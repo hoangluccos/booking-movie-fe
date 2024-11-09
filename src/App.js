@@ -1,18 +1,28 @@
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
-import LoginForm from "./pages/LoginForm";
-import RegisterForm from "./pages/RegisterForm";
-import Header from "./components/Header";
+import { publicRoutes } from "./routes";
+import { Fragment } from "react";
 
 function App() {
   return (
-    <div className="App">
-      <Routes>
-        <Route path="/login" element={<LoginForm />}></Route>
-        <Route path="/register" element={<RegisterForm />}></Route>
-      </Routes>
-      <Header />
-    </div>
+    <Routes>
+      {publicRoutes.map((route, index) => {
+        const Page = route.component;
+        const Layout = route.layout || Fragment;
+
+        return (
+          <Route
+            key={index}
+            path={route.path}
+            element={
+              <Layout>
+                <Page />
+              </Layout>
+            }
+          />
+        );
+      })}
+    </Routes>
   );
 }
 

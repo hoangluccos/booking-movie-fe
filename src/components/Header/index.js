@@ -15,7 +15,7 @@ function Header() {
           <FaUserCircle className="header__icon" />
           <button className="header__button">Ưu đãi</button>
         </div>
-        <div className="header__right mt-3">
+        <div className="header__right mt-2">
           <button className="header__button">Trang chủ</button>
           <button className="header__button">Rạp phim</button>
           <button className="header__button">Lịch chiếu</button>

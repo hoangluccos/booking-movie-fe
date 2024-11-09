@@ -1,18 +1,20 @@
 import React from "react";
 import "./LoginForm.scss";
-import profileImage from "../assets/profile.png";
-import facebookIcon from "../assets/facebook.png";
-import googleIcon from "../assets/google.png";
+import profileImage from "../../assets/profile.png";
+import facebookIcon from "../../assets/facebook.png";
+import googleIcon from "../../assets/google.png";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import instance from "../../api/instance";
 
 const schema = z.object({
-  email: z.string().email(),
+  username: z.string().min(3),
   password: z.string().min(8),
 });
 function LoginForm() {
+  const nav = useNavigate();
   const {
     register,
     handleSubmit,
@@ -22,6 +24,20 @@ function LoginForm() {
   });
   const onSubmit = (data) => {
     console.log(data);
+    (async () => {
+      try {
+        const res = await instance.post("/auth/login", data);
+        if (res.data.code === 200) {
+          localStorage.setItem("user", JSON.stringify(data));
+          localStorage.setItem("token", JSON.stringify(res.data.result));
+          if (window.confirm("Login Successfully - Redirect to Home Page")) {
+            nav("/");
+          }
+        }
+      } catch (error) {
+        console.log("Login failed" + error);
+      }
+    })();
   };
   return (
     <div className="bg-image">
@@ -49,14 +65,14 @@ function LoginForm() {
         </div>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="form-group">
-            <label>Your email</label>
+            <label>Username</label>
             <input
-              type="email"
+              type="text"
               className="form-control"
-              {...register("email")}
+              {...register("username")}
             />
-            {errors.email && (
-              <p className="text-danger">{errors.email.message}</p>
+            {errors.username && (
+              <p className="text-danger">{errors.username.message}</p>
             )}
           </div>
           <div className="form-group">
