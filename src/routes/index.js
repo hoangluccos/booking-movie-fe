@@ -19,6 +19,11 @@ const publicRoutes = [
     path: "/register",
     component: Register,
   },
+  {
+    path: "/logout",
+    component: Home,
+    layout: CommonLayout,
+  },
 ];
 //private
 export { publicRoutes };
