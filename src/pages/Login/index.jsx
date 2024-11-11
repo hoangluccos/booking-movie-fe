@@ -8,7 +8,8 @@ import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, useNavigate } from "react-router-dom";
 import instance from "../../api/instance";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const schema = z.object({
   username: z.string().min(3),
   password: z.string().min(8),
@@ -30,9 +31,10 @@ function LoginForm() {
         if (res.data.code === 200) {
           localStorage.setItem("user", JSON.stringify(data));
           localStorage.setItem("token", JSON.stringify(res.data.result));
-          if (window.confirm("Login Successfully - Redirect to Home Page")) {
+          toast.success("Bạn đã đăng nhập thành công!");
+          setTimeout(() => {
             nav("/");
-          }
+          }, 2000);
         }
       } catch (error) {
         console.log("Login failed" + error);
@@ -41,6 +43,7 @@ function LoginForm() {
   };
   return (
     <div className="bg-image">
+      <ToastContainer />
       <div className="login-modal container text-center p-4">
         <img src={profileImage} alt="Profile" className="profile-img" />
         <h3 className="mt-2">Log in</h3>

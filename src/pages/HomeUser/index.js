@@ -17,7 +17,7 @@ function HomeUser({ isLogout }) {
         console.log("Failed to fetch movies:", error);
       }
     })();
-  }, [data]);
+  }, []);
 
   // Hiển thị tối đa 4 sản phẩm nếu `showAll` là `false`
   const displayedData = showAll ? data : data.slice(0, 4);
@@ -28,9 +28,9 @@ function HomeUser({ isLogout }) {
         <h1 className="text-center">PHIM ĐANG CHIẾU</h1>
         <div className="product-list">
           {displayedData.map((product, index) => (
-            <Link to="/product/:id">
+            <Link to={`/movies/${product.id}`} key={index}>
               <ProductItem
-                key={index}
+                // key={index}
                 image={product.image}
                 title={product.name}
                 subtitle={product.language}
