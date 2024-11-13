@@ -1,14 +1,13 @@
 import axios from "axios";
-// Lấy token từ localStorage (hoặc từ nơi lưu trữ bảo mật khác)
-// const token = JSON.parse(localStorage.getItem("token"));
+
 const instance = axios.create({
   baseURL: "http://localhost:8080/api",
-  timeout: 3000,
+  timeout: 5000,
   headers: {
     "Content-Type": "application/json",
-    // Authorization: token ? `Bearer ${token.token}` : "",
   },
 });
+
 // Interceptor để thêm token vào mỗi request
 instance.interceptors.request.use(
   (config) => {
@@ -20,4 +19,12 @@ instance.interceptors.request.use(
   },
   (error) => Promise.reject(error)
 );
+export const otpInstance = axios.create({
+  baseURL: "http://localhost:8080/api",
+  timeout: 20000,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
+
 export default instance;

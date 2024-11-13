@@ -26,7 +26,7 @@ function Header() {
     <div className="contain">
       <ToastContainer />
       <header className="header">
-        <div className="header__left mt-1">
+        <div className="header__left mt-2">
           <FaFilm className="header__logo" />
           <div className="header__search">
             <input type="text" placeholder="Search" />
@@ -47,8 +47,7 @@ function Header() {
                 onClick={() => handleLogout()}
                 className="header__user-item d-inline-block"
               >
-                <i class="fa-solid fa-right-from-bracket"></i>
-                Đăng xuất
+                <i class="fa-solid fa-right-from-bracket"></i> Đăng xuất
               </button>
             </div>
           </div>
