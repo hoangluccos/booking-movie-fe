@@ -7,8 +7,11 @@ import ProfilePage from "../pages/ProfilePage";
 import PaymentHistory from "../pages/PaymentHistory";
 import NotFound from "../pages/NotFound";
 import CouponsPage from "../pages/CouponsPage";
+import HomeAdmin from "../pages/AdminPages/HomeAdmin";
+import Users from "../pages/AdminPages/Users";
 
 import CommonLayout from "../components/Layout/CommonLayout";
+import AdminLayout from "../components/Layout/AdminLayout";
 
 //public
 const publicRoutes = [
@@ -51,4 +54,16 @@ const publicRoutes = [
   },
 ];
 //private
-export { publicRoutes };
+const privateRoutes = [
+  {
+    path: "/admin",
+    component: HomeAdmin,
+    layout: AdminLayout,
+  },
+  {
+    path: "/admin/users",
+    component: Users,
+    layout: AdminLayout,
+  },
+];
+export { publicRoutes, privateRoutes };

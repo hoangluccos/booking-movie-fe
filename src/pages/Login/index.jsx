@@ -37,6 +37,7 @@ function LoginForm() {
           }, 2000);
         }
       } catch (error) {
+        toast.error("Đăng nhập thất bại");
         console.log("Login failed" + error);
       }
     })();

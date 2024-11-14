@@ -1,0 +1,13 @@
+.home-admin {
+  .image-column {
+    width: 100px;
+  }
+  flex: 1;
+  .movie-image {
+    width: 100px;
+    height: 100%;
+    object-fit: cover;
+  }
+  th {
+  }
+}
