@@ -1,5 +1,5 @@
 import React from "react";
-import "./CouponsPage.scss";
+// import "./CouponsPage.scss";
 import CouponItem from "../../components/CouponItem";
 
 function CouponsPage() {
@@ -7,7 +7,7 @@ function CouponsPage() {
     "https://bhdstar.vn/wp-content/uploads/2024/10/poster-labubu-web-1.jpg";
   return (
     <div className="content mt-4">
-      <div className="d-flex flex-wrap gap-10">
+      <div className="flex flex-wrap gap-[10px]">
         <CouponItem
           img={img}
           title="Cơ hội sở hữu LABUBU FLIP WITH ME 40cm tại HL-Theaters !"

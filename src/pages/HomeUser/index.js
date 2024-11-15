@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import ProductItem from "../../components/ProductItem";
+import MovieItem from "../../components/MovieItem";
 import instance from "../../api/instance";
 import "./HomeUser.scss";
 import { Link } from "react-router-dom";
@@ -24,16 +24,17 @@ function HomeUser({ isLogout }) {
 
   return (
     <div className="contain">
-      <div className="content gradient-background">
+      <div className="content gradient-background mt-4">
         <h1 className="text-center">PHIM ĐANG CHIẾU</h1>
         <div className="product-list">
           {displayedData.map((product, index) => (
             <Link to={`/movies/${product.id}`} key={index}>
-              <ProductItem
+              <MovieItem
                 // key={index}
                 image={product.image}
                 title={product.name}
                 subtitle={product.language}
+                duration={product.duration}
               />
             </Link>
           ))}

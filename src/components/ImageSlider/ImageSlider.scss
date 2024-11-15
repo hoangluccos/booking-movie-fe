@@ -1,0 +1,19 @@
+.slider-container {
+  background-color: black; /* Nền đen */
+  padding: 20px 0; /* Khoảng cách trên và dưới */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.slide {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.slide-image {
+  width: 1200px;
+  height: 400px;
+  object-fit: cover; /* Đảm bảo hình ảnh không bị méo */
+}

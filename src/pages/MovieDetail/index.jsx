@@ -19,7 +19,7 @@ function MovieDetail() {
   }, [param.id]);
   return (
     <div>
-      <div className="content mt-3 pb-3 detail-movie d-flex flex-direction-row gap-4">
+      <div className="content mt-3 pb-3 detail-movie d-flex flex-direction-row gap-4 ">
         <div className="img-banner">
           <img src={infoMovie.image} alt="" />
         </div>
@@ -33,6 +33,7 @@ function MovieDetail() {
           </div>
           <div className="d-flex align-items-center mt-3">
             <i class="fa-solid fa-clock"></i>
+            <p className="mx-3 mb-0 ">{infoMovie.duration} phút</p>
           </div>
           <div className="d-flex align-items-center mt-3">
             <i class="fa-solid fa-tag"></i>
@@ -45,6 +46,9 @@ function MovieDetail() {
             <h4 className="fw-bold">NỘI DUNG</h4>
             <p>{infoMovie.content}</p>
           </div>
+          <button className="buy-ticket">
+            <i class="fa-solid fa-ticket"></i> Mua vé
+          </button>
         </div>
       </div>
     </div>

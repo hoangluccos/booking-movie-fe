@@ -6,3 +6,18 @@
     width: 100%;
   }
 }
+.buy-ticket {
+  margin-top: 8px;
+  background: rgb(213, 104, 104);
+  color: white;
+  height: 36px;
+  transition: background-position 0.4s ease-in-out;
+  border-radius: 6px;
+  user-select: none;
+
+  &:hover {
+    background: linear-gradient(to right, rgb(213, 104, 104), #f8cf55);
+    background-size: 200% 100%;
+    background-position: right;
+  }
+}

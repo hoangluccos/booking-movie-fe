@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import "./OTPComponent.scss";
 function OTPComponent({ onCountdownComplete }) {
   const [countdown, setCountdown] = useState(60);
 
@@ -17,7 +16,7 @@ function OTPComponent({ onCountdownComplete }) {
 
   return (
     <div>
-      <p className="text-danger">
+      <p className="text-red-600 mb-[0px] ml-[4px]">
         Đã gửi OTP. Thời gian còn lại: {countdown} giây
       </p>
     </div>
