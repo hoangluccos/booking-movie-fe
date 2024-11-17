@@ -1,11 +1,10 @@
 import React from "react";
-import "./CouponItem.scss";
 function CouponItem({ img, title, detail }) {
   return (
-    <div className="banner-coupon m-3">
-      <img src={img} alt="" />
-      <h4 className="fw-bold mt-3">{title}</h4>
-      <p className="fw-light">{detail}</p>
+    <div className="m-3 w-[360px] h-[440px]">
+      <img src={img} alt="" className="w-full" />
+      <h4 className="font-bold mt-3">{title}</h4>
+      <p className="font-light text-[17px]">{detail}</p>
     </div>
   );
 }

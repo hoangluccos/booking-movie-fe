@@ -1,18 +1,15 @@
 import React from "react";
 import Header from "../../Header";
 import Footer from "../../Footer";
-import ImageSlider from "../../ImageSlider";
 
-function CommonLayout({ children }) {
+function NotSlider({ children }) {
   return (
-    <div className="bg-[#0f172a]">
+    <div className="">
       <Header />
-      <ImageSlider />
-
       {children}
       <Footer />
     </div>
   );
 }
 
-export default CommonLayout;
+export default NotSlider;

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import "./Users.scss";
 import instance from "../../../api/instance";
 import ProfileImage from "../../../assets/profile.png";
 
@@ -16,12 +15,10 @@ function Users() {
     })();
   }, []);
 
-  // Calculate movies for the current page
   const indexOfLastMovie = currentPage * itemsPerPage;
   const indexOfFirstMovie = indexOfLastMovie - itemsPerPage;
   const currentMovies = movies.slice(indexOfFirstMovie, indexOfLastMovie);
 
-  // Handle page changes
   const handleNextPage = () => {
     if (currentPage < Math.ceil(movies.length / itemsPerPage)) {
       setCurrentPage(currentPage + 1);
@@ -35,62 +32,73 @@ function Users() {
   };
 
   return (
-    <div className="home-admin">
-      <h1>Admin</h1>
-      <table className="table-bordered table-striped ml-3 w-100 text-center">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>username</th>
-            <th>lastName</th>
-            <th>dateOfBirth</th>
-            <th>avatar</th>
-            <th>roles</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {currentMovies.map((movie, index) => (
-            <tr key={movie.id}>
-              <td>{indexOfFirstMovie + index + 1}</td>
-              <td className="fw-bold">{movie.username}</td>
-              <td>{movie.lastName}</td>
-              <td>{movie.dateOfBirth}</td>
-              <td className="image-column">
-                {movie.avatar ? (
-                  <img
-                    src={movie.avatar}
-                    alt={movie.name}
-                    className="movie-image"
-                  />
-                ) : (
-                  <img
-                    src={ProfileImage}
-                    alt={movie.name}
-                    className="movie-image"
-                  />
-                )}
-              </td>
-              <td>
-                {movie.roles.map((role, index) => (
-                  <p className="fw-bold" key={index}>
-                    {role.name.toUpperCase()}
-                  </p>
-                ))}
-              </td>
-              <td>
-                <button className="btn btn-warning m-1">Edit</button>
-                <button className="btn btn-danger m-1">Delete</button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div className="home-admin p-4">
+      <h1 className="text-3xl font-bold mb-4">Admin</h1>
 
-      {/* Pagination Controls */}
-      <div className="pagination-controls text-center mt-3">
+      <div className="overflow-x-auto max-w-full">
+        <table className="table-auto w-full border-collapse border border-gray-300 text-center">
+          <thead>
+            <tr className="bg-gray-200">
+              <th className="p-2 border border-gray-300">ID</th>
+              <th className="p-2 border border-gray-300">Username</th>
+              <th className="p-2 border border-gray-300">Last Name</th>
+              <th className="p-2 border border-gray-300">Date of Birth</th>
+              <th className="p-2 border border-gray-300">Avatar</th>
+              <th className="p-2 border border-gray-300">Roles</th>
+              <th className="p-2 border border-gray-300">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {currentMovies.map((movie, index) => (
+              <tr key={movie.id}>
+                <td className="p-2 border border-gray-300">
+                  {indexOfFirstMovie + index + 1}
+                </td>
+                <td className="p-2 border border-gray-300 font-bold">
+                  {movie.username}
+                </td>
+                <td className="p-2 border border-gray-300">{movie.lastName}</td>
+                <td className="p-2 border border-gray-300">
+                  {movie.dateOfBirth}
+                </td>
+                <td className="p-2 border border-gray-300">
+                  {movie.avatar ? (
+                    <img
+                      src={movie.avatar}
+                      alt={movie.name}
+                      className="w-24 h-24 object-cover rounded-md"
+                    />
+                  ) : (
+                    <img
+                      src={ProfileImage}
+                      alt={movie.name}
+                      className="w-24 h-24 object-cover rounded-md"
+                    />
+                  )}
+                </td>
+                <td className="p-2 border border-gray-300">
+                  {movie.roles.map((role, index) => (
+                    <p className="font-bold uppercase" key={index}>
+                      {role.name}
+                    </p>
+                  ))}
+                </td>
+                <td className="p-2 border border-gray-300">
+                  <button className="bg-yellow-400 text-white px-3 py-1 rounded m-1">
+                    Edit
+                  </button>
+                  <button className="bg-red-500 text-white px-3 py-1 rounded m-1">
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div className="flex justify-center items-center mt-4 space-x-4">
         <button
-          className="btn btn-primary m-1"
+          className="bg-blue-500 text-white px-3 py-1 rounded disabled:bg-gray-300"
           onClick={handlePreviousPage}
           disabled={currentPage === 1}
         >
@@ -100,7 +108,7 @@ function Users() {
           Page {currentPage} of {Math.ceil(movies.length / itemsPerPage)}
         </span>
         <button
-          className="btn btn-primary m-1"
+          className="bg-blue-500 text-white px-3 py-1 rounded disabled:bg-gray-300"
           onClick={handleNextPage}
           disabled={currentPage === Math.ceil(movies.length / itemsPerPage)}
         >

@@ -11,9 +11,6 @@ a {
   text-decoration: none;
   color: inherit;
 }
-.bg-full {
-  /* background: #0f172a; */
-}
 .contain {
   background-color: #0f172a;
   user-select: none;

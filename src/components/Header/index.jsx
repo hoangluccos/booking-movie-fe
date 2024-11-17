@@ -6,6 +6,8 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function Header() {
+  const user = JSON.parse(localStorage.getItem("user"));
+  console.log(user);
   const handleLogout = () => {
     (async () => {
       try {
@@ -24,7 +26,7 @@ function Header() {
   };
 
   return (
-    <div className="bg-[#0f172a] select-none">
+    <div className=" select-none">
       <ToastContainer />
       <header className="w-full max-w-[1200px] mx-auto flex flex-col bg-[#0f172a] p-2.5 items-center">
         <div className="flex items-center justify-between mb-2 w-full">
@@ -42,26 +44,43 @@ function Header() {
             <div className="pb-2 mt-2">
               <FaUserCircle className="text-white text-3xl cursor-pointer mr-2" />
             </div>
-            <div className="absolute top-full right-0 bg-[#333] rounded-lg py-1 shadow-lg min-w-[160px] z-10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
-              <Link
-                to="/profile"
-                className="block px-5 py-2 text-white text-left w-full cursor-pointer text-sm hover:bg-[#555]"
-              >
-                Thông tin cá nhân
-              </Link>
-              <Link
-                to="/history-payment"
-                className="block px-5 py-2 text-white text-left w-full cursor-pointer text-sm hover:bg-[#555]"
-              >
-                Lịch sử thanh toán
-              </Link>
-              <button
-                onClick={() => handleLogout()}
-                className="block px-5 py-2 text-white text-left w-full cursor-pointer text-sm hover:bg-[#555]"
-              >
-                <i className="fa-solid fa-right-from-bracket"></i> Đăng xuất
-              </button>
-            </div>
+            {user ? (
+              <div className="absolute top-full right-0 bg-[#333] rounded-lg py-1 shadow-lg min-w-[160px] z-10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
+                <Link
+                  to="/profile"
+                  className="block px-5 py-2 text-white text-left w-full cursor-pointer text-sm hover:bg-[#555]"
+                >
+                  Thông tin cá nhân
+                </Link>
+                <Link
+                  to="/history-payment"
+                  className="block px-5 py-2 text-white text-left w-full cursor-pointer text-sm hover:bg-[#555]"
+                >
+                  Lịch sử thanh toán
+                </Link>
+                <button
+                  onClick={() => handleLogout()}
+                  className="block px-5 py-2 text-white text-left w-full cursor-pointer text-sm hover:bg-[#555]"
+                >
+                  <i className="fa-solid fa-right-from-bracket"></i> Đăng xuất
+                </button>
+              </div>
+            ) : (
+              <div className="absolute top-full right-0 bg-[#333] rounded-lg py-1 shadow-lg min-w-[160px] z-10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
+                <Link
+                  to="/login"
+                  className="block px-5 py-2 text-white text-left w-full cursor-pointer text-sm hover:bg-[#555]"
+                >
+                  Đăng nhập
+                </Link>
+                <Link
+                  to="/register"
+                  className="block px-5 py-2 text-white text-left w-full cursor-pointer text-sm hover:bg-[#555]"
+                >
+                  Đăng ký
+                </Link>
+              </div>
+            )}
           </div>
 
           <Link

@@ -9,8 +9,12 @@ import NotFound from "../pages/NotFound";
 import CouponsPage from "../pages/CouponsPage";
 import HomeAdmin from "../pages/AdminPages/HomeAdmin";
 import Users from "../pages/AdminPages/Users";
+import SeatSelection from "../pages/SeatSelection";
+import PaymentMethods from "../pages/PaymentMethods";
+import PaymentCallback from "../pages/PaymentCallback";
 
 import CommonLayout from "../components/Layout/CommonLayout";
+import NotSlider from "../components/Layout/NotSlider";
 import AdminLayout from "../components/Layout/AdminLayout";
 
 //public
@@ -35,22 +39,37 @@ const publicRoutes = [
   {
     path: "/movies/:id",
     component: MovieDetail,
-    layout: CommonLayout,
+    layout: NotSlider,
   },
   {
     path: "/profile",
     component: ProfilePage,
-    layout: CommonLayout,
+    layout: NotSlider,
   },
   {
     path: "/history-payment",
     component: PaymentHistory,
-    layout: CommonLayout,
+    layout: NotSlider,
   },
   {
     path: "/coupons",
     component: CouponsPage,
-    layout: CommonLayout,
+    layout: NotSlider,
+  },
+  {
+    path: "/showtime/:id/seat-selection",
+    component: SeatSelection,
+    layout: NotSlider,
+  },
+  {
+    path: "/paymentMethod/:showtimeId",
+    component: PaymentMethods,
+    layout: NotSlider,
+  },
+  {
+    path: "/payment-status",
+    component: PaymentCallback,
+    layout: NotSlider,
   },
 ];
 //private
