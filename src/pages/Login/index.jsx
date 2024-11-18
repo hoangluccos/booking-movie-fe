@@ -64,6 +64,7 @@ function LoginForm() {
             Sign up
           </Link>
         </p>
+
         <div className="my-4 space-y-2">
           <button className="flex items-center justify-center w-full px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200">
             <img src={facebookIcon} alt="Facebook" className="w-5 h-5 mr-2" />
@@ -117,6 +118,13 @@ function LoginForm() {
             Log in
           </button>
         </form>
+        <p className="text-center text-gray-600 mt-4">
+          Using website without login?
+          <Link to="/" className="text-blue-500 hover:underline">
+            <i class="fa-solid fa-house"></i>
+            Home Page
+          </Link>
+        </p>
       </div>
     </div>
   );

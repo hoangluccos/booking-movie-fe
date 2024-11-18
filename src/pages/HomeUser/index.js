@@ -39,6 +39,7 @@ function HomeUser({ isLogout }) {
                       title={product.name}
                       subtitle={product.language}
                       duration={product.duration}
+                      id={product.id}
                     />
                   </Link>
                 ))}

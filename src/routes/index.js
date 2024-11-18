@@ -1,7 +1,6 @@
 //pages
 import Home from "../pages/HomeUser";
 import Login from "../pages/Login";
-import Register from "../pages/Register";
 import MovieDetail from "../pages/MovieDetail";
 import ProfilePage from "../pages/ProfilePage";
 import PaymentHistory from "../pages/PaymentHistory";
@@ -12,6 +11,7 @@ import Users from "../pages/AdminPages/Users";
 import SeatSelection from "../pages/SeatSelection";
 import PaymentMethods from "../pages/PaymentMethods";
 import PaymentCallback from "../pages/PaymentCallback";
+import RegistrationFlow from "../pages/RegistrationFlow";
 
 import CommonLayout from "../components/Layout/CommonLayout";
 import NotSlider from "../components/Layout/NotSlider";
@@ -34,7 +34,7 @@ const publicRoutes = [
   },
   {
     path: "/register",
-    component: Register,
+    component: RegistrationFlow,
   },
   {
     path: "/movies/:id",
