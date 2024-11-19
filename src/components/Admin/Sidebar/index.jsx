@@ -13,7 +13,7 @@ function Sidebar() {
           <span>Dashboard</span>
         </li>
         <NavLink
-          to="/admin"
+          to="/admin/movies"
           end
           className={({ isActive }) =>
             `menu-item flex items-center pl-4 text-lg transition-colors ${

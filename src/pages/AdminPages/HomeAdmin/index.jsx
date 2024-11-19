@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
 import instance from "../../../api/instance";
+import { Link } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function HomeAdmin() {
   const [movies, setMovies] = useState([]);
@@ -31,13 +34,37 @@ function HomeAdmin() {
       setCurrentPage(currentPage - 1);
     }
   };
+  const handleDeleteMovie = (idMovie) => {
+    const deleteMovie = async () => {
+      try {
+        const res = await instance.delete(`/movies/${idMovie}`);
+        console.log(res.data);
+
+        if (res.status === 200) {
+          // Cập nhật danh sách phim sau khi xóa
+          toast.success("Delete Movie Successfully");
+          setMovies((prevMovies) =>
+            prevMovies.filter((movie) => movie.id !== idMovie)
+          );
+        }
+      } catch (error) {
+        console.error("Error deleting movie:", error);
+      }
+    };
+    deleteMovie();
+  };
 
   return (
     <div className="home-admin p-4">
+      <ToastContainer />
       <h1 className="text-3xl font-bold mb-4">Admin</h1>
-
-      {/* Wrapper thêm overflow-x-auto */}
-      <div className="overflow-x-auto max-w-full">
+      <Link
+        to="/admin/add-movie"
+        className="p-2  bg-blue-600 text-white rounded-md mb-3"
+      >
+        Add Movie
+      </Link>
+      <div className="overflow-x-auto max-w-full mt-3">
         <table className="table-auto w-full border-collapse border border-gray-300 text-center">
           <thead>
             <tr className="bg-gray-200">
@@ -74,10 +101,16 @@ function HomeAdmin() {
                   ))}
                 </td>
                 <td className="p-2 border border-gray-300">
-                  <button className="bg-yellow-400 text-white px-2 py-1 rounded m-1">
+                  <Link
+                    to={`/admin/edit-movie/${movie.id}`}
+                    className="bg-yellow-400 text-white px-2 py-1 rounded m-1"
+                  >
                     Edit
-                  </button>
-                  <button className="bg-red-500 text-white px-2 py-1 rounded m-1">
+                  </Link>
+                  <button
+                    onClick={() => handleDeleteMovie(movie.id)}
+                    className="bg-red-500 text-white px-2 py-1 rounded m-1"
+                  >
                     Delete
                   </button>
                 </td>
@@ -87,7 +120,6 @@ function HomeAdmin() {
         </table>
       </div>
 
-      {/* Điều khiển phân trang */}
       <div className="flex justify-center items-center mt-4 space-x-4">
         <button
           className="bg-blue-500 text-white px-3 py-1 rounded disabled:bg-gray-300"

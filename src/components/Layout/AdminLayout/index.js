@@ -5,7 +5,7 @@ function AdminLayout({ children }) {
   return (
     <div className="flex">
       <SideBar />
-      <div style={{ marginLeft: "250px", width: "100%" }}>{children}</div>
+      <div className="ml-[250px] w-full">{children}</div>
     </div>
   );
 }

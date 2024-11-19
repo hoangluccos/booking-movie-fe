@@ -12,6 +12,7 @@ import SeatSelection from "../pages/SeatSelection";
 import PaymentMethods from "../pages/PaymentMethods";
 import PaymentCallback from "../pages/PaymentCallback";
 import RegistrationFlow from "../pages/RegistrationFlow";
+import MovieForm from "../pages/AdminPages/MovieForm";
 
 import CommonLayout from "../components/Layout/CommonLayout";
 import NotSlider from "../components/Layout/NotSlider";
@@ -75,13 +76,23 @@ const publicRoutes = [
 //private
 const privateRoutes = [
   {
-    path: "/admin",
+    path: "/admin/movies",
     component: HomeAdmin,
     layout: AdminLayout,
   },
   {
     path: "/admin/users",
     component: Users,
+    layout: AdminLayout,
+  },
+  {
+    path: "/admin/add-movie",
+    component: MovieForm,
+    layout: AdminLayout,
+  },
+  {
+    path: "/admin/edit-movie/:id",
+    component: MovieForm,
     layout: AdminLayout,
   },
 ];
