@@ -11,6 +11,9 @@ import ChangePassWord from "../../components/ChangePassWord";
 
 const ProfilePage = () => {
   const [userData, setUserData] = useState({});
+  const [avatar, setAvatar] = useState(null);
+  const [previewAvatar, setPreviewAvatar] = useState(ProfileImage);
+
   const {
     register,
     handleSubmit,
@@ -36,6 +39,31 @@ const ProfilePage = () => {
     })();
   };
 
+  const handleAvatarChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setAvatar(file);
+      setPreviewAvatar(URL.createObjectURL(file)); // Hiển thị ảnh preview
+    }
+  };
+
+  const handleAvatarSave = async () => {
+    if (!avatar) return;
+
+    const formData = new FormData();
+    formData.append("file", avatar);
+
+    try {
+      const res = await instance.put("/users/avatar", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      toast.success("Tải lên Avatar thành công!");
+    } catch (error) {
+      toast.error("Tải lên Avatar thất bại!");
+      console.error(error);
+    }
+  };
+
   const formatDate = (dateString) => {
     const [day, month, year] = dateString.split("-");
     return `${year}-${month}-${day}`;
@@ -52,6 +80,9 @@ const ProfilePage = () => {
         };
         reset(formattedData);
         setUserData(formattedData);
+        if (res.data.result.avatar) {
+          setPreviewAvatar(res.data.result.avatar);
+        }
       } catch (error) {
         console.log(error);
       }
@@ -64,16 +95,32 @@ const ProfilePage = () => {
         <ToastContainer />
         <div className="flex">
           {/* Sidebar */}
-          <div className="bg-white border rounded p-5 text-center w-1/3 ">
+          <div className="bg-white border rounded p-5 text-center w-1/3">
             <div className="avatar">
               <img
-                src={ProfileImage}
+                src={previewAvatar}
                 alt="avatar"
-                className="w-24 h-24 rounded-full mx-auto"
+                className="w-24 h-24 rounded-full mx-auto mb-3 cursor-pointer"
+                onClick={() => document.getElementById("avatarInput").click()}
+              />
+              <input
+                id="avatarInput"
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleAvatarChange}
               />
             </div>
+            {avatar && (
+              <button
+                onClick={handleAvatarSave}
+                className="bg-blue-500 text-white py-2 px-4 rounded-full mt-3"
+              >
+                Save
+              </button>
+            )}
             <Link
-              className="mt-[8px] bg-red-500 text-white py-2 px-4 rounded-full"
+              className="bg-red-500 text-white py-2 px-4 rounded-full mt-3 block"
               to="/logout"
             >
               Đăng xuất

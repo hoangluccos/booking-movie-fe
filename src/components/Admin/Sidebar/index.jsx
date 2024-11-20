@@ -1,9 +1,29 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
+import instance from "../../../api/instance";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Sidebar() {
+  const handleLogout = () => {
+    (async () => {
+      try {
+        const token = JSON.parse(localStorage.getItem("token"));
+        await instance.post("/auth/logout", token);
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        toast.error("Bạn đã logout");
+        setTimeout(() => {
+          window.location.reload();
+        }, 2000);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  };
   return (
     <div className="fixed top-0 left-0 w-64 bg-gray-100 h-screen flex flex-col justify-between p-5 shadow-md">
+      <ToastContainer />
       <div className="sidebar-header text-2xl font-bold text-gray-800 ">
         <h2>HL Movies</h2>
       </div>
@@ -76,6 +96,18 @@ function Sidebar() {
           <i className="fa-solid fa-street-view mr-3"></i>
           <span>Director</span>
         </NavLink>
+        <NavLink
+          to="/"
+          className={({ isActive }) =>
+            `menu-item flex items-center pl-4 text-lg transition-colors ${
+              isActive ? "text-blue-500" : "text-gray-600 hover:text-blue-500"
+            }`
+          }
+        >
+          <i className="fa-solid fa-house mr-3"></i>
+          <span>Home Page User</span>
+        </NavLink>
+        <button onClick={() => handleLogout()}>Logout</button>
       </ul>
       <div className="sidebar-footer text-sm text-gray-600 text-center">
         Help

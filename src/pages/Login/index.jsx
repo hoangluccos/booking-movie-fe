@@ -30,12 +30,23 @@ function LoginForm() {
   const onSubmit = async (data) => {
     try {
       const res = await instance.post("/auth/login", data);
+      const token = res.data.result;
       if (res.data.code === 200) {
         localStorage.setItem("user", JSON.stringify(data));
         localStorage.setItem("token", JSON.stringify(res.data.result));
         toast.success("Bạn đã đăng nhập thành công!");
+        const introspectRes = await instance.post("/auth/introspect", token);
+
+        const role = introspectRes.data.result.role;
+
         setTimeout(() => {
-          nav("/");
+          if (role === "MANAGER") {
+            nav("/admin");
+          } else if (role === "USER") {
+            nav("/");
+          } else {
+            nav("/master");
+          }
         }, 2000);
       }
     } catch (error) {
