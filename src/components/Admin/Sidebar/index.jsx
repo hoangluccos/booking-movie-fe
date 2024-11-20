@@ -8,10 +8,18 @@ function Sidebar() {
         <h2>HL Movies</h2>
       </div>
       <ul className="sidebar-menu list-none flex flex-col gap-4 mt-auto mb-auto">
-        <li className="menu-item flex items-center pl-4 text-lg text-gray-600 hover:text-blue-500 transition-colors">
+        <NavLink
+          to="/admin"
+          end
+          className={({ isActive }) =>
+            `menu-item flex items-center pl-4 text-lg transition-colors ${
+              isActive ? "text-blue-500" : "text-gray-600 hover:text-blue-500"
+            }`
+          }
+        >
           <i className="fa-solid fa-square-poll-vertical mr-3"></i>
           <span>Dashboard</span>
-        </li>
+        </NavLink>
         <NavLink
           to="/admin/movies"
           end
@@ -35,10 +43,39 @@ function Sidebar() {
           <i className="fa-solid fa-users mr-3"></i>
           <span>Users</span>
         </NavLink>
-        <li className="menu-item flex items-center pl-4 text-lg text-gray-600 hover:text-blue-500 transition-colors">
-          <i className="fa-solid fa-money-bill-wave mr-3"></i>
-          <span>Payment</span>
-        </li>
+        <NavLink
+          to="/admin/genres"
+          className={({ isActive }) =>
+            `menu-item flex items-center pl-4 text-lg transition-colors ${
+              isActive ? "text-blue-500" : "text-gray-600 hover:text-blue-500"
+            }`
+          }
+        >
+          <i className="fa-solid fa-bars-staggered mr-3"></i>
+          <span>Genre</span>
+        </NavLink>
+        <NavLink
+          to="/admin/actors"
+          className={({ isActive }) =>
+            `menu-item flex items-center pl-4 text-lg transition-colors ${
+              isActive ? "text-blue-500" : "text-gray-600 hover:text-blue-500"
+            }`
+          }
+        >
+          <i className="fa-solid fa-street-view mr-3"></i>
+          <span>Actors</span>
+        </NavLink>
+        <NavLink
+          to="/admin/directors"
+          className={({ isActive }) =>
+            `menu-item flex items-center pl-4 text-lg transition-colors ${
+              isActive ? "text-blue-500" : "text-gray-600 hover:text-blue-500"
+            }`
+          }
+        >
+          <i className="fa-solid fa-street-view mr-3"></i>
+          <span>Director</span>
+        </NavLink>
       </ul>
       <div className="sidebar-footer text-sm text-gray-600 text-center">
         Help

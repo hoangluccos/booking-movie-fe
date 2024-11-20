@@ -13,6 +13,10 @@ import PaymentMethods from "../pages/PaymentMethods";
 import PaymentCallback from "../pages/PaymentCallback";
 import RegistrationFlow from "../pages/RegistrationFlow";
 import MovieForm from "../pages/AdminPages/MovieForm";
+import Dashboard from "../pages/AdminPages/Dashboard";
+import GenrePage from "../pages/AdminPages/GenrePage";
+import ActorPage from "../pages/AdminPages/ActorPage";
+import DirectorPage from "../pages/AdminPages/DirectorPage";
 
 import CommonLayout from "../components/Layout/CommonLayout";
 import NotSlider from "../components/Layout/NotSlider";
@@ -76,6 +80,11 @@ const publicRoutes = [
 //private
 const privateRoutes = [
   {
+    path: "/admin",
+    component: Dashboard,
+    layout: AdminLayout,
+  },
+  {
     path: "/admin/movies",
     component: HomeAdmin,
     layout: AdminLayout,
@@ -93,6 +102,21 @@ const privateRoutes = [
   {
     path: "/admin/edit-movie/:id",
     component: MovieForm,
+    layout: AdminLayout,
+  },
+  {
+    path: "/admin/genres",
+    component: GenrePage,
+    layout: AdminLayout,
+  },
+  {
+    path: "/admin/actors",
+    component: ActorPage,
+    layout: AdminLayout,
+  },
+  {
+    path: "/admin/directors",
+    component: DirectorPage,
     layout: AdminLayout,
   },
 ];
