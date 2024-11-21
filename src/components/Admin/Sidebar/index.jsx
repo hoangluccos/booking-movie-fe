@@ -1,10 +1,11 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import instance from "../../../api/instance";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function Sidebar() {
+  const nav = useNavigate();
   const handleLogout = () => {
     (async () => {
       try {
@@ -14,6 +15,7 @@ function Sidebar() {
         localStorage.removeItem("user");
         toast.error("Bạn đã logout");
         setTimeout(() => {
+          nav("/login");
           window.location.reload();
         }, 2000);
       } catch (error) {

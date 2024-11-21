@@ -3,7 +3,7 @@ import certificate from "../../assets/certificate.png";
 
 function Footer() {
   return (
-    <div className="bg-gray-900 text-white pt-3">
+    <div className="bg-gray-900 text-white pt-3 mt-3">
       <div className="max-w-screen-xl mx-auto px-4">
         <div className="flex justify-around items-center">
           <div className="certi">

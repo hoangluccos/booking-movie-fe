@@ -1,11 +1,12 @@
 import React from "react";
 import { FaUserCircle, FaTimes, FaFilm } from "react-icons/fa";
 import instance from "../../api/instance";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function Header() {
+  const nav = useNavigate();
   const user = JSON.parse(localStorage.getItem("user"));
   console.log(user);
   const handleLogout = () => {
@@ -17,6 +18,7 @@ function Header() {
         localStorage.removeItem("user");
         toast.error("Bạn đã logout");
         setTimeout(() => {
+          nav("/login");
           window.location.reload();
         }, 2000);
       } catch (error) {
@@ -104,12 +106,12 @@ function Header() {
           >
             RẠP PHIM
           </Link>
-          <Link
+          {/* <Link
             to="/showtime"
             className="inline-flex items-center justify-center bg-[#d1d5db] rounded-full py-2 px-4 text-sm cursor-pointer transition duration-300 text-black hover:bg-[#e2e8f0]"
           >
             LỊCH CHIẾU
-          </Link>
+          </Link> */}
           <Link
             to="/contact"
             className="inline-flex items-center justify-center bg-[#d1d5db] rounded-full py-2 px-4 text-sm cursor-pointer transition duration-300 text-black hover:bg-[#e2e8f0]"

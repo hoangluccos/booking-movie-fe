@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import EmailForm from "./EmailForm";
 import OTPVerification from "./OTPVerification";
 import PersonalInfoForm from "./PersonalInfoForm";
+import ForgetPW from "./ForgetPW";
 import cinemaImage from "../../assets/cinema.jpg";
 import instance, { otpInstance } from "../../api/instance";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const RegistrationFlow = () => {
   const [step, setStep] = useState(1);
@@ -12,6 +13,9 @@ const RegistrationFlow = () => {
   const [otp, setOtp] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const nav = useNavigate();
+  const location = useLocation();
+  console.log(location.pathname.split("/")[1]);
+  const isForgetPW = location.pathname.split("/")[1];
 
   const handleEmailSubmit = async (submittedEmail) => {
     setEmail(submittedEmail);
@@ -62,7 +66,10 @@ const RegistrationFlow = () => {
     console.log("Personal Info Submitted:", personalInfo);
     const createUser = async () => {
       try {
-        const res = await instance.post("/users/", personalInfo);
+        let res;
+        isForgetPW
+          ? (res = await instance.put("/users/changePassword", personalInfo))
+          : (res = await instance.post("/users/", personalInfo));
         console.log(res.data);
         nav("/login");
       } catch (error) {
@@ -91,9 +98,12 @@ const RegistrationFlow = () => {
           {step === 2 && (
             <OTPVerification email={email} onSubmit={handleOtpSubmit} />
           )}
-          {step === 3 && (
-            <PersonalInfoForm onSubmit={handlePersonalInfoSubmit} />
-          )}
+          {step === 3 &&
+            (isForgetPW === "forget-password" ? (
+              <ForgetPW onSubmit={handlePersonalInfoSubmit} />
+            ) : (
+              <PersonalInfoForm onSubmit={handlePersonalInfoSubmit} />
+            ))}
         </div>
       </div>
     </div>

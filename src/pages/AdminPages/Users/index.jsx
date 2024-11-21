@@ -61,7 +61,7 @@ function Users() {
                 <td className="p-2 border border-gray-300">
                   {movie.dateOfBirth}
                 </td>
-                <td className="p-2 border border-gray-300">
+                <td className="p-2 border border-gray-300 flex justify-center">
                   {movie.avatar ? (
                     <img
                       src={movie.avatar}

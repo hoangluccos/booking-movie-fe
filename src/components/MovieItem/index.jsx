@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 function MovieItem({ image, title, subtitle, duration, id }) {
   return (
-    <div className="relative group w-48 m-2 text-gray-300 hover:cursor-pointer hover:scale-105 transition-transform duration-300">
+    <div className="relative group w-50 m-2 text-gray-300 hover:cursor-pointer hover:scale-105 transition-transform duration-300">
       <img src={image} alt={title} className="w-full h-auto rounded-lg" />
       <div className="absolute inset-0 bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center rounded-lg">
         <Link

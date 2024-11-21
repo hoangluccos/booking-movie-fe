@@ -268,7 +268,7 @@ function DirectorPage() {
                   actor.dateOfBirth
                 )}
               </td>
-              <td className="border px-4 py-2">
+              <td className="border px-4 py-2 flex justify-center">
                 {editingActor && editingActor.id === actor.id ? (
                   <input
                     type="file"

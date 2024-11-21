@@ -6,6 +6,8 @@ import ProfilePage from "../pages/ProfilePage";
 import PaymentHistory from "../pages/PaymentHistory";
 import NotFound from "../pages/NotFound";
 import CouponsPage from "../pages/CouponsPage";
+import TheatersPage from "../pages/TheatersPage";
+import ContactPage from "../pages/ContactPage";
 import HomeAdmin from "../pages/AdminPages/HomeAdmin";
 import Users from "../pages/AdminPages/Users";
 import SeatSelection from "../pages/SeatSelection";
@@ -42,6 +44,10 @@ const publicRoutes = [
     component: RegistrationFlow,
   },
   {
+    path: "/forget-password",
+    component: RegistrationFlow,
+  },
+  {
     path: "/movies/:id",
     component: MovieDetail,
     layout: NotSlider,
@@ -59,6 +65,16 @@ const publicRoutes = [
   {
     path: "/coupons",
     component: CouponsPage,
+    layout: NotSlider,
+  },
+  {
+    path: "/theaters",
+    component: TheatersPage,
+    layout: NotSlider,
+  },
+  {
+    path: "/contact",
+    component: ContactPage,
     layout: NotSlider,
   },
   {
