@@ -28,9 +28,8 @@ function ShowTimePage() {
 
     const fetchShowtimes = async () => {
       try {
-        const response = await instance.post("/showtimes/all", {
-          movieId: movieId,
-        });
+        const response = await instance.get(`/showtimes/${movieId}/all`);
+        console.log(response.data.result);
         setShowtimes(response.data.result);
       } catch (err) {
         console.log(err);
@@ -56,7 +55,6 @@ function ShowTimePage() {
   }, [movieId]);
 
   const handleSubmit = async (e) => {
-    console.log(formData);
     e.preventDefault();
     try {
       const requestBody = {
@@ -64,12 +62,20 @@ function ShowTimePage() {
         movieId,
       };
       const res = await instance.post("/showtimes/", requestBody);
-      console.log(res.data);
+      console.log("Lịch chiếu mới:", res.data.result);
       alert("Tạo lịch chiếu thành công!");
-      setShowtimes((prev) => [...prev, res.data.result]);
+
+      // Thêm lịch chiếu mới vào danh sách
+      setShowtimes((prev) => [
+        ...prev,
+        {
+          ...res.data.result,
+          theater: rooms.find((room) => room.id === formData.roomId) || {},
+        },
+      ]);
     } catch (err) {
       console.log(err);
-      alert("Có lỗi xảy ra khi tạo lịch chiếu.");
+      alert(err.response?.data?.message || "Có lỗi xảy ra");
     }
   };
 
@@ -162,10 +168,10 @@ function ShowTimePage() {
                     {showtime.date}
                   </td>
                   <td className="p-2 border border-gray-300">
-                    {showtime.time}
+                    {showtime.startTime}
                   </td>
                   <td className="p-2 border border-gray-300">
-                    {showtime.roomName}
+                    {showtime.theater.name}
                   </td>
                 </tr>
               ))}

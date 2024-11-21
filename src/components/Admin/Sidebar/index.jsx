@@ -1,10 +1,26 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import instance from "../../../api/instance";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function Sidebar() {
+  const token = JSON.parse(localStorage.getItem("token"));
+  const [auth, setAuth] = useState(null);
+  console.log(auth);
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await instance.post("/auth/introspect", token);
+        // console.log(res.data.result.role);
+        setAuth(res.data.result.role);
+      } catch (error) {
+        console.log(error);
+        setAuth("");
+      }
+    })();
+  }, []);
+
   const nav = useNavigate();
   const handleLogout = () => {
     (async () => {
@@ -30,18 +46,22 @@ function Sidebar() {
         <h2>HL Movies</h2>
       </div>
       <ul className="sidebar-menu list-none flex flex-col gap-4 mt-auto mb-auto">
-        <NavLink
-          to="/admin"
-          end
-          className={({ isActive }) =>
-            `menu-item flex items-center pl-4 text-lg transition-colors ${
-              isActive ? "text-blue-500" : "text-gray-600 hover:text-blue-500"
-            }`
-          }
-        >
-          <i className="fa-solid fa-square-poll-vertical mr-3"></i>
-          <span>Dashboard</span>
-        </NavLink>
+        {auth === "ADMIN" ? (
+          <NavLink
+            to="/admin"
+            end
+            className={({ isActive }) =>
+              `menu-item flex items-center pl-4 text-lg transition-colors ${
+                isActive ? "text-blue-500" : "text-gray-600 hover:text-blue-500"
+              }`
+            }
+          >
+            <i className="fa-solid fa-square-poll-vertical mr-3"></i>
+            <span>Dashboard</span>
+          </NavLink>
+        ) : (
+          ""
+        )}
         <NavLink
           to="/admin/movies"
           end

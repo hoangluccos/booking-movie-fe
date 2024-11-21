@@ -6,14 +6,31 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { profileSchema } from "../../utils/validationSchema";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ChangePassWord from "../../components/ChangePassWord";
 
 const ProfilePage = () => {
   const [userData, setUserData] = useState({});
   const [avatar, setAvatar] = useState(null);
   const [previewAvatar, setPreviewAvatar] = useState(ProfileImage);
-
+  const nav = useNavigate();
+  const handleLogout = () => {
+    (async () => {
+      try {
+        const token = JSON.parse(localStorage.getItem("token"));
+        await instance.post("/auth/logout", token);
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        toast.error("Bạn đã logout");
+        setTimeout(() => {
+          nav("/login");
+          window.location.reload();
+        }, 2000);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  };
   const {
     register,
     handleSubmit,
@@ -119,12 +136,14 @@ const ProfilePage = () => {
                 Save
               </button>
             )}
-            <Link
-              className="bg-red-500 text-white py-2 px-4 rounded-full mt-3 block"
-              to="/logout"
-            >
-              Đăng xuất
-            </Link>
+            <div className="flex justify-center">
+              <button
+                className="bg-red-500 text-white py-2 px-4 rounded-full mt-3 block"
+                onClick={() => handleLogout()}
+              >
+                Đăng xuất
+              </button>
+            </div>
           </div>
 
           {/* Form Section */}

@@ -86,43 +86,62 @@ function DirectorPage() {
     }
     console.log(formattedDateOfBirth);
 
-    // Cập nhật lại state với actor đã sửa đổi
     setEditingActor({ ...actor, dateOfBirth: formattedDateOfBirth });
   };
 
   const handleSaveActor = async () => {
-    console.log(editingActor); // Kiểm tra giá trị của editingActor thay vì truyền trực tiếp actor
+    const formData = new FormData();
 
-    const formattedActorData = {
-      name: editingActor.name,
-      gender: editingActor.gender,
-      dateOfBirth: editingActor.dateOfBirth, // Đảm bảo đây là định dạng YYYY-MM-DD
-      job: editingActor.jobName, // Job từ state
-      image: editingActor.image, // Chuyển đổi thành base64 nếu cần hoặc gửi đường dẫn
-    };
+    formData.append("personId", editingActor.id);
+    formData.append(
+      "updatePersonRequest",
+      new Blob(
+        [
+          JSON.stringify({
+            name: editingActor.name,
+            gender: editingActor.gender,
+            dateOfBirth: editingActor.dateOfBirth,
+            job: editingActor.jobName,
+          }),
+        ],
+        { type: "application/json" }
+      )
+    );
+
+    if (editingActor.image) {
+      formData.append("file", editingActor.image);
+    } else {
+      formData.append("file", new Blob());
+    }
 
     try {
-      const response = await instance.put(
-        `/persons/${editingActor.id}`,
-        formattedActorData,
-        {
-          headers: { "Content-Type": "application/json" }, // Đảm bảo Content-Type là application/json
-        }
-      );
+      const response = await instance.put(`/persons/`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
-      console.log(response.data);
+      if (response.data.message === "Update Person Success") {
+        const updatedActor = response.data.result;
 
-      if (response.data.code === 200) {
+        // Tạo query parameter động cho ảnh
+        const updatedImageUrl = `${updatedActor.image}?t=${Date.now()}`;
+
+        // Cập nhật danh sách actor
         setActors(
           actors.map((a) =>
-            a.id === editingActor.id ? response.data.result : a
+            a.id === editingActor.id
+              ? { ...updatedActor, image: updatedImageUrl }
+              : a
           )
         );
+
         setEditingActor(null);
+        alert("Cập nhật thành công!");
       }
     } catch (error) {
       console.error("Error saving actor:", error);
-      alert("Failed to save actor.");
+      alert("Cập nhật thất bại. Vui lòng thử lại.");
     }
   };
 

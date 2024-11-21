@@ -57,7 +57,6 @@ function HomeAdmin() {
   return (
     <div className="home-admin p-4">
       <ToastContainer />
-      <h1 className="text-3xl font-bold mb-4">Admin</h1>
       <Link
         to="/admin/add-movie"
         className="p-2  bg-blue-600 text-white rounded-md mb-3"

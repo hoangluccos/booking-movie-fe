@@ -40,12 +40,12 @@ function LoginForm() {
         const role = introspectRes.data.result.role;
 
         setTimeout(() => {
-          if (role === "MANAGER") {
+          if (role === "ADMIN") {
             nav("/admin");
           } else if (role === "USER") {
             nav("/");
-          } else {
-            nav("/master");
+          } else if (role === "MANAGER") {
+            nav("/admin/movies");
           }
         }, 2000);
       }

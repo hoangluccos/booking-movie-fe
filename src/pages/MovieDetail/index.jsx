@@ -13,6 +13,12 @@ function MovieDetail() {
   const param = useParams();
   const query = useQuery();
   const navigate = useNavigate();
+  const token = JSON.parse(localStorage.getItem("token"));
+  useEffect(() => {
+    if (token === null) {
+      navigate("/login");
+    }
+  }, []);
 
   useEffect(() => {
     (async () => {

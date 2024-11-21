@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import instance from "../../../api/instance";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 function GenrePage() {
   const [genres, setGenres] = useState([]);
-  const [editingId, setEditingId] = useState(null); // ID của hàng đang được chỉnh sửa
-  const [editedValue, setEditedValue] = useState(""); // Giá trị đã chỉnh sửa
-  const [isAdding, setIsAdding] = useState(false); // Trạng thái thêm hàng mới
-  const [newGenre, setNewGenre] = useState(""); // Giá trị của thể loại mới
+  const [editingId, setEditingId] = useState(null);
+  const [editedValue, setEditedValue] = useState("");
+  const [isAdding, setIsAdding] = useState(false);
+  const [newGenre, setNewGenre] = useState("");
 
   useEffect(() => {
     const fetchGenres = async () => {
@@ -23,24 +24,21 @@ function GenrePage() {
 
   const handleEditClick = (id, currentName) => {
     setEditingId(id);
-    setEditedValue(currentName); // Đặt giá trị input bằng tên hiện tại của thể loại
+    setEditedValue(currentName);
   };
 
   const handleSaveClick = async (id) => {
     try {
-      // Gửi API PUT để cập nhật thể loại
-      const payload = { name: editedValue }; // Payload phải tuân theo định dạng UpdateGenreRequest
+      const payload = { name: editedValue };
       const res = await instance.put(`/genres/${id}`, payload);
 
       if (res.data && res.data.message === "Update Genre Success") {
-        // Cập nhật lại danh sách thể loại trong bảng
         setGenres((prevGenres) =>
           prevGenres.map((genre) =>
             genre.id === id ? { ...genre, name: editedValue } : genre
           )
         );
 
-        // Reset trạng thái chỉnh sửa
         setEditingId(null);
         setEditedValue("");
       } else {
@@ -52,20 +50,18 @@ function GenrePage() {
   };
 
   const handleAddClick = () => {
-    setIsAdding(true); // Kích hoạt trạng thái thêm hàng mới
+    setIsAdding(true);
   };
 
   const handleAddSave = async () => {
     try {
-      // Gửi API POST để thêm thể loại mới
-      const payload = { name: newGenre }; // Payload phải tuân theo định dạng CreateGenreRequest
+      const payload = { name: newGenre };
       const res = await instance.post("/genres/", payload);
 
       if (res.data && res.data.message === "Create Genre Success") {
-        const createdGenre = res.data.result; // Dữ liệu thể loại mới từ API
+        const createdGenre = res.data.result;
         setGenres((prevGenres) => [...prevGenres, createdGenre]);
 
-        // Reset trạng thái thêm hàng mới
         setIsAdding(false);
         setNewGenre("");
       } else {
@@ -77,12 +73,27 @@ function GenrePage() {
   };
 
   const handleCancelAdd = () => {
-    setIsAdding(false); // Hủy thêm hàng mới
+    setIsAdding(false);
     setNewGenre("");
+  };
+  const handleDeleteClick = async (id) => {
+    try {
+      const res = await instance.delete(`/genres/${id}`);
+      toast.success(res.data.message);
+      setTimeout(() => {
+        setGenres((prevGenres) =>
+          prevGenres.filter((genre) => genre.id !== id)
+        );
+      }, 1000);
+    } catch (error) {
+      console.error("Error deleting genre:", error);
+      alert("Xóa thể loại thất bại!");
+    }
   };
 
   return (
     <div className="p-6">
+      <ToastContainer />
       <h2 className="text-[30px] font-bold mb-4">Danh sách thể loại</h2>
       <button
         onClick={handleAddClick}
@@ -128,12 +139,20 @@ function GenrePage() {
                       Save
                     </button>
                   ) : (
-                    <button
-                      onClick={() => handleEditClick(genre.id, genre.name)}
-                      className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-blue-600"
-                    >
-                      Chỉnh sửa
-                    </button>
+                    <>
+                      <button
+                        onClick={() => handleEditClick(genre.id, genre.name)}
+                        className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-blue-600 mr-2"
+                      >
+                        Chỉnh sửa
+                      </button>
+                      <button
+                        onClick={() => handleDeleteClick(genre.id)}
+                        className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+                      >
+                        Xóa
+                      </button>
+                    </>
                   )}
                 </td>
               </tr>

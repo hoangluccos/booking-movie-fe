@@ -26,12 +26,15 @@ const RegistrationFlow = () => {
       email: submittedEmail,
     };
     try {
-      const res = await otpInstance.post("/verify/registration", req);
+      let res;
+      isForgetPW === "forget-password"
+        ? (res = await otpInstance.post("/verify/forgotPassword", req))
+        : (res = await otpInstance.post("/verify/registration", req));
       console.log(res.data);
       setStep(2);
     } catch (error) {
       console.log("Sending OTP error:", error);
-      alert("Mail không tồn tại. Hãy thử lại");
+      alert(error.response.data.message);
     } finally {
       setIsLoading(false);
     }
@@ -75,7 +78,9 @@ const RegistrationFlow = () => {
           : (res = await instance.post("/users/", personalInfo));
         console.log(res.data);
         toast.success(res.data?.message || "Thành công");
-        nav("/login");
+        setTimeout(() => {
+          nav("/");
+        }, 2000);
       } catch (error) {
         console.log(error);
       }
@@ -89,7 +94,6 @@ const RegistrationFlow = () => {
         className="absolute inset-0 bg-cover bg-center blur-sm z-[-1]"
         style={{ backgroundImage: `url(${cinemaImage})` }}
       ></div>
-      <ToastContainer />
       <div className="flex items-center justify-center h-full">
         <div className="bg-white p-8 rounded-lg shadow-lg w-[400px] relative">
           {isLoading && (

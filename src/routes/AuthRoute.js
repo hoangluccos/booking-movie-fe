@@ -19,7 +19,11 @@ function AuthRoute() {
   }, []);
   // Khi auth chưa được thiết lập, hiển thị trạng thái chờ.
   if (auth === null) return <div>Loading...</div>;
-  return auth === "MANAGER" ? <Outlet /> : <Navigate to="/login" />;
+  return auth === "MANAGER" || auth === "ADMIN" ? (
+    <Outlet />
+  ) : (
+    <Navigate to="/login" />
+  );
 }
 
 export default AuthRoute;

@@ -57,7 +57,6 @@ function Users() {
   return (
     <div className="home-admin p-4">
       <ToastContainer />
-      <h1 className="text-3xl font-bold mb-4">Admin</h1>
 
       <div className="overflow-x-auto max-w-full">
         <table className="table-auto w-full border-collapse border border-gray-300 text-center">

@@ -93,7 +93,7 @@ function DateSelector() {
           <ul>
             {tickets.map((ticket, index) => (
               <li key={index} className="border-b py-2 text-blue-950">
-                {ticket.name} - {ticket.date} - {ticket.totalPrice} VND
+                {ticket.movieName} - {ticket.date} - {ticket.totalPrice} VND
               </li>
             ))}
           </ul>
