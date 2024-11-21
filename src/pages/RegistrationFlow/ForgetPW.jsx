@@ -18,7 +18,7 @@ const ForgetPW = ({ onSubmit }) => {
     }
     const personalInfo = {
       password: password,
-      confirmPassword: confirmPassword,
+      passwordConfirm: confirmPassword,
     };
 
     onSubmit(personalInfo);

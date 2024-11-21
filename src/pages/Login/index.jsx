@@ -50,8 +50,13 @@ function LoginForm() {
         }, 2000);
       }
     } catch (error) {
-      toast.error("Đăng nhập thất bại");
-      console.error("Login failed", error);
+      toast.error(
+        <>
+          Đăng nhập thất bại <br />
+          {error.response.data.message}
+        </>
+      );
+      console.error("Login failed", error.response.data.message);
     }
   };
 

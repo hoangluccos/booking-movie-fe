@@ -6,6 +6,8 @@ import ForgetPW from "./ForgetPW";
 import cinemaImage from "../../assets/cinema.jpg";
 import instance, { otpInstance } from "../../api/instance";
 import { useLocation, useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const RegistrationFlow = () => {
   const [step, setStep] = useState(1);
@@ -52,6 +54,7 @@ const RegistrationFlow = () => {
       }
     } catch (error) {
       console.log("Verify OTP error:", error);
+      alert("Mã OTP không chính xác!");
     } finally {
       setIsLoading(false);
     }
@@ -67,10 +70,11 @@ const RegistrationFlow = () => {
     const createUser = async () => {
       try {
         let res;
-        isForgetPW
+        isForgetPW === "forget-password"
           ? (res = await instance.put("/users/changePassword", personalInfo))
           : (res = await instance.post("/users/", personalInfo));
         console.log(res.data);
+        toast.success(res.data?.message || "Thành công");
         nav("/login");
       } catch (error) {
         console.log(error);
@@ -85,7 +89,7 @@ const RegistrationFlow = () => {
         className="absolute inset-0 bg-cover bg-center blur-sm z-[-1]"
         style={{ backgroundImage: `url(${cinemaImage})` }}
       ></div>
-
+      <ToastContainer />
       <div className="flex items-center justify-center h-full">
         <div className="bg-white p-8 rounded-lg shadow-lg w-[400px] relative">
           {isLoading && (

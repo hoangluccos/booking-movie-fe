@@ -113,6 +113,13 @@ function HomeAdmin() {
                   >
                     Delete
                   </button>
+                  <hr />
+                  <Link
+                    to={`/admin/showtime/${movie.id}`}
+                    className="bg-blue-400 text-white px-2 py-1 rounded m-1"
+                  >
+                    Show times
+                  </Link>
                 </td>
               </tr>
             ))}

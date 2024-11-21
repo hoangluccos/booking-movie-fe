@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import instance from "../../../api/instance";
 import ProfileImage from "../../../assets/profile.png";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Users() {
   const [movies, setMovies] = useState([]);
@@ -10,8 +12,11 @@ function Users() {
   useEffect(() => {
     (async () => {
       const res = await instance.get("/users/");
-      console.log(res);
-      setMovies(res.data.result);
+      const usersWithBanStatus = res.data.result.map((user) => ({
+        ...user,
+        banned: false,
+      }));
+      setMovies(usersWithBanStatus);
     })();
   }, []);
 
@@ -31,8 +36,27 @@ function Users() {
     }
   };
 
+  const handleBanUser = (id) => {
+    const apiBan = async () => {
+      try {
+        const res = await instance.put(`/users/ban/${id}`);
+        toast.success(res.data.message);
+
+        setMovies((prevMovies) =>
+          prevMovies.map((user) =>
+            user.id === id ? { ...user, banned: !user.banned } : user
+          )
+        );
+      } catch (error) {
+        console.log("Error:", error.response?.data?.message || error.message);
+      }
+    };
+    apiBan();
+  };
+
   return (
     <div className="home-admin p-4">
+      <ToastContainer />
       <h1 className="text-3xl font-bold mb-4">Admin</h1>
 
       <div className="overflow-x-auto max-w-full">
@@ -67,6 +91,7 @@ function Users() {
                       src={movie.avatar}
                       alt={movie.name}
                       className="w-24 h-24 object-cover rounded-md"
+                      onError={(e) => (e.target.src = ProfileImage)}
                     />
                   ) : (
                     <img
@@ -84,11 +109,16 @@ function Users() {
                   ))}
                 </td>
                 <td className="p-2 border border-gray-300">
-                  <button className="bg-yellow-400 text-white px-3 py-1 rounded m-1">
+                  {/* <button className="bg-yellow-400 text-white px-3 py-1 rounded m-1">
                     Edit
-                  </button>
-                  <button className="bg-red-500 text-white px-3 py-1 rounded m-1">
-                    Delete
+                  </button> */}
+                  <button
+                    onClick={() => handleBanUser(movie.id)}
+                    className={`${
+                      movie.banned ? "bg-green-500" : "bg-red-500"
+                    } text-white px-3 py-1 rounded m-1`}
+                  >
+                    {movie.banned ? "UNBAN" : "BAN"}
                   </button>
                 </td>
               </tr>

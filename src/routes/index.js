@@ -19,6 +19,7 @@ import Dashboard from "../pages/AdminPages/Dashboard";
 import GenrePage from "../pages/AdminPages/GenrePage";
 import ActorPage from "../pages/AdminPages/ActorPage";
 import DirectorPage from "../pages/AdminPages/DirectorPage";
+import ShowTimePage from "../pages/AdminPages/ShowTimePage";
 
 import CommonLayout from "../components/Layout/CommonLayout";
 import NotSlider from "../components/Layout/NotSlider";
@@ -103,6 +104,11 @@ const privateRoutes = [
   {
     path: "/admin/movies",
     component: HomeAdmin,
+    layout: AdminLayout,
+  },
+  {
+    path: "/admin/showtime/:id",
+    component: ShowTimePage,
     layout: AdminLayout,
   },
   {
