@@ -3,6 +3,9 @@ import instance from "../../../api/instance";
 import SuccessModal from "../../../components/SuccessModal";
 import { useParams } from "react-router-dom";
 import { parse, format } from "date-fns"; // Thư viện date-fns
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 const MovieForm = () => {
   const { id } = useParams(); // Lấy id từ URL
   const [isModalOpen, setIsModalOpen] = useState(false); // Trạng thái để hiển thị modal
@@ -130,9 +133,11 @@ const MovieForm = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    const parsedValue =
+      name === "rate" || name === "duration" ? Math.max(1, value) : value;
     setFormData({
       ...formData,
-      [name]: value,
+      [name]: parsedValue,
     });
   };
 
@@ -220,6 +225,7 @@ const MovieForm = () => {
           });
 
       if (response.data.code === 200) {
+        toast.success(response.data?.message || "Thành công");
         setModalData({
           title: id ? "Edit Movie" : "Add Movie",
           detail: response.data.message,
@@ -229,7 +235,8 @@ const MovieForm = () => {
       console.log("Movie submitted:", response.data);
     } catch (error) {
       console.error("Error submitting movie:", error);
-      alert("Failed to submit movie.");
+      // alert("Failed to submit movie.");
+      toast.error(error.response.data.message);
     }
   };
 
@@ -239,6 +246,7 @@ const MovieForm = () => {
   console.log(formData);
   return (
     <div className="max-w-6xl mx-auto p-4 rounded shadow-lg bg-gradient-to-r from-slate-400 via-indigo-500 to-indigo-700 h-full">
+      <ToastContainer />
       <h2 className="text-md font-bold text-white mb-3 text-center">
         {id ? "Edit Movie" : "Add Movie"}
       </h2>
@@ -256,8 +264,16 @@ const MovieForm = () => {
             type: "number",
             name: "duration",
             min: "60",
+            onBlur: (e) => handleChange(e),
           },
-          { label: "Rate", type: "number", name: "rate", step: "0.1" },
+          {
+            label: "Rate",
+            type: "number",
+            name: "rate",
+            step: "0.1",
+            min: "1",
+            onBlur: (e) => handleChange(e),
+          },
         ].map(({ label, ...inputProps }) => (
           <div key={inputProps.name} className="col-span-1">
             <label className="block text-md font-semibold text-gradient bg-clip-text text-transparent bg-gradient-to-r from-indigo-700 via-purple-700 to-pink-700">

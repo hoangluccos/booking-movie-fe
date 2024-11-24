@@ -2,11 +2,9 @@ import React, { useEffect, useState } from "react";
 import CouponItem from "../../components/CouponItem";
 import instance from "../../api/instance";
 import { useNavigate } from "react-router-dom";
-
+import img from "../../assets/cinema.jpg";
 function TheatersPage() {
   const [theaters, setTheaters] = useState([]);
-  const img =
-    "https://lh3.googleusercontent.com/p/AF1QipPFD5rcTPXnFkTC-mP1_fXRg0T-c8Ez51xpwnJy=s1360-w1360-h1020";
   const navigate = useNavigate();
   const token = JSON.parse(localStorage.getItem("token"));
   useEffect(() => {

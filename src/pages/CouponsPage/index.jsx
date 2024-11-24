@@ -11,17 +11,17 @@ function CouponsPage() {
         <CouponItem
           img={img}
           title="Cơ hội sở hữu LABUBU FLIP WITH ME 40cm tại HL-Theaters !"
-          detail="Đến BHD Star mua combo để có cơ hội sở hữu LABUBU miễn phí ngay nhéee"
+          detail="Đến 3HL Movies mua combo để có cơ hội sở hữu LABUBU miễn phí ngay nhéee"
         ></CouponItem>
         <CouponItem
-          img={img}
-          title="Cơ hội sở hữu LABUBU FLIP WITH ME 40cm tại HL-Theaters !"
-          detail="Đến BHD Star mua combo để có cơ hội sở hữu LABUBU miễn phí ngay nhéee"
+          img="https://bhdstar.vn/wp-content/uploads/2024/11/466793530_1003149731851513_661564586689858699_n.jpg"
+          title="Siêu bão miễn phí vé"
+          detail="Đến 3HL Movies mua combo để có cơ hội sở hữu LABUBU miễn phí ngay nhéee"
         ></CouponItem>
         <CouponItem
-          img={img}
-          title="Cơ hội sở hữu LABUBU FLIP WITH ME 40cm tại HL-Theaters !"
-          detail="Đến BHD Star mua combo để có cơ hội sở hữu LABUBU miễn phí ngay nhéee"
+          img="https://bhdstar.vn/wp-content/uploads/2024/11/bap-free-vui-het-y.jpg"
+          title="Bắp Free tại HL-Theaters !"
+          detail="Tặng ngay bắp miễn phí KHÔNG phụ thu đổi vị dành cho 2 người khi xem phim."
         ></CouponItem>
       </div>
     </div>

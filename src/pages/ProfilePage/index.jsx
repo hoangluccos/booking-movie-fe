@@ -115,9 +115,13 @@ const ProfilePage = () => {
           <div className="bg-white border rounded p-5 text-center w-1/3">
             <div className="avatar">
               <img
-                src={previewAvatar}
+                src={previewAvatar || ProfileImage}
                 alt="avatar"
                 className="w-24 h-24 rounded-full mx-auto mb-3 cursor-pointer"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = ProfileImage;
+                }}
                 onClick={() => document.getElementById("avatarInput").click()}
               />
               <input

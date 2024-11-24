@@ -33,6 +33,7 @@ function GenrePage() {
       const res = await instance.put(`/genres/${id}`, payload);
 
       if (res.data && res.data.message === "Update Genre Success") {
+        toast.success("Update Person thành công!");
         setGenres((prevGenres) =>
           prevGenres.map((genre) =>
             genre.id === id ? { ...genre, name: editedValue } : genre
@@ -61,7 +62,7 @@ function GenrePage() {
       if (res.data && res.data.message === "Create Genre Success") {
         const createdGenre = res.data.result;
         setGenres((prevGenres) => [...prevGenres, createdGenre]);
-
+        toast.success("Add Person thành công!");
         setIsAdding(false);
         setNewGenre("");
       } else {
@@ -104,7 +105,7 @@ function GenrePage() {
       <table className="w-full border-collapse border border-gray-300">
         <thead>
           <tr className="bg-gray-200">
-            <th className="border border-gray-300 px-4 py-2 text-left">ID</th>
+            {/* <th className="border border-gray-300 px-4 py-2 text-left">ID</th> */}
             <th className="border border-gray-300 px-4 py-2 text-left">
               Tên thể loại
             </th>
@@ -117,7 +118,7 @@ function GenrePage() {
           {genres.length > 0 ? (
             genres.map((genre) => (
               <tr key={genre.id}>
-                <td className="border border-gray-300 px-4 py-2">{genre.id}</td>
+                {/* <td className="border border-gray-300 px-4 py-2">{genre.id}</td> */}
                 <td className="border border-gray-300 px-4 py-2">
                   {editingId === genre.id ? (
                     <input

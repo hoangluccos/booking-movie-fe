@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import instance from "../../../api/instance";
 import instanceImg from "../../../assets/profile.png";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function DirectorPage() {
   const [actors, setActors] = useState([]);
@@ -127,6 +129,7 @@ function DirectorPage() {
 
         // Tạo query parameter động cho ảnh
         const updatedImageUrl = `${updatedActor.image}?t=${Date.now()}`;
+        toast.success("Update Person thành công!");
 
         // Cập nhật danh sách actor
         setActors(
@@ -138,22 +141,25 @@ function DirectorPage() {
         );
 
         setEditingActor(null);
-        alert("Cập nhật thành công!");
+        // alert("Cập nhật thành công!");
       }
     } catch (error) {
       console.error("Error saving actor:", error);
-      alert("Cập nhật thất bại. Vui lòng thử lại.");
+      // alert("Cập nhật thất bại. Vui lòng thử lại.");
+      toast.error(error.response.data.message);
     }
   };
 
   const handleDeleteActor = async (actorId) => {
     const res = await instance.delete(`/persons/${actorId}`);
     console.log(res.data);
+    toast.success("Delete Director Successfully");
     setActors(actors.filter((actor) => actor.id !== actorId));
   };
 
   return (
     <div className="p-6">
+      <ToastContainer />
       <h2 className="text-2xl font-bold mb-4">Danh Sách Director</h2>
 
       {/* Form thêm Director */}
@@ -213,7 +219,7 @@ function DirectorPage() {
       <table className="table-auto w-full border-collapse">
         <thead>
           <tr>
-            <th className="border px-4 py-2">ID</th>
+            {/* <th className="border px-4 py-2">ID</th> */}
             <th className="border px-4 py-2">Tên</th>
             <th className="border px-4 py-2">Giới Tính</th>
             <th className="border px-4 py-2">Ngày Sinh</th>
@@ -224,7 +230,7 @@ function DirectorPage() {
         <tbody>
           {actors.map((actor) => (
             <tr key={actor.id}>
-              <td className="border px-4 py-2">{actor.id}</td>
+              {/* <td className="border px-4 py-2">{actor.id}</td> */}
               <td className="border px-4 py-2">
                 {editingActor && editingActor.id === actor.id ? (
                   <input

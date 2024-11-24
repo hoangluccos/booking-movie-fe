@@ -57,9 +57,7 @@ const PaymentCallback = () => {
           <p className="mb-2 font-bold">
             Số tiền: {paymentInfo.amount.toLocaleString()} VNĐ
           </p>
-          <p className="mb-2 font-bold">
-            Thông tin đơn hàng: {paymentInfo.orderInfo}
-          </p>
+          <p className="mb-2 font-bold">{paymentInfo.orderInfo}</p>
           <button
             className="p-2 bg-blue-500 text-white rounded"
             onClick={() => {

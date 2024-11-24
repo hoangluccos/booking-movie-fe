@@ -2,12 +2,16 @@ import React, { useEffect, useState } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import instance from "../../api/instance";
 import TicketModal from "../../components/TicketModal";
+import CouponsPage from "../../pages/CouponsPage";
+import CouponItem from "../../components/CouponItem";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
 
 function MovieDetail() {
+  const img =
+    "https://bhdstar.vn/wp-content/uploads/2024/10/poster-labubu-web-1.jpg";
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [infoMovie, setInfoMovie] = useState({});
   const param = useParams();
@@ -24,6 +28,7 @@ function MovieDetail() {
     (async () => {
       try {
         const res = await instance.get(`/movies/${param.id}`);
+        console.log(res.data.result);
         setInfoMovie(res.data.result);
       } catch (error) {
         console.log(error);
@@ -46,7 +51,7 @@ function MovieDetail() {
   return (
     <div className="mt-5 ">
       <div className="content mt-6 pb-3 flex flex-row gap-[40px] ">
-        <div className="w-[480px] h-[720px]">
+        <div className="w-[480px] h-[500px]">
           <img src={infoMovie.image} alt="" className="w-full" />
         </div>
         <div className="">
@@ -63,14 +68,15 @@ function MovieDetail() {
           </div>
           <div className="flex items-center mt-5">
             <i className="fa-solid fa-tag"></i>
-          </div>
-          <div className="mt-5 mh-25">
-            <h4 className="fw-bold">MÔ TẢ</h4>
-            <p>{infoMovie.content}</p>
+            <p className="mx-3 mb-0">{infoMovie.language}</p>
           </div>
           <div className="mh-25 mt-5">
             <h4 className="fw-bold">NỘI DUNG</h4>
             <p>{infoMovie.content}</p>
+          </div>
+          <div className="mh-25 mt-5">
+            <h4 className="fw-bold">KHỞI CHIẾU</h4>
+            <p>{infoMovie.premiere}</p>
           </div>
           <button
             onClick={() => setIsModalOpen(true)}
@@ -79,6 +85,26 @@ function MovieDetail() {
             <i className="fa-solid fa-ticket"></i> Mua vé
           </button>
           <TicketModal isOpen={isModalOpen} onRequestClose={closeModal} />
+        </div>
+      </div>
+      <div className="content">
+        <h3 className="fw-bold text-center ">ƯU ĐÃI HIỆN CÓ</h3>
+        <div className="flex flex-wrap gap-[10px]">
+          <CouponItem
+            img={img}
+            title="Cơ hội sở hữu LABUBU FLIP WITH ME 40cm tại HL-Theaters !"
+            detail="Đến 3HL Movies mua combo để có cơ hội sở hữu LABUBU miễn phí ngay nhéee"
+          ></CouponItem>
+          <CouponItem
+            img="https://bhdstar.vn/wp-content/uploads/2024/11/466793530_1003149731851513_661564586689858699_n.jpg"
+            title="Siêu bão miễn phí vé"
+            detail="Đến 3HL Movies mua combo để có cơ hội sở hữu LABUBU miễn phí ngay nhéee"
+          ></CouponItem>
+          <CouponItem
+            img="https://bhdstar.vn/wp-content/uploads/2024/11/bap-free-vui-het-y.jpg"
+            title="Bắp Free tại HL-Theaters !"
+            detail="Tặng ngay bắp miễn phí KHÔNG phụ thu đổi vị dành cho 2 người khi xem phim."
+          ></CouponItem>
         </div>
       </div>
     </div>

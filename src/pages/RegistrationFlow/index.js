@@ -34,7 +34,8 @@ const RegistrationFlow = () => {
       setStep(2);
     } catch (error) {
       console.log("Sending OTP error:", error);
-      alert(error.response.data.message);
+      // alert(error.response.data.message);
+      toast.error(error.response.data.message);
     } finally {
       setIsLoading(false);
     }
@@ -57,7 +58,8 @@ const RegistrationFlow = () => {
       }
     } catch (error) {
       console.log("Verify OTP error:", error);
-      alert("Mã OTP không chính xác!");
+      // alert("Mã OTP không chính xác!");
+      toast.error(error.response.data.message);
     } finally {
       setIsLoading(false);
     }
@@ -83,6 +85,7 @@ const RegistrationFlow = () => {
         }, 2000);
       } catch (error) {
         console.log(error);
+        toast.error(error.response.data.message);
       }
     };
     createUser();
@@ -90,6 +93,7 @@ const RegistrationFlow = () => {
 
   return (
     <div className="relative w-full h-screen">
+      <ToastContainer />
       <div
         className="absolute inset-0 bg-cover bg-center blur-sm z-[-1]"
         style={{ backgroundImage: `url(${cinemaImage})` }}

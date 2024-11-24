@@ -6,9 +6,10 @@ import "./ImageSlider.scss";
 
 const ImageSlider = () => {
   const images = [
-    "https://cinestar.com.vn/_next/image/?url=https%3A%2F%2Fapi-website.cinestar.com.vn%2Fmedia%2FMageINIC%2Fbannerslider%2F1215wx365h.jpg&w=1920&q=50",
+    "https://i.ytimg.com/vi/8l4crgVt36Y/maxresdefault.jpg",
     "https://cinestar.com.vn/_next/image/?url=https%3A%2F%2Fapi-website.cinestar.com.vn%2Fmedia%2FMageINIC%2Fbannerslider%2Fcong-chua-noi-loan.jpg&w=1920&q=50",
     "https://cinestar.com.vn/_next/image/?url=https%3A%2F%2Fapi-website.cinestar.com.vn%2Fmedia%2FMageINIC%2Fbannerslider%2Fbap-nuoc-onl.webp&w=1920&q=50",
+    "https://i.ytimg.com/vi/q-wr0JDcvVk/maxresdefault.jpg",
   ];
 
   const settings = {
