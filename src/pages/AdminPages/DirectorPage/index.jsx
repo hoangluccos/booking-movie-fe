@@ -230,7 +230,7 @@ function DirectorPage() {
         <tbody>
           {actors.map((actor) => (
             <tr key={actor.id}>
-              {/* <td className="border px-4 py-2">{actor.id}</td> */}
+              {/* <td className="border px-4 py-2">{actor.id}</td>   */}
               <td className="border px-4 py-2">
                 {editingActor && editingActor.id === actor.id ? (
                   <input

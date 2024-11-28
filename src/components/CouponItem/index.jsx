@@ -1,7 +1,7 @@
 import React from "react";
 function CouponItem({ img, title, detail }) {
   return (
-    <div className="m-3 w-[360px] h-[300px] mt">
+    <div className="item m-3 w-[28%] h-[300px] mt">
       <img src={img} alt="" className="w-full" />
       <h4 className="font-bold mt-3">{title}</h4>
       <p className="font-light text-[17px]">{detail}</p>

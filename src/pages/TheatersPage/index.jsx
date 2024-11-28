@@ -26,7 +26,7 @@ function TheatersPage() {
   }, []);
   return (
     <div className="content mt-4">
-      <div className="flex flex-wrap gap-[10px]">
+      <div className="theater-page flex flex-wrap gap-[10px]">
         {theaters.map((theater) => {
           return (
             <CouponItem

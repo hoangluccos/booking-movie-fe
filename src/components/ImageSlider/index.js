@@ -2,7 +2,6 @@ import React from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import "./ImageSlider.scss";
 
 const ImageSlider = () => {
   const images = [
@@ -30,7 +29,7 @@ const ImageSlider = () => {
             <img
               src={img}
               alt={`Slide ${index + 1}`}
-              style={{ width: "1200px", height: "400px" }}
+              className="slide-image w-full h-[400px] object-contain"
             />
           </div>
         ))}

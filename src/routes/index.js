@@ -20,6 +20,7 @@ import GenrePage from "../pages/AdminPages/GenrePage";
 import ActorPage from "../pages/AdminPages/ActorPage";
 import DirectorPage from "../pages/AdminPages/DirectorPage";
 import ShowTimePage from "../pages/AdminPages/ShowTimePage";
+import SearchPage from "../pages/SearchPage";
 
 import CommonLayout from "../components/Layout/CommonLayout";
 import NotSlider from "../components/Layout/NotSlider";
@@ -91,6 +92,11 @@ const publicRoutes = [
   {
     path: "/payment-status",
     component: PaymentCallback,
+    layout: NotSlider,
+  },
+  {
+    path: "/search",
+    component: SearchPage,
     layout: NotSlider,
   },
 ];

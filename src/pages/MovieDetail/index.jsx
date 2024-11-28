@@ -51,7 +51,7 @@ function MovieDetail() {
   return (
     <div className="mt-5 ">
       <div className="content mt-6 pb-3 flex flex-row gap-[40px] ">
-        <div className="w-[480px] h-[500px]">
+        <div className="w-[40%] h-[40%]">
           <img src={infoMovie.image} alt="" className="w-full" />
         </div>
         <div className="">
@@ -89,7 +89,7 @@ function MovieDetail() {
       </div>
       <div className="content">
         <h3 className="fw-bold text-center ">ƯU ĐÃI HIỆN CÓ</h3>
-        <div className="flex flex-wrap gap-[10px]">
+        <div className="flex flex-wrap gap-[10px] justify-center">
           <CouponItem
             img={img}
             title="Cơ hội sở hữu LABUBU FLIP WITH ME 40cm tại HL-Theaters !"

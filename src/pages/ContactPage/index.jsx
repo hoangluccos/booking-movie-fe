@@ -3,7 +3,7 @@ import GroupImage from "../../assets/anhNhom.jpg";
 function ContactPage() {
   return (
     <div className="content mt-4 flex gap-8">
-      <div className="w-[400px] rounded mt-4">
+      <div className="w-[50%] rounded mt-4">
         <img className="w-full" src={GroupImage} alt="" />
       </div>
       <div className="mt-4">
