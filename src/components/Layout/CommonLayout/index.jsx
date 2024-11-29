@@ -21,13 +21,22 @@ function CommonLayout({ children }) {
           <i className="fa-solid fa-square-xmark"></i>
         </label>
         <ul className="list-navigation ">
-          <Link className="block m-5 font-bold text-[28px]" to={"/coupons"}>
+          <Link
+            className="flex items-center pt-[5px] m-5 font-bold text-[28px] hover:bg-gray-400 rounded"
+            to={"/coupons"}
+          >
             ƯU ĐÃI
           </Link>
-          <Link className="block m-5 font-bold text-[28px]" to={"/theaters"}>
+          <Link
+            className="flex items-center pt-[5px] m-5 font-bold text-[28px] hover:bg-gray-400 rounded"
+            to={"/theaters"}
+          >
             RẠP PHIM
           </Link>
-          <Link className="block m-5 font-bold text-[28px]" to={"/contact"}>
+          <Link
+            className="flex items-center pt-[5px] m-5 font-bold text-[28px] hover:bg-gray-400 rounded"
+            to={"/contact"}
+          >
             LIÊN HỆ
           </Link>
         </ul>

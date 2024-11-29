@@ -50,8 +50,8 @@ function MovieDetail() {
   };
   return (
     <div className="mt-5 ">
-      <div className="content mt-6 pb-3 flex flex-row gap-[40px] ">
-        <div className="w-[40%] h-[40%]">
+      <div className="content movie-detail mt-6 pb-3 flex flex-row gap-[40px] ">
+        <div className="w-[40%] h-[40%] movie-banner">
           <img src={infoMovie.image} alt="" className="w-full" />
         </div>
         <div className="">
@@ -87,9 +87,9 @@ function MovieDetail() {
           <TicketModal isOpen={isModalOpen} onRequestClose={closeModal} />
         </div>
       </div>
-      <div className="content">
+      <div className="content coupons">
         <h3 className="fw-bold text-center ">ƯU ĐÃI HIỆN CÓ</h3>
-        <div className="flex flex-wrap gap-[10px] justify-center">
+        <div className=" flex flex-wrap gap-[10px] justify-center">
           <CouponItem
             img={img}
             title="Cơ hội sở hữu LABUBU FLIP WITH ME 40cm tại HL-Theaters !"

@@ -110,9 +110,9 @@ const ProfilePage = () => {
     <div className="my-4">
       <div className="content mx-auto my-4">
         <ToastContainer />
-        <div className="flex">
+        <div className="flex profile-info">
           {/* Sidebar */}
-          <div className="bg-white border rounded p-5 text-center w-1/3">
+          <div className="form-avatar bg-white border rounded p-5 text-center w-1/3">
             <div className="avatar">
               <img
                 src={previewAvatar || ProfileImage}
@@ -152,7 +152,7 @@ const ProfilePage = () => {
 
           {/* Form Section */}
           <form
-            className="bg-white border rounded p-5 ml-5 flex-grow"
+            className="form-input bg-white border rounded p-5 ml-5 flex-grow"
             onSubmit={handleSubmit(onSubmit)}
           >
             <h2 className="font-bold mb-5">Thông tin cá nhân</h2>

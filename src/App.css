@@ -85,6 +85,40 @@ a {
   }
 }
 @media only screen and (max-width: 739px) {
+  .movie-detail {
+    flex-direction: column;
+  }
+  .movie-detail .movie-banner {
+    width: 100%;
+  }
+  .coupons {
+    display: hidden;
+  }
+  .modal-ticket {
+    width: 100%;
+  }
+  .modal-ticket-day {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .profile-info {
+    flex-direction: column;
+  }
+  .form-avatar {
+    width: 100%;
+  }
+  .form-input {
+    width: 100%;
+    margin-left: 0;
+    margin-top: 8px;
+  }
+  .get-otp {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .get-otp input {
+    width: 100%;
+    justify-self: center;
+  }
 }
 @media only screen and (min-width: 740px) and (max-width: 1023px) {
 }

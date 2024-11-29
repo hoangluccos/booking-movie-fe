@@ -71,7 +71,7 @@ function ChangePassWord({ userData }) {
         <div className="get-otp flex items-center space-x-4">
           <button
             onClick={handleGetOTP}
-            className="bg-blue-300 py-2 px-4 rounded-full"
+            className="bg-blue-300 py-2 px-4 rounded-full "
             disabled={isSendedOTP}
           >
             Get OTP
@@ -88,7 +88,7 @@ function ChangePassWord({ userData }) {
 
         {/* Form Section */}
         <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="info-item mb-4">
+          <div className="info-item mb-4 mt-4">
             <label className="block mb-2">Mật khẩu mới</label>
             <input
               type="password"

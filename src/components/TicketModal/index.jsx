@@ -56,7 +56,7 @@ const TicketModal = ({ isOpen, onRequestClose }) => {
     <Modal
       isOpen={isOpen}
       onRequestClose={onRequestClose}
-      className="bg-white p-6 rounded-md w-[1000px] mx-auto mt-[140px] overflow-y-auto max-h-[80vh]"
+      className="modal-ticket bg-white p-6 rounded-md w-[75%] mx-auto mt-[140px] overflow-y-auto max-h-[80vh]"
       overlayClassName="fixed inset-0 bg-black bg-opacity-50"
     >
       <div className="flex justify-end mb-4">
@@ -64,7 +64,7 @@ const TicketModal = ({ isOpen, onRequestClose }) => {
           X
         </button>
       </div>
-      <div className="grid grid-cols-7 gap-2 mb-4">
+      <div className="modal-ticket-day grid grid-cols-7 gap-3 mb-4">
         {days.map((date, index) => (
           <button
             key={index}

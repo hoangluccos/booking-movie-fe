@@ -8,7 +8,7 @@ function NotSlider({ children }) {
     <div className="">
       <Header />
       <label for="nav-tablet-input" className="navigation hidden ">
-        <i className="fa-solid fa-bars text-[28px] text-white ml-[8px] mt-[4px] text-center"></i>
+        <i className="fa-solid fa-bars text-[28px] text-black ml-[8px] mt-[4px] text-center"></i>
       </label>
       <input hidden type="checkbox" id="nav-tablet-input" />
       <div className="navigation_overlay"></div>
@@ -20,13 +20,22 @@ function NotSlider({ children }) {
           <i className="fa-solid fa-square-xmark"></i>
         </label>
         <ul className="list-navigation ">
-          <Link className="block m-5 font-bold text-[28px]" to={"/coupons"}>
+          <Link
+            className="flex items-center pt-[5px] m-5 font-bold text-[28px] hover:bg-gray-400 rounded"
+            to={"/coupons"}
+          >
             ƯU ĐÃI
           </Link>
-          <Link className="block m-5 font-bold text-[28px]" to={"/theaters"}>
+          <Link
+            className="flex items-center pt-[5px] m-5 font-bold text-[28px] hover:bg-gray-400 rounded"
+            to={"/theaters"}
+          >
             RẠP PHIM
           </Link>
-          <Link className="block m-5 font-bold text-[28px]" to={"/contact"}>
+          <Link
+            className="flex items-center pt-[5px] m-5 font-bold text-[28px] hover:bg-gray-400 rounded"
+            to={"/contact"}
+          >
             LIÊN HỆ
           </Link>
         </ul>
