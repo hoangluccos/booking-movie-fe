@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { QRCodeCanvas } from "qrcode.react"; // Import thư viện mã QR
 import instance from "../../api/instance";
+
 const PaymentHistory = () => {
   const [transactions, setTransactions] = useState([]);
 
@@ -18,54 +20,55 @@ const PaymentHistory = () => {
   }, []);
 
   return (
-    <div className="my-4">
+    <div className="my-4 flex-grow">
       <div className="content mt-6 mb-5">
         <div className="payment-history">
-          <h2 className="text-2xl font-bold">Lịch sử giao dịch</h2>
-          <div className="filters flex justify-end items-center mb-5">
-            <select className="mr-2 p-2 text-sm border border-gray-300 rounded">
-              <option>Đặt vé</option>
-            </select>
-            {/* <input
-              type="month"
-              className="mr-2 p-2 text-sm border border-gray-300 rounded"
-            />
-            <button className="mr-2 p-2 text-sm bg-red-500 text-white rounded">
-              X
-            </button> */}
-          </div>
+          <h2 className="text-2xl font-bold mb-5">Lịch sử giao dịch</h2>
+          <p className="text-red-500 mb-3 underline">
+            Hãy đưa mã QR phía dưới cho nhân viên
+          </p>
           <table className="w-full border-collapse">
             <thead>
               <tr>
                 <th className="bg-gray-200 p-3 text-left">STT</th>
-                <th className="bg-gray-200 p-3 text-left">
-                  Thời gian giao dịch
-                </th>
-                <th className="bg-gray-200 p-3 text-left">Mã lấy vé</th>
-                <th className="bg-gray-200 p-3 text-left">Thông tin rạp</th>
+                <th className="bg-gray-200 p-3 text-left">Mã QR</th>
+                <th className="bg-gray-200 p-3 text-left">Phim - Thời gian</th>
                 <th className="bg-gray-200 p-3 text-left">Tổng tiền</th>
-                <th className="bg-gray-200 p-3 text-left">Vị trí</th>
               </tr>
             </thead>
             <tbody>
               {transactions.length === 0 ? (
                 <tr>
-                  <td colSpan="6" className="text-center p-3">
+                  <td colSpan="4" className="text-center p-3">
                     Không có giao dịch nào
                   </td>
                 </tr>
               ) : (
                 transactions.map((transaction, index) => {
-                  const seatLocations = transaction.seats
-                    .map((seat) => `${seat.locateRow}${seat.locateColumn}`)
-                    .join(", ");
+                  // Ghép thông tin vào mã QR
+                  const qrData = {
+                    ticketId: transaction.id,
+                    seats: transaction.seats.map(
+                      (seat) => `${seat.locateRow}${seat.locateColumn}`
+                    ),
+                    movieName: transaction.movieName,
+                    startTime: transaction.startTime,
+                    endTime: transaction.endTime,
+                    totalPrice: transaction.totalPrice,
+                  };
+
                   return (
                     <tr key={transaction.id}>
                       <td className="p-3 border">{index + 1}</td>
                       <td className="p-3 border">
-                        {transaction.date} {transaction.time}
+                        <QRCodeCanvas
+                          value={JSON.stringify(qrData)}
+                          size={84}
+                          bgColor="#ffffff"
+                          fgColor="#000000"
+                          level="H"
+                        />
                       </td>
-                      <td className="p-3 border">{transaction.id}</td>
                       <td className="p-3 border">
                         {transaction.movieName} - {transaction.startTime} -{" "}
                         {transaction.endTime}
@@ -73,14 +76,13 @@ const PaymentHistory = () => {
                       <td className="p-3 border">
                         {transaction.totalPrice} VND
                       </td>
-                      <td className="p-3 border">{seatLocations}</td>
                     </tr>
                   );
                 })
               )}
               <tr>
                 <td
-                  colSpan="5"
+                  colSpan="3"
                   className="font-bold text-right p-3 border border-gray-300"
                 >
                   Tổng cộng

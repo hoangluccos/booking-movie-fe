@@ -8,7 +8,7 @@ const SeatSelection = () => {
   const location = useLocation();
   const movieID = location.state;
   const [selectedSeats, setSelectedSeats] = useState([]);
-  const [selectedSeatsID, setSelectedSeatsID] = useState([]); // Thêm trạng thái để lưu ID của các ghế được chọn
+  const [selectedSeatsID, setSelectedSeatsID] = useState([]);
   const [seats, setSeats] = useState([]);
   const [movie, setMovie] = useState({});
 
@@ -16,10 +16,9 @@ const SeatSelection = () => {
     const fetchData = async () => {
       try {
         const response = await instance.get(`/movies/${movieID}`);
-        console.log(response.data.result);
         setMovie(response.data.result);
       } catch (error) {
-        console.error("Error fetching seats:", error);
+        console.error("Error fetching movie data:", error);
       }
     };
     fetchData();
@@ -29,7 +28,6 @@ const SeatSelection = () => {
     const fetchSeats = async () => {
       try {
         const response = await instance.get(`/showtimes/${showtimeId}`);
-        console.log(response.data.result);
         setSeats(response.data.result);
       } catch (error) {
         console.error("Error fetching seats:", error);
@@ -38,10 +36,8 @@ const SeatSelection = () => {
     fetchSeats();
   }, [showtimeId]);
 
-  // Tạo key cho ghế từ row và column
   const getSeatKey = (row, column) => `${row}-${column}`;
 
-  // Toggle ghế chọn
   const toggleSeatSelection = (seat) => {
     const seatKey = getSeatKey(seat.locateRow, seat.locateColumn);
 
@@ -51,24 +47,40 @@ const SeatSelection = () => {
         : [...prevSelected, seatKey]
     );
 
-    setSelectedSeatsID(
-      (prevIDs) =>
-        prevIDs.includes(seat.id)
-          ? prevIDs.filter((id) => id !== seat.id) // Bỏ ID nếu đã chọn trước đó
-          : [...prevIDs, seat.id] // Thêm ID mới vào danh sách
+    setSelectedSeatsID((prevIDs) =>
+      prevIDs.includes(seat.id)
+        ? prevIDs.filter((id) => id !== seat.id)
+        : [...prevIDs, seat.id]
     );
   };
 
-  // Tạo các hàng và cột từ API
-  const rows = [...new Set(seats.map((seat) => seat.locateRow))]; // Tạo danh sách hàng duy nhất
-  const columns = Math.max(...seats.map((seat) => seat.locateColumn)); // Xác định số cột từ dữ liệu ghế
+  const rows = [...new Set(seats.map((seat) => seat.locateRow))];
+  const columns = Math.max(...seats.map((seat) => seat.locateColumn));
 
-  // Sắp xếp các hàng theo bảng chữ cái tăng dần
   rows.sort();
 
   return (
     <div className="content p-4">
       <h1 className="text-center text-2xl font-bold mb-4">Chọn ghế</h1>
+
+      {/* Hướng dẫn màu sắc */}
+      <div className="flex justify-center items-center mb-6">
+        <div className="flex items-center space-x-4">
+          <div className="flex items-center">
+            <button className="w-6 h-6 bg-gray-300 border rounded"></button>
+            <span className="ml-2 text-sm">Có thể chọn</span>
+          </div>
+          <div className="flex items-center">
+            <button className="w-6 h-6 bg-green-500 border rounded"></button>
+            <span className="ml-2 text-sm">Đang chọn</span>
+          </div>
+          <div className="flex items-center">
+            <button className="w-6 h-6 bg-red-500 border rounded"></button>
+            <span className="ml-2 text-sm">Đã đặt</span>
+          </div>
+        </div>
+      </div>
+
       <div className="flex space-x-4">
         <div className="w-2/3 p-4 border rounded">
           <div className="space-y-4">
@@ -116,9 +128,7 @@ const SeatSelection = () => {
         <div className="w-1/3 p-4 border rounded flex flex-col justify-between">
           <div>
             <h2 className="text-xl font-bold">{movie.name}</h2>
-            <p className="mt-2">
-              {movie.date} - Suất chiếu: {showtimeId}
-            </p>
+            <p className="mt-2">- Thời gian: {movie.duration} phút</p>
           </div>
           <img
             src={movie.image}

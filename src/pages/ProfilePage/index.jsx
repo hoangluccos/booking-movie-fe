@@ -107,7 +107,7 @@ const ProfilePage = () => {
   }, []);
 
   return (
-    <div className="my-4">
+    <div className="my-4 flex-grow">
       <div className="content mx-auto my-4">
         <ToastContainer />
         <div className="flex profile-info">

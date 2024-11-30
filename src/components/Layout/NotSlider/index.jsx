@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 function NotSlider({ children }) {
   return (
-    <div className="">
+    <div className="flex flex-col">
       <Header />
       <label for="nav-tablet-input" className="navigation hidden ">
         <i className="fa-solid fa-bars text-[28px] text-black ml-[8px] mt-[4px] text-center"></i>
