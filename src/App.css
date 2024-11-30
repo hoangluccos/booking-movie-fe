@@ -119,6 +119,9 @@ a {
     width: 100%;
     justify-self: center;
   }
+  header .search-input {
+    min-width: auto;
+  }
 }
 @media only screen and (min-width: 740px) and (max-width: 1023px) {
 }
