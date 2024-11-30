@@ -18,6 +18,7 @@ import MovieForm from "../pages/AdminPages/MovieForm";
 import Dashboard from "../pages/AdminPages/Dashboard";
 import GenrePage from "../pages/AdminPages/GenrePage";
 import ActorPage from "../pages/AdminPages/ActorPage";
+import TheaterManagement from "../pages/AdminPages/TheaterManagement";
 import DirectorPage from "../pages/AdminPages/DirectorPage";
 import ShowTimePage from "../pages/AdminPages/ShowTimePage";
 import SearchPage from "../pages/SearchPage";
@@ -145,6 +146,11 @@ const privateRoutes = [
   {
     path: "/admin/directors",
     component: DirectorPage,
+    layout: AdminLayout,
+  },
+  {
+    path: "/admin/theaters",
+    component: TheaterManagement,
     layout: AdminLayout,
   },
 ];

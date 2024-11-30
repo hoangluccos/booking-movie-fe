@@ -119,6 +119,18 @@ function Sidebar() {
           <span>Director</span>
         </NavLink>
         <NavLink
+          to="/admin/theaters"
+          className={({ isActive }) =>
+            `menu-item flex items-center pl-4 text-lg transition-colors ${
+              isActive ? "text-blue-500" : "text-gray-600 hover:text-blue-500"
+            }`
+          }
+        >
+          <i className="fa-solid fa-shop mr-2"></i>
+
+          <span>Theaters</span>
+        </NavLink>
+        <NavLink
           to="/"
           className={({ isActive }) =>
             `menu-item flex items-center pl-4 text-lg transition-colors ${
@@ -129,7 +141,12 @@ function Sidebar() {
           <i className="fa-solid fa-house mr-3"></i>
           <span>Home Page User</span>
         </NavLink>
-        <button onClick={() => handleLogout()}>Logout</button>
+        <button
+          className="text-black p-3 bg-gray-300 rounded font-bold hover:bg-gray-500 hover:text-white"
+          onClick={() => handleLogout()}
+        >
+          Logout
+        </button>
       </ul>
       <div className="sidebar-footer text-sm text-gray-600 text-center">
         Help
