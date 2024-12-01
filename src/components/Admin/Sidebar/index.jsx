@@ -131,6 +131,17 @@ function Sidebar() {
           <span>Theaters</span>
         </NavLink>
         <NavLink
+          to="/admin/feedbacks"
+          className={({ isActive }) =>
+            `menu-item flex items-center pl-4 text-lg transition-colors ${
+              isActive ? "text-blue-500" : "text-gray-600 hover:text-blue-500"
+            }`
+          }
+        >
+          <i className="fa-solid fa-comment mr-2"></i>
+          <span>Feedbacks</span>
+        </NavLink>
+        <NavLink
           to="/"
           className={({ isActive }) =>
             `menu-item flex items-center pl-4 text-lg transition-colors ${

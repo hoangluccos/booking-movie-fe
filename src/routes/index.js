@@ -26,6 +26,7 @@ import SearchPage from "../pages/SearchPage";
 import CommonLayout from "../components/Layout/CommonLayout";
 import NotSlider from "../components/Layout/NotSlider";
 import AdminLayout from "../components/Layout/AdminLayout";
+import FeedbacksManagement from "../pages/AdminPages/FeedbacksManagement";
 
 //public
 const publicRoutes = [
@@ -151,6 +152,11 @@ const privateRoutes = [
   {
     path: "/admin/theaters",
     component: TheaterManagement,
+    layout: AdminLayout,
+  },
+  {
+    path: "/admin/feedbacks",
+    component: FeedbacksManagement,
     layout: AdminLayout,
   },
 ];

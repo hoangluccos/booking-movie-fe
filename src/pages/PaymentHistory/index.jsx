@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { QRCodeCanvas } from "qrcode.react"; // Import thư viện mã QR
 import instance from "../../api/instance";
+import { Link } from "react-router-dom";
 
 const PaymentHistory = () => {
   const [transactions, setTransactions] = useState([]);
@@ -9,7 +10,7 @@ const PaymentHistory = () => {
     const fetchTransactions = async () => {
       try {
         const response = await instance.get("/users/ticket");
-        console.log(response.data.result);
+        console.log("Ticket Detail:", response.data.result);
         setTransactions(response.data.result);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -34,6 +35,7 @@ const PaymentHistory = () => {
                 <th className="bg-gray-200 p-3 text-left">Mã QR</th>
                 <th className="bg-gray-200 p-3 text-left">Phim - Thời gian</th>
                 <th className="bg-gray-200 p-3 text-left">Tổng tiền</th>
+                <th className="bg-gray-200 p-3 text-left">Đánh giá</th>
               </tr>
             </thead>
             <tbody>
@@ -76,13 +78,25 @@ const PaymentHistory = () => {
                       <td className="p-3 border">
                         {transaction.totalPrice} VND
                       </td>
+                      <td className="p-3 border">
+                        {transaction.canComment ? (
+                          <Link
+                            className="text-red-400 underline"
+                            to={`/movies/${transaction.movieId}#comment`}
+                          >
+                            Đánh giá ngay
+                          </Link>
+                        ) : (
+                          <p className="text-red-500">Bạn chưa thể đánh giá</p>
+                        )}
+                      </td>
                     </tr>
                   );
                 })
               )}
               <tr>
                 <td
-                  colSpan="3"
+                  colSpan="4"
                   className="font-bold text-right p-3 border border-gray-300"
                 >
                   Tổng cộng
