@@ -3,9 +3,11 @@ import "./App.css";
 import { publicRoutes, privateRoutes } from "./routes";
 import { Fragment } from "react";
 import AuthRoute from "./routes/AuthRoute";
+import Authenticate from "./components/Authenticate";
 function App() {
   return (
     <Routes>
+      <Route path="/authenticate" element={<Authenticate />} />
       {publicRoutes.map((route, index) => {
         const Page = route.component;
         const Layout = route.layout || Fragment;

@@ -11,6 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { OAuthConfig } from "../../configurations/configuration";
 
 const schema = z.object({
   username: z.string().min(3, "Username must be at least 3 characters long"),
@@ -59,7 +60,19 @@ function LoginForm() {
       console.error("Login failed", error.response.data.message);
     }
   };
+  const handleClick = () => {
+    const callbackUrl = OAuthConfig.redirectUri;
+    const authUrl = OAuthConfig.authUri;
+    const googleClientId = OAuthConfig.clientId;
 
+    const targetUrl = `${authUrl}?redirect_uri=${encodeURIComponent(
+      callbackUrl
+    )}&response_type=code&client_id=${googleClientId}&scope=openid%20email%20profile`;
+
+    console.log(targetUrl);
+
+    window.location.href = targetUrl;
+  };
   return (
     <div
       className="relative flex items-center justify-center min-h-screen bg-cover bg-center bg-no-repeat"
@@ -91,11 +104,14 @@ function LoginForm() {
           {/* <button className="flex items-center justify-center w-full px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200">
             <img src={facebookIcon} alt="Facebook" className="w-5 h-5 mr-2" />
             Log in with Facebook
-          </button>
-          <button className="flex items-center justify-center w-full px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200">
+          </button> */}
+          <button
+            className="flex items-center justify-center w-full px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200"
+            onClick={handleClick}
+          >
             <img src={googleIcon} alt="Google" className="w-5 h-5 mr-2" />
             Log in with Google
-          </button> */}
+          </button>
         </div>
         <div className="flex items-center my-4">
           <div className="flex-grow border-t border-gray-300"></div>

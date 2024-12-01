@@ -14,6 +14,8 @@ function Header() {
   const nav = useNavigate();
   const user = JSON.parse(localStorage.getItem("user"));
   console.log("User: ", user);
+  const token = JSON.parse(localStorage.getItem("token"));
+  console.log("Token: ", token);
   const [Search, setSearch] = useState("");
   console.log(Search);
   const handleLogout = () => {
@@ -132,7 +134,7 @@ function Header() {
               <div className="pb-2 mt-2">
                 <FaUserCircle className="text-white text-3xl cursor-pointer mr-2" />
               </div>
-              {user ? (
+              {user || token ? (
                 <div className="absolute top-full right-0 bg-[#333] rounded-lg py-1 shadow-lg min-w-[160px] z-10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
                   <Link
                     to="/profile"

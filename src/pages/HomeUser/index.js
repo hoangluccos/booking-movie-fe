@@ -3,7 +3,7 @@ import MovieItem from "../../components/MovieItem";
 import instance from "../../api/instance";
 import { Link } from "react-router-dom";
 
-function HomeUser({ isLogout }) {
+function HomeUser() {
   const [data, setData] = useState([]);
   const [showAll, setShowAll] = useState(false);
 

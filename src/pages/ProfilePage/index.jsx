@@ -82,6 +82,7 @@ const ProfilePage = () => {
   };
 
   const formatDate = (dateString) => {
+    if (!dateString) return null;
     const [day, month, year] = dateString.split("-");
     return `${year}-${month}-${day}`;
   };
@@ -90,7 +91,7 @@ const ProfilePage = () => {
     (async () => {
       try {
         const res = await instance.get("users/bio");
-        console.log(res);
+        console.log("bio : ", res);
         const formattedData = {
           ...res.data.result,
           dateOfBirth: formatDate(res.data.result.dateOfBirth),
