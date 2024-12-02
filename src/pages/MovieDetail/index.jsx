@@ -21,17 +21,10 @@ function MovieDetail() {
   const query = useQuery();
   const navigate = useNavigate();
   const token = JSON.parse(localStorage.getItem("token"));
-  const [feedback, setFeedback] = useState([
-    {
-      avatar:
-        "https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg",
-      username: "hoangluc",
-      rate: "9.5",
-      content: "dang xem",
-    },
-  ]);
+  const [feedback, setFeedback] = useState([]);
   const [comment, setComment] = useState("");
   const [rate, setRate] = useState(0);
+  const [bioData, setBioData] = useState(null); //store email in bioData
 
   const handleSubmit = () => {
     if (!comment.trim() || rate === 0) {
@@ -59,17 +52,37 @@ function MovieDetail() {
   };
 
   useEffect(() => {
+    // const fetch = async () => {
+    //   try {
+    //     const res = await instance.get(`/feedbacks/${param.id}/all`);
+    //     console.log(res.data);
+    //     console.log(res.data.result.byEmail);
+    //     if (res.data.result.length > 0) {
+    //       setFeedback(res.data.result);
+    //     } else {
+    //       setFeedback([]);
+    //     }
+    //   } catch (error) {
+    //     console.log("Error fetch feedback: ", error);
+    //   }
+    // };
+    // fetch();
     const fetch = async () => {
       try {
-        const res = await instance.get(`/feedbacks/${param.id}/all`);
-        console.log(res.data);
-        if (res.data.result.length > 0) {
-          setFeedback(res.data.result);
+        const [resFeedback, resBio] = await Promise.all([
+          instance.get(`/feedbacks/${param.id}/all`),
+          instance.get("/users/bio"),
+        ]);
+        console.log(resFeedback.data);
+        if (resFeedback.data.result.length > 0) {
+          setFeedback(resFeedback.data.result);
         } else {
           setFeedback([]);
         }
+        console.log(resBio.data.result);
+        setBioData(resBio.data.result.email);
       } catch (error) {
-        console.log("Error fetch feedback: ", error);
+        console.log("Error fetch feedback and bio", error);
       }
     };
     fetch();
@@ -106,6 +119,44 @@ function MovieDetail() {
       currentUrl.searchParams.delete("buyTicket");
       navigate(`${currentUrl.pathname}${currentUrl.search}`, { replace: true });
     }
+  };
+
+  const handleEdit = (id, newContent, newRate) => {
+    console.log(newContent, "---", newRate, "------", "id:", id);
+    const fetchUpdateFB = async () => {
+      try {
+        const res = await instance.put(`/feedbacks/${id}`, {
+          content: newContent,
+          rate: newRate,
+        });
+        toast.success(res.data.message);
+        console.log(res.data);
+      } catch (error) {
+        toast.error(error.response.data.message);
+        console.log(error);
+      }
+    };
+    fetchUpdateFB();
+    setFeedback((prev) =>
+      prev.map((fb) =>
+        fb.id === id ? { ...fb, content: newContent, rate: newRate } : fb
+      )
+    );
+  };
+
+  const handleDelete = (id) => {
+    const fetchDelFB = async () => {
+      try {
+        const res = await instance.delete(`/feedbacks/${id}`);
+        toast.success(res.data.message);
+        console.log(res.data);
+      } catch (error) {
+        toast.error(error.response.data.message);
+        console.log(error.data);
+      }
+    };
+    fetchDelFB();
+    setFeedback((prev) => prev.filter((fb) => fb.id !== id));
   };
 
   return (
@@ -221,6 +272,11 @@ function MovieDetail() {
                 content={item.content}
                 date={item.date}
                 time={item.time}
+                isEdit={bioData === item.byEmail}
+                onEdit={(newContent, newRate) =>
+                  handleEdit(item.id, newContent, newRate)
+                }
+                onDelete={() => handleDelete(item.id)}
               />
             );
           })
