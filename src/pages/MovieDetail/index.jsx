@@ -167,7 +167,7 @@ function MovieDetail() {
           <img src={infoMovie.image} alt="" className="w-full" />
         </div>
         <div>
-          <h3 className="fw-bold">
+          <h3 className="font-bold text-2xl">
             {infoMovie.name ? infoMovie.name.toUpperCase() : ""}
           </h3>
           <div className="flex align-items-center mt-5">
@@ -183,11 +183,11 @@ function MovieDetail() {
             <p className="mx-3 mb-0">{infoMovie.language}</p>
           </div>
           <div className="mh-25 mt-5">
-            <h4 className="fw-bold">NỘI DUNG</h4>
+            <h4 className="font-bold">NỘI DUNG</h4>
             <p>{infoMovie.content}</p>
           </div>
           <div className="mh-25 mt-5">
-            <h4 className="fw-bold">KHỞI CHIẾU</h4>
+            <h4 className="font-bold">KHỞI CHIẾU</h4>
             <p>{infoMovie.premiere}</p>
           </div>
           <button

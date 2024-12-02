@@ -28,6 +28,7 @@ const SeatSelection = () => {
     const fetchSeats = async () => {
       try {
         const response = await instance.get(`/showtimes/${showtimeId}`);
+        console.log("api seat: ", response.data.result);
         setSeats(response.data.result);
       } catch (error) {
         console.error("Error fetching seats:", error);
@@ -118,7 +119,11 @@ const SeatSelection = () => {
             <Link
               to={`/paymentMethod/${showtimeId}`}
               state={{ showtimeId: showtimeId, seatId: selectedSeatsID }}
-              className="p-2 bg-blue-500 text-white rounded"
+              className={`p-2  text-white rounded ${
+                selectedSeatsID.length === 0
+                  ? "bg-blue-200 cursor-not-allowed pointer-events-none select-none"
+                  : "bg-blue-500"
+              }`}
             >
               Xác nhận
             </Link>
