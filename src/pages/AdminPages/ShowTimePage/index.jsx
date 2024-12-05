@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import instance from "../../../api/instance";
 import ProfileImg from "../../../assets/profile.png";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 function ShowTimePage() {
   const param = useParams();
   const movieId = param.id;
@@ -11,6 +12,12 @@ function ShowTimePage() {
   const [infoMovie, setInfoMovie] = useState({});
   const [rooms, setRooms] = useState([]);
   const [formData, setFormData] = useState({
+    date: "",
+    startTime: "",
+    roomId: "",
+  });
+  const [editingShowtime, setEditingShowtime] = useState(null);
+  const [editFormData, setEditFormData] = useState({
     date: "",
     startTime: "",
     roomId: "",
@@ -29,7 +36,6 @@ function ShowTimePage() {
     const fetchShowtimes = async () => {
       try {
         const response = await instance.get(`/showtimes/${movieId}/all`);
-        console.log(response.data.result);
         setShowtimes(response.data.result);
       } catch (err) {
         console.log(err);
@@ -41,8 +47,6 @@ function ShowTimePage() {
     const fetchRooms = async () => {
       try {
         const res = await instance.get("/theaters/getAll");
-        console.log("All room");
-        console.log(res.data.result);
         setRooms(res.data.result);
       } catch (err) {
         console.log(err);
@@ -62,10 +66,7 @@ function ShowTimePage() {
         movieId,
       };
       const res = await instance.post("/showtimes/", requestBody);
-      console.log("Lịch chiếu mới:", res.data.result);
-      alert("Tạo lịch chiếu thành công!");
-
-      // Thêm lịch chiếu mới vào danh sách
+      toast.success("Tạo lịch chiếu thành công!");
       setShowtimes((prev) => [
         ...prev,
         {
@@ -75,7 +76,63 @@ function ShowTimePage() {
       ]);
     } catch (err) {
       console.log(err);
-      alert(err.response?.data?.message || "Có lỗi xảy ra");
+      toast.error(err.response.data.message);
+    }
+  };
+
+  const handleEdit = (showtime) => {
+    setEditingShowtime(showtime);
+    setEditFormData({
+      date: showtime.date,
+      startTime: showtime.startTime,
+      roomId: showtime.theater.id,
+    });
+  };
+
+  const handleEditChange = (e) => {
+    const { name, value } = e.target;
+    setEditFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    try {
+      const updatedShowtime = { ...editFormData };
+      const res = await instance.put(
+        `/showtimes/${editingShowtime.id}`,
+        updatedShowtime
+      );
+      toast.success("Cập nhật lịch chiếu thành công!");
+      setShowtimes((prev) =>
+        prev.map((st) =>
+          st.id === editingShowtime.id
+            ? {
+                ...st,
+                ...res.data.result,
+                theater:
+                  rooms.find((room) => room.id === updatedShowtime.roomId) ||
+                  {},
+              }
+            : st
+        )
+      );
+      setEditingShowtime(null);
+    } catch (err) {
+      toast.error(err.response.data.message);
+      console.log(err);
+    }
+  };
+
+  const handleDelete = async (showtimeId) => {
+    if (window.confirm("Bạn có chắc chắn muốn xóa lịch chiếu này không?")) {
+      try {
+        await instance.delete(`/showtimes/${showtimeId}`);
+        toast.success("Xóa lịch chiếu thành công!");
+        setShowtimes((prev) => prev.filter((st) => st.id !== showtimeId));
+      } catch (err) {
+        console.log(err);
+        toast.error(err.response.data.message);
+      }
     }
   };
 
@@ -90,7 +147,8 @@ function ShowTimePage() {
 
   return (
     <div className="p-4">
-      <div className="flex items-center mb-4 ">
+      <ToastContainer />
+      <div className="flex items-center mb-4">
         <img
           src={infoMovie.image || ProfileImg}
           alt={infoMovie.name}
@@ -149,6 +207,67 @@ function ShowTimePage() {
           </button>
         </form>
       </div>
+
+      {editingShowtime && (
+        <div className="p-4 border rounded bg-gray-100">
+          <h2 className="text-xl font-semibold mb-2">Chỉnh Sửa Lịch Chiếu</h2>
+          <form onSubmit={handleUpdate} className="space-y-4">
+            <div>
+              <label className="block font-medium">Ngày:</label>
+              <input
+                type="date"
+                name="date"
+                value={editFormData.date}
+                onChange={handleEditChange}
+                required
+                className="border border-gray-300 p-2 rounded w-full"
+              />
+            </div>
+            <div>
+              <label className="block font-medium">Giờ bắt đầu:</label>
+              <input
+                type="time"
+                name="startTime"
+                value={editFormData.startTime}
+                onChange={handleEditChange}
+                required
+                className="border border-gray-300 p-2 rounded w-full"
+              />
+            </div>
+            <div>
+              <label className="block font-medium">Phòng chiếu:</label>
+              <select
+                name="roomId"
+                value={editFormData.roomId}
+                onChange={handleEditChange}
+                required
+                className="border border-gray-300 p-2 rounded w-full"
+              >
+                <option value="">Chọn phòng chiếu</option>
+                {rooms.map((room) => (
+                  <option key={room.id} value={room.id}>
+                    {room.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <button
+              type="submit"
+              className="bg-blue-500 text-white px-4 py-2 rounded mr-2"
+            >
+              Cập Nhật
+            </button>
+            <button
+              type="button"
+              onClick={() => setEditingShowtime(null)}
+              className="bg-gray-500 text-white px-4 py-2 rounded"
+            >
+              Hủy
+            </button>
+          </form>
+        </div>
+      )}
+
       <hr className="border-t-2 border-gray-200 my-4" />
       <div>
         <h2 className="text-xl font-semibold mb-2">Lịch Chiếu Phim</h2>
@@ -159,6 +278,7 @@ function ShowTimePage() {
                 <th className="p-2 border border-gray-300">Ngày</th>
                 <th className="p-2 border border-gray-300">Giờ</th>
                 <th className="p-2 border border-gray-300">Phòng</th>
+                <th className="p-2 border border-gray-300">Hành Động</th>
               </tr>
             </thead>
             <tbody>
@@ -173,12 +293,26 @@ function ShowTimePage() {
                   <td className="p-2 border border-gray-300">
                     {showtime.theater.name}
                   </td>
+                  <td className="p-2 border border-gray-300">
+                    <button
+                      onClick={() => handleEdit(showtime)}
+                      className="bg-yellow-500 text-white px-2 py-1 rounded mr-2"
+                    >
+                      Sửa
+                    </button>
+                    <button
+                      onClick={() => handleDelete(showtime.id)}
+                      className="bg-red-500 text-white px-2 py-1 rounded"
+                    >
+                      Xóa
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
         ) : (
-          <p>Chưa có lịch chiếu</p>
+          <p>Không có lịch chiếu nào.</p>
         )}
       </div>
     </div>
