@@ -31,6 +31,7 @@ const ProfilePage = () => {
       }
     })();
   };
+
   const {
     register,
     handleSubmit,
