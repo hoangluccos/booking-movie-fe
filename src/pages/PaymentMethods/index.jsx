@@ -30,12 +30,13 @@ const PaymentMethods = () => {
 
   //handleBook
   const handleBook = () => {
-    console.log("Selected Seat IDs:", location.state.seatId); // In ra danh sách ID ghế đã chọn
+    console.log("Selected Seat IDs:", location.state.seatId);
+    console.log("CouponID");
     const bookTicket = async () => {
       const req = {
         showtimeId: location.state.showtimeId,
         seatId: location.state.seatId,
-        couponId: "2e7d46d1-4ca0-42bd-960e-a7dd91b6f2a9",
+        couponId: selectedCouponId,
       };
       console.log(req);
       try {

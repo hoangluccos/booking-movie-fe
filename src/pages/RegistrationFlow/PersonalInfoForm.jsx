@@ -86,13 +86,13 @@ const PersonalInfoForm = ({ onSubmit }) => {
         </select>
       </div>
 
-      <input
+      {/* <input
         type="text"
         value={avatar}
         onChange={(e) => setAvatar(e.target.value)}
         placeholder="URL Avatar (Tùy chọn)"
         className="p-2 border border-gray-300 rounded mb-4 w-80"
-      />
+      /> */}
 
       <button
         type="submit"

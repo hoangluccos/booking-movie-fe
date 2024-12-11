@@ -170,7 +170,6 @@ function GenrePage() {
           )}
           {isAdding && (
             <tr>
-              <td className="border border-gray-300 px-4 py-2">New</td>
               <td className="border border-gray-300 px-4 py-2">
                 <input
                   type="text"
