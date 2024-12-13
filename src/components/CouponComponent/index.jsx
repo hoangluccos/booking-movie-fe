@@ -12,6 +12,7 @@ function CouponComponent({ totalPrice, onApplyCoupon }) {
     const fetchCoupons = async () => {
       try {
         const res = await instance.get("/coupons/");
+        console.log("Danh sách mã giảm giá NE: ", res.data);
         console.log("Danh sách mã giảm giá: ", res.data.result);
         setListCoupons(res.data.result);
       } catch (error) {
@@ -29,7 +30,7 @@ function CouponComponent({ totalPrice, onApplyCoupon }) {
     if (matchedCoupon) {
       if (totalPrice < matchedCoupon.minValue) {
         toast.error(
-          `Mã giảm giá chỉ áp dụng cho hóa đơn tối thiểu ${matchedCoupon.minValue} VND.`
+          `Mã giảm giá chỉ áp dụng cho hóa đơn tối thiểu ${matchedCoupon.minValue.toLocaleString()} VND.`
         );
         setAppliedCoupon(null);
         onApplyCoupon(null);
@@ -60,12 +61,18 @@ function CouponComponent({ totalPrice, onApplyCoupon }) {
     return totalPrice;
   };
 
+  const formatCurrency = (value) => {
+    return value.toLocaleString(); // Thêm dấu phân cách hàng nghìn
+  };
+
   return (
     <div className="p-3 border rounded">
       <ToastContainer />
       <h1 className="text-xl text-center font-bold mb-4">
         Tổng hóa đơn{" "}
-        <strong className="text-green-400">{totalPrice} VND</strong>
+        <strong className="text-green-400">
+          {formatCurrency(totalPrice)} VND
+        </strong>
       </h1>
       <div className="coupons">
         <input
@@ -85,11 +92,16 @@ function CouponComponent({ totalPrice, onApplyCoupon }) {
       <hr className="border-t-2 border-gray-200 my-4" />
       {appliedCoupon ? (
         <div className="text-green-500">
-          <p>
-            Đã áp dụng mã giảm giá: <strong>{appliedCoupon.code}</strong>
+          <p>Giá ban đầu: {formatCurrency(totalPrice)} VND</p>
+          <p className="text-red-400">
+            Số tiền được giảm:{" "}
+            {appliedCoupon.discountType === "Fixed"
+              ? formatCurrency(appliedCoupon.discountValue)
+              : formatCurrency(
+                  Math.max(totalPrice * (appliedCoupon.discountValue / 100), 0)
+                )}{" "}
+            VND
           </p>
-          <p>Loại giảm giá: {appliedCoupon.discountType}</p>
-          <p>Giá trị: {appliedCoupon.discountValue}</p>
         </div>
       ) : (
         <p className="text-red-500">Chưa áp dụng mã giảm giá nào</p>
@@ -97,7 +109,9 @@ function CouponComponent({ totalPrice, onApplyCoupon }) {
       <hr className="border-t-2 border-gray-200 my-4" />
       <h1 className="text-xl text-center font-bold mb-4">
         Cần thanh toán{" "}
-        <strong className="text-green-400">{calculateFinalPrice()} VND</strong>
+        <strong className="text-green-400">
+          {formatCurrency(calculateFinalPrice())} VND
+        </strong>
       </h1>
     </div>
   );
