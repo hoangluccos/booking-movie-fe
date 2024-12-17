@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import StatsCard from "../../../components/Admin/StatsCard";
+import RevenueChart from "../../../pages/AdminPages/RevenueChart";
 import DateSelector from "../../../components/Admin/DateSelector";
 import instance from "../../../api/instance";
 
@@ -62,11 +63,13 @@ function Dashboard() {
           color="bg-blue-400"
         />
       </div>
-      <DateSelector
+      {/* <DateSelector
         date={date}
         onDateChange={handleDateChange}
         tickets={tickets}
-      />
+      /> */}
+      <h3 className="font-bold underline mb-3">Doanh thu 7 ngày gần nhất</h3>
+      <RevenueChart />
     </div>
   );
 }

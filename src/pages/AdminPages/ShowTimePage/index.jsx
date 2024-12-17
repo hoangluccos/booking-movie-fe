@@ -36,6 +36,7 @@ function ShowTimePage() {
     const fetchShowtimes = async () => {
       try {
         const response = await instance.get(`/showtimes/${movieId}/all`);
+        console.log("showtime: ", response.data.result);
         setShowtimes(response.data.result);
       } catch (err) {
         console.log(err);
@@ -47,6 +48,7 @@ function ShowTimePage() {
     const fetchRooms = async () => {
       try {
         const res = await instance.get("/theaters/getAll");
+        console.log("Room:", res.data.result);
         setRooms(res.data.result);
       } catch (err) {
         console.log(err);

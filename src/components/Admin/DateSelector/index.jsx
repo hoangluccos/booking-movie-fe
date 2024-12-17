@@ -27,11 +27,6 @@ function DateSelector() {
   };
 
   const fetchRevenueByDateRange = async () => {
-    if (!startDate || !endDate) {
-      alert("Vui lòng chọn ngày bắt đầu và ngày kết thúc!");
-      return;
-    }
-
     try {
       const res = await instance.get("/revenues/ticket/range", {
         params: { startDate, endDate },
@@ -48,22 +43,6 @@ function DateSelector() {
   return (
     <div className="p-4">
       <h1 className="text-xl font-bold mb-4">Thống Kê Doanh Thu</h1>
-
-      <div className="mb-4">
-        <h2 className="font-semibold">Thống kê theo ngày</h2>
-        <input
-          type="date"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-          className="border p-2 rounded mr-2"
-        />
-        <button
-          onClick={fetchRevenueByDate}
-          className="bg-blue-500 text-white px-4 py-2 rounded"
-        >
-          Lấy dữ liệu
-        </button>
-      </div>
 
       <div className="mb-4">
         <h2 className="font-semibold">Thống kê theo khoảng ngày</h2>
