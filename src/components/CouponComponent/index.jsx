@@ -2,17 +2,17 @@ import React, { useEffect, useState } from "react";
 import instance from "../../api/instance";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import SelectCoupon from "./SelectCoupon";
 
 function CouponComponent({ totalPrice, onApplyCoupon }) {
   const [coupons, setCoupons] = useState("");
   const [listCoupons, setListCoupons] = useState([]);
   const [appliedCoupon, setAppliedCoupon] = useState(null);
-
+  const [isSelect, setIsSelect] = useState("");
   useEffect(() => {
     const fetchCoupons = async () => {
       try {
         const res = await instance.get("/coupons/");
-        console.log("Danh sách mã giảm giá NE: ", res.data);
         console.log("Danh sách mã giảm giá: ", res.data.result);
         setListCoupons(res.data.result);
       } catch (error) {
@@ -64,7 +64,11 @@ function CouponComponent({ totalPrice, onApplyCoupon }) {
   const formatCurrency = (value) => {
     return value.toLocaleString(); // Thêm dấu phân cách hàng nghìn
   };
-
+  const handleSelectCoupon = (id, code) => {
+    // setAppliedCoupon(code);
+    onApplyCoupon(id);
+    setIsSelect(id);
+  };
   return (
     <div className="p-3 border rounded">
       <ToastContainer />
@@ -82,6 +86,15 @@ function CouponComponent({ totalPrice, onApplyCoupon }) {
           onChange={(e) => setCoupons(e.target.value)}
           className="border w-full rounded p-1"
         />
+        {listCoupons.map((c, id) => (
+          <SelectCoupon
+            key={id}
+            image={c.image}
+            name={c.code}
+            handleSelect={() => handleSelectCoupon(c.id, c.code)}
+            isSelect={isSelect === c.id}
+          />
+        ))}
         <button
           onClick={handleApplyCoupon}
           className="bg-blue-500 text-white px-4 py-2 mt-2 rounded w-full"
@@ -93,15 +106,15 @@ function CouponComponent({ totalPrice, onApplyCoupon }) {
       {appliedCoupon ? (
         <div className="text-green-500">
           <p>Giá ban đầu: {formatCurrency(totalPrice)} VND</p>
-          <p className="text-red-400">
-            Số tiền được giảm:{" "}
+          {/* <p className="text-red-400">
+            Số tiền được giảm:
             {appliedCoupon.discountType === "Fixed"
-              ? formatCurrency(appliedCoupon.discountValue)
+              ? formatCurrency(calculateFinalPrice)
               : formatCurrency(
                   Math.max(totalPrice * (appliedCoupon.discountValue / 100), 0)
                 )}{" "}
             VND
-          </p>
+          </p> */}
         </div>
       ) : (
         <p className="text-red-500">Chưa áp dụng mã giảm giá nào</p>
