@@ -7,6 +7,7 @@ function CouponsPage() {
     "https://bhdstar.vn/wp-content/uploads/2024/10/poster-labubu-web-1.jpg";
   return (
     <div className="content mt-4">
+      <p className="text-3xl font-bold text-center mt-3">Ưu đãi hiện có</p>
       <div className="flex flex-wrap gap-[10px]">
         <CouponItem
           img={img}

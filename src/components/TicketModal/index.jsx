@@ -45,6 +45,7 @@ const TicketModal = ({ isOpen, onRequestClose }) => {
 
     try {
       const response = await instance.post("/showtimes/all", request);
+      console.log("list showtime by movies: ", response.data.result);
       setShowtimes(response.data.result);
     } catch (error) {
       console.error("Error fetching showtimes:", error);

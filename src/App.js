@@ -4,6 +4,8 @@ import { publicRoutes, privateRoutes } from "./routes";
 import { Fragment } from "react";
 import AuthRoute from "./routes/AuthRoute";
 import Authenticate from "./components/Authenticate";
+import "antd/dist/reset.css"; // Ant Design css
+
 function App() {
   return (
     <Routes>

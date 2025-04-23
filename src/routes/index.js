@@ -27,6 +27,7 @@ import CommonLayout from "../components/Layout/CommonLayout";
 import NotSlider from "../components/Layout/NotSlider";
 import AdminLayout from "../components/Layout/AdminLayout";
 import FeedbacksManagement from "../pages/AdminPages/FeedbacksManagement";
+import MatchingPage from "../pages/MatchingPage";
 
 //public
 const publicRoutes = [
@@ -99,6 +100,11 @@ const publicRoutes = [
   {
     path: "/search",
     component: SearchPage,
+    layout: NotSlider,
+  },
+  {
+    path: "/matching",
+    component: MatchingPage,
     layout: NotSlider,
   },
 ];
