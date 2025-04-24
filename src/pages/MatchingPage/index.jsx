@@ -3,7 +3,7 @@ import hand_love from "../../assets/hand_love.jpg";
 import { Select } from "antd";
 import instance from "../../api/instance";
 import { useNavigate } from "react-router-dom";
-import { transferStringToDate } from "../../utils/common";
+import { transferStringToDateCheckToDay } from "../../utils/common";
 import { useWebSocket } from "../../hooks/useWebSocket";
 import { Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
@@ -80,7 +80,7 @@ const MatchingPage = () => {
           console.log("showtimes all of ", res);
           const temp = [];
           res.data.result.forEach((data) => {
-            if (transferStringToDate(data.date)) {
+            if (transferStringToDateCheckToDay(data.date)) {
               temp.push(data);
             }
           });

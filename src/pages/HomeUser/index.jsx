@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import MovieItem from "../../components/MovieItem";
 import instance from "../../api/instance";
 import { Link } from "react-router-dom";
+import { transferStringToDateCheckToDay } from "../../utils/common";
 
 function HomeUser() {
   const [data, setData] = useState([]);
@@ -11,6 +12,7 @@ function HomeUser() {
     (async () => {
       try {
         const res = await instance.get("/movies/");
+        console.log("List Movies in HomeUser: ", res.data.result);
         setData(res.data.result);
       } catch (error) {
         console.log("Failed to fetch movies:", error);
@@ -32,17 +34,22 @@ function HomeUser() {
               </h1>
               <hr className="border-t-2 border-gray-200 my-4" />
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 p-5 justify-start">
-                {displayedData.map((product, index) => (
-                  <Link to={`/movies/${product.id}`} key={index}>
-                    <MovieItem
-                      image={product.image}
-                      title={product.name}
-                      subtitle={product.language}
-                      duration={product.duration}
-                      id={product.id}
-                    />
-                  </Link>
-                ))}
+                {displayedData
+                  .filter(
+                    (product) =>
+                      !transferStringToDateCheckToDay(product.premiere)
+                  )
+                  .map((product, index) => (
+                    <Link to={`/movies/${product.id}`} key={index}>
+                      <MovieItem
+                        image={product.image}
+                        title={product.name}
+                        subtitle={product.language}
+                        duration={product.duration}
+                        id={product.id}
+                      />
+                    </Link>
+                  ))}
               </div>
               <div className="w-full flex justify-center mt-4">
                 {!showAll && data.length > 4 ? (
@@ -71,17 +78,21 @@ function HomeUser() {
               </h1>
               <hr className="border-t-2 border-gray-200 my-4" />
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 p-5 justify-start">
-                {displayedData.map((product, index) => (
-                  <Link to={`/movies/${product.id}`} key={index}>
-                    <MovieItem
-                      image={product.image}
-                      title={product.name}
-                      subtitle={product.language}
-                      duration={product.duration}
-                      id={product.id}
-                    />
-                  </Link>
-                ))}
+                {displayedData
+                  .filter((product) =>
+                    transferStringToDateCheckToDay(product.premiere)
+                  )
+                  .map((product, index) => (
+                    <Link to={`/movies/${product.id}`} key={index}>
+                      <MovieItem
+                        image={product.image}
+                        title={product.name}
+                        subtitle={product.language}
+                        duration={product.duration}
+                        id={product.id}
+                      />
+                    </Link>
+                  ))}
               </div>
               <div className="w-full flex justify-center mt-4">
                 {!showAll && data.length > 4 ? (

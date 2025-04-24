@@ -1,6 +1,6 @@
-//input -> string ; output Date
+//input -> string ;
 //dd-mm-yyyy
-export const transferStringToDate = (typeString) => {
+export const transferStringToDateCheckToDay = (typeString) => {
   const [day, month, year] = typeString.split("-");
   //   console.log(day, month, year);
   const newDate = new Date(year, month - 1, day);
