@@ -7,18 +7,19 @@ function Footer() {
       {/* mt-[64px]  */}
       <div className="max-w-screen-xl mx-auto px-4">
         <div className="footer-css flex justify-around items-center">
-          <div className="certi">
+          <div className="certi flex-col items-start">
             <img
               className="w-36 h-36"
               src={certificate}
               alt="Giay chung nhan"
             />
+            <div className=""></div>
           </div>
           <div className="theaters">
-            <ul className="text-center">
-              <h3 className="text-xl font-semibold mb-2 underline">
+            <ul className="">
+              <p className="text-2xl font-semibold mb-2 underline">
                 Hệ thống rạp
-              </h3>
+              </p>
               <li>Rạp Thống Nhất</li>
               <li>Rạp Hồng Bàng</li>
               <li>Rạp Tây Sơn</li>
@@ -26,25 +27,26 @@ function Footer() {
             </ul>
           </div>
           <div className="info">
-            <ul className="text-center">
-              <h3 className="text-xl font-semibold mb-2 underline">
-                Châm ngôn
-              </h3>
+            <ul className="">
+              <p className="text-2xl font-semibold mb-2 underline">Châm ngôn</p>
               <li>Chất lượng</li>
               <li>Tin cậy</li>
               <li>Bảo mật</li>
               <li>Nhanh chóng</li>
             </ul>
           </div>
-          <div className="download self-start">
-            <h3 className="text-xl font-semibold mb-2 underline text-center">
-              Download
-            </h3>
-            <img
-              src="https://cdn.getyourguide.com/tf/assets/static/badges/google-play-badge-en-us.svg"
-              alt="CHplay"
-              className="w-32"
-            />
+          <div className="take_care_client">
+            <ul className="">
+              <p className="text-2xl font-semibold mb-2 underline">
+                Chăm sóc khách hàng
+              </p>
+              <li>Hotline: 19002099</li>
+              <li>
+                Giờ làm việc: 9:00 - 22:00 (Tất cả các ngày bao gồm cả Lễ, Tết)
+              </li>
+              <li>Email hỗ trợ: client@hltheaters.vn</li>
+              <li>Nhanh chóng</li>
+            </ul>
           </div>
         </div>
       </div>

@@ -7,6 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import SearchItem from "../SearchItem";
 import { IoIosNotifications } from "react-icons/io";
 import IMG_TICKET from "../../assets/random_partner.png";
+import ButtonNavHeader from "../ButtonNavHeader";
 function Header() {
   const [listMovies, setListMovies] = useState([]);
   const [suggestedMovies, setSuggestedMovies] = useState([]);
@@ -94,14 +95,14 @@ function Header() {
     setSearch(e.target.value);
   };
   return (
-    <div className="select-none">
+    <div className="select-nones">
       <ToastContainer />
-      <div className="w-full bg-[#0f172a]">
-        <header className=" max-w-[1200px] mx-auto flex flex-col bg-[#0f172a] p-2.5 items-center">
+      <div className="w-full bg-[#0f172a] fixed top-0 left-0 z-50 p-2.5">
+        <header className="max-w-[1200px] mx-auto flex flex-col p-2.5 items-center">
           <div className="flex items-center justify-between mb-2 w-full">
             <div className="flex items-center">
               <Link to={"/"}>
-                <FaFilm className="text-white text-xl mr-2" />
+                <FaFilm className="text-white text-4xl mr-2" />
               </Link>
               <div className="search-input relative w-full max-w-[500px] min-w-[800px] flex-grow">
                 <div className="flex items-center bg-[#f5f5f5] rounded-full p-1.5 mr-2 flex-grow min-w-[200px]">
@@ -190,36 +191,10 @@ function Header() {
           </div>
 
           <div className="navigation_desktop flex justify-evenly gap-10 w-full mt-2 mb-3">
-            <Link
-              to="/"
-              className="inline-flex items-center justify-center bg-[#d1d5db] rounded-full py-2 px-4 text-sm cursor-pointer transition duration-300 text-black hover:bg-[#e2e8f0]"
-            >
-              TRANG CHỦ
-            </Link>
-            <Link
-              to="/theaters"
-              className="inline-flex items-center justify-center bg-[#d1d5db] rounded-full py-2 px-4 text-sm cursor-pointer transition duration-300 text-black hover:bg-[#e2e8f0]"
-            >
-              RẠP PHIM
-            </Link>
-            {/* <Link
-            to="/showtime"
-            className="inline-flex items-center justify-center bg-[#d1d5db] rounded-full py-2 px-4 text-sm cursor-pointer transition duration-300 text-black hover:bg-[#e2e8f0]"
-          >
-            LỊCH CHIẾU
-          </Link> */}
-            <Link
-              to="/contact"
-              className="inline-flex items-center justify-center bg-[#d1d5db] rounded-full py-2 px-4 text-sm cursor-pointer transition duration-300 text-black hover:bg-[#e2e8f0]"
-            >
-              LIÊN HỆ
-            </Link>
-            <Link
-              to="/coupons"
-              className="inline-flex items-center justify-center bg-[#d1d5db] rounded-full py-2 px-4 text-sm cursor-pointer transition duration-300 text-black hover:bg-[#e2e8f0]"
-            >
-              ƯU ĐÃI
-            </Link>
+            <ButtonNavHeader navTo={"/"} text={"TRANG CHỦ"} />
+            <ButtonNavHeader navTo={"/theaters"} text={"RẠP PHIM"} />
+            <ButtonNavHeader navTo={"/contact"} text={"LIÊN HỆ"} />
+            <ButtonNavHeader navTo={"/coupons"} text={"ƯU ĐÃI"} />
           </div>
         </header>
       </div>

@@ -7,6 +7,7 @@ function NotSlider({ children }) {
   return (
     <div className="flex flex-col">
       <Header />
+      {/* Navigation for tablet using web -- BEGIN */}
       <label for="nav-tablet-input" className="navigation hidden ">
         <i className="fa-solid fa-bars text-[28px] text-black ml-[8px] mt-[4px] text-center"></i>
       </label>
@@ -41,7 +42,8 @@ function NotSlider({ children }) {
         </ul>
       </nav>
       <div className="navigation_mobile"></div>
-      {children}
+      <div className="pt-[160px] min-h-[600px]">{children}</div>
+      {/* Navigation for tablet using web -- END */}
       <Footer />
     </div>
   );

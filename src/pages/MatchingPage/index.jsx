@@ -133,7 +133,7 @@ const MatchingPage = () => {
   if (isLoading) {
     console.log("Loading");
     return (
-      <>
+      <div className="flex flex-col justify-center pt-5">
         <Spin
           size="large"
           // style={{ fontSize: "100px" }}
@@ -155,7 +155,7 @@ const MatchingPage = () => {
         <div className="flex justify-center">
           {notifications.length > 0 ? <></> : ""}
         </div>
-      </>
+      </div>
     );
   }
   return (

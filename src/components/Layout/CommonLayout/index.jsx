@@ -8,6 +8,7 @@ function CommonLayout({ children }) {
   return (
     <div className="bg-[#0f172a]">
       <Header />
+      {/* Navigation for tablet using web -- BEGIN */}
       <label for="nav-tablet-input" className="navigation hidden ">
         <i className="fa-solid fa-bars text-[28px] text-white ml-[8px] mt-[4px] text-center"></i>
       </label>
@@ -42,8 +43,10 @@ function CommonLayout({ children }) {
         </ul>
       </nav>
       <div className="navigation_mobile"></div>
-      <ImageSlider />
-
+      {/* Navigation for tablet using web -- END */}
+      <div className="pt-[160px]">
+        <ImageSlider />
+      </div>
       {children}
       <Footer />
     </div>
