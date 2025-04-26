@@ -7,6 +7,7 @@ import { transferStringToDateCheckToDay } from "../../utils/common";
 import { useWebSocket } from "../../hooks/useWebSocket";
 import { Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
+import couple_bg from "../../assets/couple_gemini.jpg";
 
 const onChangeSelect = (value, storeAt) => {
   console.log(`selected ${value}`);
@@ -35,6 +36,7 @@ const MatchingPage = () => {
   const [maxAge, setMaxAge] = useState(0); //age number
   const [allShowtimesAccessible, setAllShowtimesAccessible] = useState([]);
   const [showtimesCanPick, setShowtimesCanPick] = useState([]);
+
   console.log("List movies API", listMovies);
   console.log("Selected Movies: ", selectMovieId);
   console.log("showtime can pick final ", showtimesCanPick);
@@ -133,7 +135,15 @@ const MatchingPage = () => {
   if (isLoading) {
     console.log("Loading");
     return (
-      <div className="flex flex-col justify-center pt-5">
+      <div
+        className="flex flex-col justify-center pt-5"
+        style={{
+          backgroundImage: `url(${couple_bg})`,
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center",
+        }}
+      >
         <Spin
           size="large"
           // style={{ fontSize: "100px" }}
@@ -159,7 +169,15 @@ const MatchingPage = () => {
     );
   }
   return (
-    <div className="flex items-center justify-center min-h-screen bg-pink-300">
+    <div
+      className="flex items-center justify-center min-h-screen bg-black"
+      style={{
+        backgroundImage: `url(${couple_bg})`,
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+        backgroundPosition: "center",
+      }}
+    >
       <div
         className="bg-white/80 border rounded shadow-md w-[550px] p-6"
         style={{

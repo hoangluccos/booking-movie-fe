@@ -42,7 +42,7 @@ function NotSlider({ children }) {
         </ul>
       </nav>
       <div className="navigation_mobile"></div>
-      <div className="pt-[160px] min-h-[600px]">{children}</div>
+      <div className="pt-[170px] min-h-[600px]">{children}</div>
       {/* Navigation for tablet using web -- END */}
       <Footer />
     </div>

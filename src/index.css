@@ -1,9 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url("https://fonts.googleapis.com/css2?family=Saira+Semi+Condensed:wght@400&display=swap");
 body {
   margin: 0;
-  font-family: "Josefin Sans", "Segoe UI", "Roboto", "Oxygen", "Ubuntu";
+  font-family: "Saira Semi Condensed", "Josefin Sans", "Segoe UI", "Roboto",
+    "Oxygen", "Ubuntu";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

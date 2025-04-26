@@ -6,6 +6,7 @@ import CouponItem from "../../components/CouponItem";
 import FeedbackItem from "../../components/FeedbackItem";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import CustomCalendar from "../../components/CustomCalendar";
 
 function useQuery() {
   const location = useLocation();
@@ -199,9 +200,12 @@ function MovieDetail() {
           <TicketModal isOpen={isModalOpen} onRequestClose={closeModal} />
         </div>
       </div>
+      <div className="flex justify-center">
+        <CustomCalendar />
+      </div>
       <div className="content coupons">
-        <h3 className="fw-bold text-center">ƯU ĐÃI HIỆN CÓ</h3>
-        <div className="flex flex-wrap gap-[10px] justify-center">
+        <p className="font-bold text-xl text-center">ƯU ĐÃI HIỆN CÓ</p>
+        <div className="flex flex-wrap gap-[10px] justify-center ">
           <CouponItem
             img={img}
             title="Cơ hội sở hữu LABUBU FLIP WITH ME 40cm tại HL-Theaters !"
