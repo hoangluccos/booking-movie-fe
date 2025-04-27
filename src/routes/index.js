@@ -28,6 +28,7 @@ import NotSlider from "../components/Layout/NotSlider";
 import AdminLayout from "../components/Layout/AdminLayout";
 import FeedbacksManagement from "../pages/AdminPages/FeedbacksManagement";
 import MatchingPage from "../pages/MatchingPage";
+import MatchingSuccess from "../pages/MatchingSuccess";
 
 //public
 const publicRoutes = [
@@ -105,6 +106,11 @@ const publicRoutes = [
   {
     path: "/matching",
     component: MatchingPage,
+    layout: NotSlider,
+  },
+  {
+    path: "/matching_success",
+    component: MatchingSuccess,
     layout: NotSlider,
   },
 ];

@@ -1,5 +1,4 @@
-//input -> string ;
-//dd-mm-yyyy
+//dd-mm-yyyy input -> string ;
 export const transferStringToDateCheckToDay = (typeString) => {
   const [day, month, year] = typeString.split("-");
   //   console.log(day, month, year);

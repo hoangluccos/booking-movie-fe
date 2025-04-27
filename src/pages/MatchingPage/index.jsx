@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
-import hand_love from "../../assets/hand_love.jpg";
-import { Select } from "antd";
+import { Select, Spin } from "antd";
 import instance from "../../api/instance";
 import { useNavigate } from "react-router-dom";
 import { transferStringToDateCheckToDay } from "../../utils/common";
 import { useWebSocket } from "../../hooks/useWebSocket";
-import { Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import couple_bg from "../../assets/couple_gemini.jpg";
 
@@ -112,7 +110,15 @@ const MatchingPage = () => {
 
     try {
       await connect(userId, handleNotificationSocket); // chờ kết nối thật sự
-
+      console.log("Object send: ", {
+        movieName: listMovies.find((movieObj) => movieObj.id === selectMovieId)
+          .name,
+        theaterName: selectTheaterName,
+        showtimeId: selectShowtime,
+        gender: selectGender,
+        minAge,
+        maxAge,
+      });
       await instance.post("/matching/", {
         movieName: listMovies.find((movieObj) => movieObj.id === selectMovieId)
           .name,
@@ -136,7 +142,7 @@ const MatchingPage = () => {
     console.log("Loading");
     return (
       <div
-        className="flex flex-col justify-center pt-5"
+        className="flex flex-col justify-center pt-5 min-h-screen"
         style={{
           backgroundImage: `url(${couple_bg})`,
           backgroundSize: "cover",
@@ -151,7 +157,7 @@ const MatchingPage = () => {
             <LoadingOutlined style={{ fontSize: 100, color: "pink" }} spin />
           }
         />
-        <p className="flex justify-center mt-10 font-bold">
+        <p className="flex justify-center mt-10 font-bold text-2xl text-white p-2 rounded-md bg-pink-400">
           Hệ thống đang tìm người phù hợp với bạn
         </p>
         <div className="flex justify-center">
@@ -162,8 +168,23 @@ const MatchingPage = () => {
             Hủy tìm
           </button>
         </div>
-        <div className="flex justify-center">
-          {notifications.length > 0 ? <></> : ""}
+        <div className="mt-3 justify-center">
+          {notifications.length > 0 ? (
+            <>
+              <div className="bg-pink-400 flex flex-col justify-center">
+                {notifications.map((noti, i) => (
+                  <p
+                    key={i}
+                    className="text-md text-center text-pink-50 font-bold"
+                  >
+                    {noti.message}
+                  </p>
+                ))}
+              </div>
+            </>
+          ) : (
+            ""
+          )}
         </div>
       </div>
     );
@@ -178,14 +199,7 @@ const MatchingPage = () => {
         backgroundPosition: "center",
       }}
     >
-      <div
-        className="bg-white/80 border rounded shadow-md w-[550px] p-6"
-        style={{
-          backgroundImage: { hand_love },
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      >
+      <div className="bg-white/80 border rounded shadow-md w-[550px] p-6">
         <div className="bg-black/40 text-white text-center py-2 font-semibold rounded mb-4">
           Đăng ký ghép đôi "Tìm bạn xem phim chung" dành cho các thành viên F.A
         </div>
