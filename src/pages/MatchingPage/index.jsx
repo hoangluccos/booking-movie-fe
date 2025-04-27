@@ -6,6 +6,7 @@ import { transferStringToDateCheckToDay } from "../../utils/common";
 import { useWebSocket } from "../../hooks/useWebSocket";
 import { LoadingOutlined } from "@ant-design/icons";
 import couple_bg from "../../assets/couple_gemini.jpg";
+import { toast } from "react-toastify";
 
 const onChangeSelect = (value, storeAt) => {
   console.log(`selected ${value}`);
@@ -35,6 +36,7 @@ const MatchingPage = () => {
   const [allShowtimesAccessible, setAllShowtimesAccessible] = useState([]);
   const [showtimesCanPick, setShowtimesCanPick] = useState([]);
 
+  const nav = useNavigate();
   console.log("List movies API", listMovies);
   console.log("Selected Movies: ", selectMovieId);
   console.log("showtime can pick final ", showtimesCanPick);
@@ -105,6 +107,40 @@ const MatchingPage = () => {
     }
   }, [allShowtimesAccessible, selectTheaterName]);
 
+  useEffect(() => {
+    const isCreateTicket = notifications.find(
+      (noti) => noti.message === "Tạo vé thành công"
+    );
+    const props = { dataPartner: null, dataTicket: null };
+    if (isCreateTicket) {
+      const isMatched = notifications.find(
+        (noti) => noti.message === "Ghép đôi thành công"
+      );
+      if (isMatched) {
+        props.dataPartner = isMatched.result; //dob, gender, name,
+        props.dataTicket = isCreateTicket.result;
+        /*
+        {
+          "id": "29e5ce02-9783-474b-9ab1-8b7b5725fbc6",
+          "date": "27-04-2025",
+          "time": "22:42:04",
+          "status": false,
+          "userId": "278ae8d6-0c8c-4fbc-b494-6100bc88c535",
+          "ticketAmount": 100000,
+          "foodAmount": 0,
+          "amount": 100000,
+          "showtimeId": "adf00d1d-a3d5-4f6d-b5d9-da8778b336c9"
+      }
+          */
+      }
+      toast.success("Hệ thống đã tìm được partner cho bạn!");
+      setTimeout(() => {
+        disconnect(); //disconnect socket
+        nav("/matching_success", { state: props });
+      }, 1000);
+    }
+  }, [notifications]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -137,6 +173,7 @@ const MatchingPage = () => {
 
   const handleDisconnect = () => {
     disconnect();
+    //logic fetch api delete request matching
   };
   if (isLoading) {
     console.log("Loading");

@@ -1,10 +1,17 @@
 import React from "react";
 import matching_congra from "../../assets/matching_success.png";
-import { Link } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Tooltip } from "antd";
 import { QuestionCircleOutlined } from "@ant-design/icons";
+import instance from "../../api/instance";
+import { handleRedirect } from "../../utils/common";
 
 function MatchingSuccess(props) {
+  const location = useLocation();
+  console.log("data receive", location.state);
+  const ticketId = location.state.dataTicket.id;
+  const nav = useNavigate();
+
   const movie = {
     id: "000ce205-71a0-4b0a-a14a-6cf7f83c2a75",
     name: "Mai",
@@ -40,6 +47,25 @@ function MatchingSuccess(props) {
       "https://res.cloudinary.com/ddwbopzwt/image/upload/v1743056304/ghostnepo/ipjekmmxonjbifkq95og.jpg",
     hasPassword: true,
   };
+
+  const handlePayment = () => {
+    const payment = async () => {
+      try {
+        const method = "VNPay";
+        const response = await instance.post(`/payment/`, null, {
+          params: {
+            ticketId,
+            method,
+          },
+        });
+        console.log(response.data.result);
+        handleRedirect(response.data.result, nav);
+      } catch (error) {
+        console.error("Error payment", error);
+      }
+    };
+    payment();
+  };
   return (
     <div
       className="min-h-[500px] flex select-none justify-between px-[180px]"
@@ -69,7 +95,7 @@ function MatchingSuccess(props) {
         </div>
       </div>
       <div className="info-btn_payment flex flex-col items-center justify-center">
-        <Link className="flex gap-2">
+        <div className="flex gap-2" onClick={handlePayment}>
           <p className="relative px-9 py-6 bg-[#2eb440] text-white rounded-md overflow-hidden group">
             <span className="absolute inset-0 bg-yellow-400 translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-500 ease-out"></span>
             <span className="relative z-10">THANH TOÁN NGAY</span>
@@ -82,7 +108,7 @@ function MatchingSuccess(props) {
               style={{ fontSize: 20, color: "black", cursor: "pointer" }}
             />
           </Tooltip>
-        </Link>
+        </div>
       </div>
     </div>
   );

@@ -4,6 +4,7 @@ import vnpay from "../../assets/vnpay.jpg";
 import instance from "../../api/instance";
 import CouponComponent from "../../components/CouponComponent";
 import FoodComponent from "../../components/FoodComponent";
+import { handleRedirect } from "../../utils/common";
 
 const PaymentMethods = () => {
   const [selectedMethod, setSelectedMethod] = useState("null");
@@ -36,14 +37,6 @@ const PaymentMethods = () => {
     setSelectFood(id);
   };
 
-  const handleRedirect = (url) => {
-    const isInternalRoute = url.startsWith("/");
-    if (isInternalRoute) {
-      nav(url);
-    } else {
-      window.location.href = url;
-    }
-  };
   const paymentMethods = [
     {
       id: "VNPay",
@@ -80,7 +73,7 @@ const PaymentMethods = () => {
               },
             });
             console.log(response.data.result);
-            handleRedirect(response.data.result);
+            handleRedirect(response.data.result, nav);
           } catch (error) {
             console.error("Error payment", error);
           }

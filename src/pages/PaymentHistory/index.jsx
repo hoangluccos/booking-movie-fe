@@ -4,15 +4,18 @@ import instance from "../../api/instance";
 import { Link } from "react-router-dom";
 import { Select } from "antd";
 import { toast, ToastContainer } from "react-toastify";
+import { convertTimestamp_DateTime } from "../../utils/common";
 
 const PaymentHistory = () => {
   const [transactions, setTransactions] = useState([]);
   const [sortOrder, setSortOrder] = useState("latest");
 
   console.log("transaction", transactions);
+
   const sortTransactions = (data, order) => {
     return [...data].sort((a, b) => {
       if (order === "latest") {
+        //giam dan
         return b.timestamp - a.timestamp;
       } else {
         return a.timestamp - b.timestamp;
@@ -31,14 +34,10 @@ const PaymentHistory = () => {
             try {
               const res = await instance.get(`/movies/${t.movieId}`);
               const image = res.data.result.image || "";
-              const timestamp = new Date(
-                t.date.split("-").reverse().join("-") + "T" + t.time
-              ).getTime();
+              const timestamp = convertTimestamp_DateTime(t.date, t.time);
               return { ...t, image, timestamp };
             } catch (error) {
-              const timestamp = new Date(
-                t.date.split("-").reverse().join("-") + "T" + t.time
-              ).getTime();
+              const timestamp = convertTimestamp_DateTime(t.date, t.time);
               return { ...t, image: "", timestamp };
             }
           })
@@ -52,7 +51,7 @@ const PaymentHistory = () => {
     };
 
     fetchTransactions();
-  }, [sortOrder]);
+  }, []);
 
   const onChangeFilter = (value) => {
     toast.success("Đã lọc thành công");
