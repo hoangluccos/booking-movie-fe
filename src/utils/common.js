@@ -22,6 +22,7 @@ export const convertTimestamp_DateTime = (date, time) => {
   // because format of ISO time is: "yyyy-mm-ddThh:mm:ss"
   //return new Date(date.split("-").reverse.join(-) + "T" + time);
 };
+
 export const handleRedirect = (url, nav) => {
   const isInternalRoute = url.startsWith("/");
   if (isInternalRoute) {

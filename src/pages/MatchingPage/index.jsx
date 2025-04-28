@@ -111,7 +111,7 @@ const MatchingPage = () => {
     const isCreateTicket = notifications.find(
       (noti) => noti.message === "Tạo vé thành công"
     );
-    const props = { dataPartner: null, dataTicket: null };
+    const props = { dataPartner: null, dataTicket: null, dataMovie: null };
     if (isCreateTicket) {
       const isMatched = notifications.find(
         (noti) => noti.message === "Ghép đôi thành công"
@@ -119,6 +119,9 @@ const MatchingPage = () => {
       if (isMatched) {
         props.dataPartner = isMatched.result; //dob, gender, name,
         props.dataTicket = isCreateTicket.result;
+        props.dataRequestMatching = listMovies.find(
+          (movieObj) => movieObj.id === selectMovieId
+        );
         /*
         {
           "id": "29e5ce02-9783-474b-9ab1-8b7b5725fbc6",

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import matching_congra from "../../assets/matching_success.png";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Tooltip } from "antd";
@@ -9,8 +9,12 @@ import { handleRedirect } from "../../utils/common";
 function MatchingSuccess(props) {
   const location = useLocation();
   console.log("data receive", location.state);
-  const ticketId = location.state.dataTicket.id;
   const nav = useNavigate();
+
+  const dataMovie = location.state.dataRequestMatching;
+  const dataTicket = location.state.dataTicket;
+  const ticketId = location.state.dataTicket.id;
+  const dataPartner = location.state.dataPartner;
 
   const movie = {
     id: "000ce205-71a0-4b0a-a14a-6cf7f83c2a75",
@@ -34,18 +38,6 @@ function MatchingSuccess(props) {
         name: "Chính Kịch",
       },
     ],
-  };
-  const partner = {
-    id: "a18dddc8-c890-4188-808e-da869bfe101b",
-    username: "ghostnepo",
-    firstName: "Luckily",
-    lastName: "Nguyen",
-    dateOfBirth: "14-06-2004",
-    gender: true,
-    email: "ghostnepo@gmail.com",
-    avatar:
-      "https://res.cloudinary.com/ddwbopzwt/image/upload/v1743056304/ghostnepo/ipjekmmxonjbifkq95og.jpg",
-    hasPassword: true,
   };
 
   const handlePayment = () => {
@@ -81,17 +73,15 @@ function MatchingSuccess(props) {
         <div className="flex flex-col items-center w-[300px] py-2 bg-white rounded-md">
           <p>Thông tin phim đã chọn</p>
           <div className="w-[100px] ">
-            <img src={movie.image} alt="" />
+            <img src={dataMovie.image} alt="" />
           </div>
-          <p>{movie.name}</p>
+          <p>{dataMovie.name}</p>
           <p>Ngày xuất chiếu - giờ</p>
         </div>
         <div className="flex flex-col items-center w-[300px] py-2 bg-white rounded-md">
           <p>Thông tin partner</p>
-          <p>
-            Tên: {partner.firstName} {partner.lastName}
-          </p>
-          <p>DOB: {partner.dateOfBirth}</p>
+          <p>Tên: {dataPartner.name}</p>
+          <p>DOB: {dataPartner.dateOfBirth}</p>
         </div>
       </div>
       <div className="info-btn_payment flex flex-col items-center justify-center">
