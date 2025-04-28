@@ -42,7 +42,7 @@ function LoginForm() {
 
         setTimeout(() => {
           if (role === "ADMIN") {
-            nav("/admin");
+            nav("/admin/dashboard");
           } else if (role === "USER") {
             nav("/");
           } else if (role === "MANAGER") {
