@@ -16,6 +16,15 @@ a {
   user-select: none;
   width: 75%;
 }
+
+#nav-tablet-input:checked ~ .navigation_overlay {
+  display: block;
+}
+
+#nav-tablet-input:checked ~ .navigation_tablet {
+  transform: translateX(0%);
+}
+
 .navigation_overlay {
   display: none;
   position: fixed;
@@ -23,14 +32,10 @@ a {
   right: 0;
   bottom: 0;
   left: 0;
+  z-index: 99;
   background-color: rgba(0, 0, 0, 0.4);
 }
-#nav-tablet-input:checked ~ .navigation_overlay {
-  display: block;
-}
-#nav-tablet-input:checked ~ .navigation_tablet {
-  transform: translateX(0%);
-}
+
 .navigation_tablet {
   position: fixed;
   top: 0;
@@ -39,22 +44,18 @@ a {
   width: 320px;
   max-width: 100%;
   background-color: #fff;
-  z-index: 1;
+  z-index: 100;
   transform: translateX(100%);
 }
 .list-navigation {
-  margin-top: 28px;
+  z-index: 100;
+  margin-top: 46px;
 }
-/* .navigation_mobile {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  background-color: rgba(0, 0, 0, 0.4);
-} */
 /* phan chung */
 @media only screen and (max-width: 1023px) {
+  .image_banner {
+    padding-top: 0;
+  }
   .slide-image {
     height: 100%;
   }
@@ -64,9 +65,6 @@ a {
     justify-content: center;
     gap: 30px;
   }
-  .download {
-    align-self: center;
-  }
   .theater-page .item {
     width: 43%;
     height: 200px;
@@ -75,6 +73,7 @@ a {
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-top: 110px;
     margin-bottom: 8px;
   }
   .navigation_desktop {
@@ -101,6 +100,9 @@ a {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
   .profile-info {
+    flex-direction: column;
+  }
+  .take_care_client {
     flex-direction: column;
   }
   .form-avatar {

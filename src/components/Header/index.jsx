@@ -8,6 +8,7 @@ import SearchItem from "../SearchItem";
 import { IoIosNotifications } from "react-icons/io";
 import IMG_TICKET from "../../assets/random_partner.png";
 import ButtonNavHeader from "../ButtonNavHeader";
+
 function Header() {
   const [listMovies, setListMovies] = useState([]);
   const [suggestedMovies, setSuggestedMovies] = useState([]);
@@ -97,14 +98,15 @@ function Header() {
   return (
     <div className="select-nones">
       <ToastContainer />
-      <div className="w-full bg-[#0f172a] fixed top-0 left-0 z-50 p-2.5">
+      <div className="w-full bg-[#0f172a] fixed top-0 left-0 z-50 p-2.5 nav_ab">
         <header className="max-w-[1200px] mx-auto flex flex-col p-2.5 items-center">
           <div className="flex items-center justify-between mb-2 w-full">
             <div className="flex items-center">
               <Link to={"/"}>
                 <FaFilm className="text-white text-4xl mr-2" />
               </Link>
-              <div className="search-input relative w-full max-w-[500px] min-w-[800px] flex-grow">
+              {/* search input */}
+              <div className="search-input relative w-full max-w-[900px] min-w-[500px] flex-grow">
                 <div className="flex items-center bg-[#f5f5f5] rounded-full p-1.5 mr-2 flex-grow min-w-[200px]">
                   <input
                     type="text"

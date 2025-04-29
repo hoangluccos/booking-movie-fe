@@ -41,9 +41,7 @@ function Footer() {
                 Chăm sóc khách hàng
               </p>
               <li>Hotline: 19002099</li>
-              <li>
-                Giờ làm việc: 9:00 - 22:00 (Tất cả các ngày bao gồm cả Lễ, Tết)
-              </li>
+              <li>Giờ làm việc: 9:00 - 22:00</li>
               <li>Email hỗ trợ: client@hltheaters.vn</li>
               <li>Nhanh chóng</li>
             </ul>
