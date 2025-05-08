@@ -8,7 +8,7 @@ function NotSlider({ children }) {
     <div className="flex flex-col">
       <Header />
       <NavResponsive />
-      <div className="pt-[170px] min-h-[600px] image_banner">{children}</div>
+      <div className="pt-[160px] min-h-[600px] image_banner">{children}</div>
       <Footer />
     </div>
   );

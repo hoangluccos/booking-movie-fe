@@ -6,15 +6,28 @@ import { transferStringToDateCheckToDay } from "../../utils/common";
 import LabelText from "../../components/LabelText";
 
 function HomeUser() {
-  const [data, setData] = useState([]);
-  const [showAll, setShowAll] = useState(false);
-
+  // const [data, setData] = useState([]);
+  // const [showAll, setShowAll] = useState(false);
+  const [showAllPlaying, setShowAllPlaying] = useState(false);
+  const [showAllComingSoon, setShowAllComingSoon] = useState(false);
+  const [listMoviePlaying, setListMoviePlaying] = useState([]);
+  const [listMovieComingSoon, setListMovieComingSoon] = useState([]);
   useEffect(() => {
     (async () => {
       try {
         const res = await instance.get("/movies/");
         console.log("List Movies in HomeUser: ", res.data.result);
-        setData(res.data.result);
+        // setData(res.data.result);
+        setListMoviePlaying(
+          res.data.result.filter(
+            (product) => !transferStringToDateCheckToDay(product.premiere)
+          )
+        );
+        setListMovieComingSoon(
+          res.data.result.filter((product) =>
+            transferStringToDateCheckToDay(product.premiere)
+          )
+        );
       } catch (error) {
         console.log("Failed to fetch movies:", error);
       }
@@ -22,8 +35,13 @@ function HomeUser() {
   }, []);
 
   // Hiển thị tối đa 4 sản phẩm nếu `showAll` là `false`
-  const displayedData = showAll ? data : data.slice(0, 4);
-
+  // const displayedData = showAll ? data : data.slice(0, 4);
+  const displayedDataPlaying = showAllPlaying
+    ? listMoviePlaying
+    : listMoviePlaying.slice(0, 4);
+  const displayedDataComingSoon = showAllComingSoon
+    ? listMovieComingSoon
+    : listMovieComingSoon.slice(0, 4);
   return (
     <div className="mt-[26px]">
       <div className="bg-[0f172a] w-full">
@@ -33,7 +51,7 @@ function HomeUser() {
               <LabelText text={"PHIM ĐANG CHIẾU"} />
               <hr className="border-t-2 border-gray-200" />
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 p-5 justify-start">
-                {displayedData
+                {displayedDataPlaying
                   .filter(
                     (product) =>
                       !transferStringToDateCheckToDay(product.premiere)
@@ -51,18 +69,18 @@ function HomeUser() {
                   ))}
               </div>
               <div className="w-full flex justify-center">
-                {!showAll && data.length > 4 ? (
+                {!showAllPlaying && listMoviePlaying.length > 4 ? (
                   <button
                     className="px-5 py-2 bg-[#4b3f72] text-white rounded-md transition-colors duration-300 hover:bg-[#6a579f]"
-                    onClick={() => setShowAll(true)}
+                    onClick={() => setShowAllPlaying(true)}
                   >
                     Hiển thị thêm
                   </button>
                 ) : (
-                  showAll && (
+                  showAllPlaying && (
                     <button
                       className="px-5 py-2 bg-[#4b3f72] text-white rounded-md transition-colors duration-300 hover:bg-[#6a579f]"
-                      onClick={() => setShowAll(false)}
+                      onClick={() => setShowAllPlaying(false)}
                     >
                       Ẩn bớt
                     </button>
@@ -71,12 +89,12 @@ function HomeUser() {
               </div>
             </div>
             {/* COMING SOON */}
-            <div className="max-w-screen-xl mx-auto px-4">
+            <div className="max-w-screen-xl mx-auto px-4 mt-2">
               <LabelText text={"PHIM SẮP CHIẾU"} />
 
               <hr className="border-t-2 border-gray-200" />
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 p-5 justify-start">
-                {displayedData
+                {displayedDataComingSoon
                   .filter((product) =>
                     transferStringToDateCheckToDay(product.premiere)
                   )
@@ -93,18 +111,18 @@ function HomeUser() {
                   ))}
               </div>
               <div className="w-full flex justify-center mt-4">
-                {!showAll && data.length > 4 ? (
+                {!showAllComingSoon && listMovieComingSoon.length > 4 ? (
                   <button
                     className="px-5 py-2 bg-[#4b3f72] text-white rounded-md transition-colors duration-300 hover:bg-[#6a579f]"
-                    onClick={() => setShowAll(true)}
+                    onClick={() => setShowAllComingSoon(true)}
                   >
                     Hiển thị thêm
                   </button>
                 ) : (
-                  showAll && (
+                  showAllComingSoon && (
                     <button
                       className="px-5 py-2 bg-[#4b3f72] text-white rounded-md transition-colors duration-300 hover:bg-[#6a579f]"
-                      onClick={() => setShowAll(false)}
+                      onClick={() => setShowAllComingSoon(false)}
                     >
                       Ẩn bớt
                     </button>
