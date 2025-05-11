@@ -7,6 +7,8 @@ import FeedbackItem from "../../components/FeedbackItem";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CustomCalendar from "../../components/CustomCalendar";
+import imgUserTmp from "../../assets/profile.png";
+import ActorComponent from "../../components/ActorComponent";
 
 function useQuery() {
   const location = useLocation();
@@ -17,7 +19,7 @@ function MovieDetail() {
   const img =
     "https://bhdstar.vn/wp-content/uploads/2024/10/poster-labubu-web-1.jpg";
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [infoMovie, setInfoMovie] = useState({});
+  const [infoMovie, setInfoMovie] = useState({ actors: [] });
   const param = useParams();
   const query = useQuery();
   const navigate = useNavigate();
@@ -182,6 +184,29 @@ function MovieDetail() {
           <div className="flex items-center mt-5">
             <i className="fa-solid fa-tag"></i>
             <p className="mx-3 mb-0">{infoMovie.language}</p>
+          </div>
+          {/* list actor */}
+          <div className="mh-25 mt-5">
+            <h4 className="font-bold">DIỄN VIÊN</h4>
+            <div className="flex flex-row gap-x-2">
+              {infoMovie.actors.map((actor, id) => (
+                <ActorComponent
+                  key={id}
+                  name={actor.name}
+                  image={actor.image}
+                />
+              ))}
+            </div>
+          </div>
+          {/* list director */}
+          <div className="mh-25 mt-5">
+            <h4 className="font-bold">ĐẠO DIỄN</h4>
+            <div className="flex flex-row gap-x-2">
+              <ActorComponent
+                name={infoMovie.director.name}
+                image={infoMovie.director.image}
+              />
+            </div>
           </div>
           <div className="mh-25 mt-5">
             <h4 className="font-bold">NỘI DUNG</h4>
