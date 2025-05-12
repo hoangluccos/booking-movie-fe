@@ -203,8 +203,8 @@ function MovieDetail() {
             <h4 className="font-bold">ĐẠO DIỄN</h4>
             <div className="flex flex-row gap-x-2">
               <ActorComponent
-                name={infoMovie.director.name}
-                image={infoMovie.director.image}
+                name={infoMovie.director?.name}
+                image={infoMovie.director?.image}
               />
             </div>
           </div>

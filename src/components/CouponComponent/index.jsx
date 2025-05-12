@@ -9,6 +9,7 @@ function CouponComponent({ totalPrice, onApplyCoupon }) {
   const [listCoupons, setListCoupons] = useState([]);
   const [appliedCoupon, setAppliedCoupon] = useState(null);
   const [isSelect, setIsSelect] = useState("");
+
   useEffect(() => {
     const fetchCoupons = async () => {
       try {
@@ -61,14 +62,21 @@ function CouponComponent({ totalPrice, onApplyCoupon }) {
     return totalPrice;
   };
 
-  const formatCurrency = (value) => {
-    return value.toLocaleString(); // Thêm dấu phân cách hàng nghìn
+  const calculateDiscountAmount = () => {
+    if (!appliedCoupon) return 0;
+    return totalPrice - calculateFinalPrice();
   };
+
+  const formatCurrency = (value) => {
+    return value.toLocaleString();
+  };
+
   const handleSelectCoupon = (id, code) => {
-    // setAppliedCoupon(code);
+    setCoupons(code);
     onApplyCoupon(id);
     setIsSelect(id);
   };
+
   return (
     <div className="p-3 border rounded">
       <ToastContainer />
@@ -106,15 +114,9 @@ function CouponComponent({ totalPrice, onApplyCoupon }) {
       {appliedCoupon ? (
         <div className="text-green-500">
           <p>Giá ban đầu: {formatCurrency(totalPrice)} VND</p>
-          {/* <p className="text-red-400">
-            Số tiền được giảm:
-            {appliedCoupon.discountType === "Fixed"
-              ? formatCurrency(calculateFinalPrice)
-              : formatCurrency(
-                  Math.max(totalPrice * (appliedCoupon.discountValue / 100), 0)
-                )}{" "}
-            VND
-          </p> */}
+          <p className="text-red-400">
+            Số tiền được giảm: {formatCurrency(calculateDiscountAmount())} VND
+          </p>
         </div>
       ) : (
         <p className="text-red-500">Chưa áp dụng mã giảm giá nào</p>
