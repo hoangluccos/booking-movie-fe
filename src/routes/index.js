@@ -29,6 +29,7 @@ import AdminLayout from "../components/Layout/AdminLayout";
 import FeedbacksManagement from "../pages/AdminPages/FeedbacksManagement";
 import MatchingPage from "../pages/MatchingPage";
 import MatchingSuccess from "../pages/MatchingSuccess";
+import PersonPage from "../pages/PersonPage";
 
 //public
 const publicRoutes = [
@@ -111,6 +112,11 @@ const publicRoutes = [
   {
     path: "/matching_success",
     component: MatchingSuccess,
+    layout: NotSlider,
+  },
+  {
+    path: "/person_page",
+    component: PersonPage,
     layout: NotSlider,
   },
 ];

@@ -7,7 +7,6 @@ import FeedbackItem from "../../components/FeedbackItem";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CustomCalendar from "../../components/CustomCalendar";
-import imgUserTmp from "../../assets/profile.png";
 import ActorComponent from "../../components/ActorComponent";
 
 function useQuery() {
@@ -55,21 +54,6 @@ function MovieDetail() {
   };
 
   useEffect(() => {
-    // const fetch = async () => {
-    //   try {
-    //     const res = await instance.get(`/feedbacks/${param.id}/all`);
-    //     console.log(res.data);
-    //     console.log(res.data.result.byEmail);
-    //     if (res.data.result.length > 0) {
-    //       setFeedback(res.data.result);
-    //     } else {
-    //       setFeedback([]);
-    //     }
-    //   } catch (error) {
-    //     console.log("Error fetch feedback: ", error);
-    //   }
-    // };
-    // fetch();
     const fetch = async () => {
       try {
         const [resFeedback, resBio] = await Promise.all([
