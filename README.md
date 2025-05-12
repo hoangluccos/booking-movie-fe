@@ -1,38 +1,33 @@
-Hệ Thống Ứng Dụng Đặt Vé Xem Phim
-Giới Thiệu
-Hệ thống ứng dụng đặt vé xem phim là một nền tảng trực tuyến được xây dựng để hỗ trợ người dùng đặt vé xem phim một cách dễ dàng và tiện lợi. Dự án này được thiết kế với hai vai trò chính: Admin và User, mỗi vai trò có các chức năng riêng biệt để đáp ứng nhu cầu quản lý và sử dụng.
-Vai Trò
+# **HỆ THỐNG ỨNG DỤNG ĐẶT VÉ XEM PHIM**
 
-Admin: Quản lý hệ thống (chức năng đang phát triển...).
-User: Người dùng cuối với các tính năng phong phú.
+## **GIỚI THIỆU**
 
-Chức Năng User
+Hệ thống ứng dụng đặt vé xem phim là một nền tảng trực tuyến được xây dựng để hỗ trợ người dùng đặt vé xem phim một cách dễ dàng và tiện lợi. Dự án này được thiết kế với hai vai trò chính: **Admin** và **User**, mỗi vai trò có các chức năng riêng biệt để đáp ứng nhu cầu quản lý và sử dụng.
 
-Xem thông tin phim.
-Tìm kiếm phim theo tiêu chí.
-Đặt vé xem phim.
-Thanh toán qua VNPay.
-Đăng nhập bằng Google.
-Đăng ký tài khoản (Sign-up).
-Đăng xuất (Logout).
-Cập nhật thông tin cá nhân.
-Tải lên ảnh đại diện (Upload ảnh).
-Xem lịch sử mua vé.
-Áp dụng coupon để giảm giá.
-Mua food đi kèm.
+## **VAI TRÒ**
 
-Chức Năng Admin
+- **Admin**: Quản lý hệ thống (chức năng đang phát triển...).
+- **User**: Người dùng cuối với các tính năng phong phú.
 
-Chức năng đang trong quá trình phát triển (Processing...).
+## **CHỨC NĂNG USER**
 
-Hướng Dẫn Sử Dụng
+- Xem thông tin phim.
+- Tìm kiếm phim theo tiêu chí.
+- Đặt vé xem phim.
+- Thanh toán qua VNPay.
+- Đăng nhập bằng Google.
+- Đăng ký tài khoản (Sign-up).
+- Đăng xuất (Logout).
+- Cập nhật thông tin cá nhân.
+- Tải lên ảnh đại diện (Upload ảnh).
+- Xem lịch sử mua vé.
+- Áp dụng coupon để giảm giá.
+- Mua food đi kèm.
 
-Clone repository về máy:git clone <repository-url>
+## **CHỨC NĂNG ADMIN**
 
-Cài đặt các dependencies:npm install
+- Chức năng đang trong quá trình phát triển (Processing...).
 
-Chạy ứng dụng:npm start
+## **HƯỚNG DẪN SỬ DỤNG**
 
-Tác Giả
-
-HoangLuc - hoangatdevno1@gmail.com
+1. Clone repository về máy:
