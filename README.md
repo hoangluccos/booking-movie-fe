@@ -30,4 +30,5 @@ Hệ thống ứng dụng đặt vé xem phim là một nền tảng trực tuy�
 
 ## **HƯỚNG DẪN SỬ DỤNG**
 
-1. Clone repository về máy:
+1. Clone repository về máy: git clone: link_project
+2. Download các Dependencies về máy: npm i

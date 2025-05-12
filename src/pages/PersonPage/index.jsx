@@ -1,53 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import instance from "../../api/instance";
-
+import imgUserTmp from "../../assets/profile.png";
 const PersonPage = () => {
-  const actor = {
-    name: "Kim Hye-ja",
-    image:
-      "https://res.cloudinary.com/ddwbopzwt/image/upload/v1746410724/Victor%20V%C5%A9/xxoc0ojefllmiytj1llc.jpg",
-    genre: "Điện ảnh",
-    intro: "Diễn viên nổi tiếng",
-    birthDate: "Ngày sinh: Đang cập nhật",
-    movies: [
-      {
-        title: "Heavenly Ever After",
-        image: "https://via.placeholder.com/200",
-        pd: "PD: 7",
-        tm: "TM: 6",
-      },
-      {
-        title: "Our Blues",
-        image: "https://via.placeholder.com/200",
-        pd: "PD: 20",
-        tm: "TM: 20",
-      },
-      {
-        title: "The Light in Your Eyes",
-        image: "https://via.placeholder.com/200",
-        pd: "PD: 12",
-      },
-      {
-        title: "How to Steal a Dog",
-        image: "https://via.placeholder.com/200",
-        pd: "PD: T.Minh",
-      },
-      {
-        title: "How to Steal a Dog",
-        image: "https://via.placeholder.com/200",
-        pd: "PD: T.Minh",
-      },
-    ],
-  };
+  const location = useLocation();
+  const personId = location.pathname.split("/")[2];
+  const [personInfo, setPersonInfo] = useState({});
   const [listMovieByPersonId, setListMovieByPersonId] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await instance.get("/movies/");
-        console.log("res", res.data.result);
-        setListMovieByPersonId(res.data.result);
+        const res = await instance.get(`/movies/person?personId=${personId}`);
+        // console.log("res", res.data.result);
+        setPersonInfo(res.data.result);
+        setListMovieByPersonId(res.data.result.listMovies);
       } catch (error) {
         console.log("error when fetch api", error);
       }
@@ -60,16 +27,20 @@ const PersonPage = () => {
       {/* Left Section - Actor Info */}
       <div className="w-1/4 p-6 flex flex-col items-center border-r border-gray-700">
         <img
-          src={actor.image}
-          alt={actor.name}
-          className="w-32 h-32 rounded-full mb-4"
+          src={personInfo.image ? personInfo.image : imgUserTmp}
+          alt={personInfo?.name}
+          className="w-32 h-32 rounded-full mb-4 object-cover"
+          onError={({ currentTarget }) => {
+            currentTarget.onerror = null;
+            currentTarget.src = imgUserTmp;
+          }}
         />
-        <h2 className="text-xl font-bold">{actor.name}</h2>
+        <h2 className="text-xl font-bold">{personInfo?.name}</h2>
         <div className="mt-4 text-sm text-gray-400">
-          <p>Thể loại: Đang cập nhật</p>
+          <p>Vai trò: {personInfo?.job?.name}</p>
           <p>Giới thiệu: Đang cập nhật</p>
-          <p>Giới tính: Đang cập nhật</p>
-          <p>{actor.birthDate}</p>
+          <p>Giới tính: {personInfo?.gender ? "Nam" : "Nữ"}</p>
+          <p>DOB: {personInfo?.dateOfBirth}</p>
         </div>
       </div>
 

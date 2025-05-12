@@ -30,6 +30,7 @@ import FeedbacksManagement from "../pages/AdminPages/FeedbacksManagement";
 import MatchingPage from "../pages/MatchingPage";
 import MatchingSuccess from "../pages/MatchingSuccess";
 import PersonPage from "../pages/PersonPage";
+import GenreMoviePage from "../pages/GenreMoviePage";
 
 //public
 const publicRoutes = [
@@ -115,8 +116,13 @@ const publicRoutes = [
     layout: NotSlider,
   },
   {
-    path: "/person_page",
+    path: "/person_page/:id",
     component: PersonPage,
+    layout: NotSlider,
+  },
+  {
+    path: "/genre_page/:id",
+    component: GenreMoviePage,
     layout: NotSlider,
   },
 ];

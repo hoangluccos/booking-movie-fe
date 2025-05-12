@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, act } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import instance from "../../api/instance";
 import TicketModal from "../../components/TicketModal";
@@ -8,6 +8,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CustomCalendar from "../../components/CustomCalendar";
 import ActorComponent from "../../components/ActorComponent";
+import GenreComponent from "../../components/GenreComponent";
 
 function useQuery() {
   const location = useLocation();
@@ -18,7 +19,7 @@ function MovieDetail() {
   const img =
     "https://bhdstar.vn/wp-content/uploads/2024/10/poster-labubu-web-1.jpg";
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [infoMovie, setInfoMovie] = useState({ actors: [] });
+  const [infoMovie, setInfoMovie] = useState({ actors: [], genres: [] });
   const param = useParams();
   const query = useQuery();
   const navigate = useNavigate();
@@ -85,7 +86,7 @@ function MovieDetail() {
     const fetchMovieDetails = async () => {
       try {
         const res = await instance.get(`/movies/${param.id}`);
-        console.log(res.data.result);
+        console.log("res:", res.data.result);
         setInfoMovie(res.data.result);
       } catch (error) {
         console.log(error);
@@ -108,6 +109,7 @@ function MovieDetail() {
     }
   };
 
+  // edit feedback
   const handleEdit = (id, newContent, newRate) => {
     console.log(newContent, "---", newRate, "------", "id:", id);
     const fetchUpdateFB = async () => {
@@ -130,7 +132,7 @@ function MovieDetail() {
       )
     );
   };
-
+  // delete feedback
   const handleDelete = (id) => {
     const fetchDelFB = async () => {
       try {
@@ -169,6 +171,15 @@ function MovieDetail() {
             <i className="fa-solid fa-tag"></i>
             <p className="mx-3 mb-0">{infoMovie.language}</p>
           </div>
+          {/* Genre */}
+          <div className="mh-25 mt-5">
+            <h4 className="font-bold">THỂ LOẠI </h4>
+            <div className="flex flex-row gap-x-2">
+              {infoMovie.genres.map((genre, id) => (
+                <GenreComponent key={id} idGenre={genre.id} name={genre.name} />
+              ))}
+            </div>
+          </div>
           {/* list actor */}
           <div className="mh-25 mt-5">
             <h4 className="font-bold">DIỄN VIÊN</h4>
@@ -176,6 +187,7 @@ function MovieDetail() {
               {infoMovie.actors.map((actor, id) => (
                 <ActorComponent
                   key={id}
+                  idPerson={actor.id}
                   name={actor.name}
                   image={actor.image}
                 />
@@ -187,6 +199,7 @@ function MovieDetail() {
             <h4 className="font-bold">ĐẠO DIỄN</h4>
             <div className="flex flex-row gap-x-2">
               <ActorComponent
+                idPerson={infoMovie.director?.id}
                 name={infoMovie.director?.name}
                 image={infoMovie.director?.image}
               />

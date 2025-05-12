@@ -1,17 +1,17 @@
 import { Link } from "react-router-dom";
 import imgUserTmp from "../../assets/profile.png";
 
-function ActorComponent({ name, image }) {
+function ActorComponent({ idPerson, name, image }) {
   return (
     <Link
-      to={"/person_page"}
+      to={`/person_page/${idPerson}`}
       className="flex max-w-[160px] h-[40px] items-center bg-slate-100 shadow-sm rounded-md px-1 transition-transform duration-200 ease-in-out hover:scale-105 hover:shadow-lg"
     >
       <div className="h-[40px] rounded-full">
         <img
           src={image}
           alt=""
-          className="w-full h-full rounded-full"
+          className="w-full h-full rounded-full object-cover"
           onError={({ currentTarget }) => {
             currentTarget.onerror = null;
             currentTarget.src = imgUserTmp;
