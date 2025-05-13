@@ -170,6 +170,16 @@ const MatchingPage = () => {
   const handleDisconnect = () => {
     disconnect();
     //logic fetch api delete request matching
+    const deleteRequestMatching = async () => {
+      try {
+        const res = await instance.delete("/matching/");
+        toast.success(res.data.message);
+        console.log("Delete matching request: ", res.data.message);
+      } catch (error) {
+        console.log("Error delete api");
+      }
+    };
+    deleteRequestMatching();
   };
   if (isLoading) {
     console.log("Loading");
