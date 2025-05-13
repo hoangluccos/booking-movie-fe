@@ -152,7 +152,7 @@ function MovieDetail() {
     <div className="mt-5">
       <ToastContainer />
       <div className="content movie-detail mt-6 pb-3 flex flex-row gap-[40px]">
-        <div className="w-[40%] h-[40%] movie-banner">
+        <div className="w-[40%] h-[40%] movie-banner shadow-lg shadow-black">
           <img src={infoMovie.image} alt="" className="w-full" />
         </div>
         <div>
@@ -215,7 +215,7 @@ function MovieDetail() {
           </div>
           <button
             onClick={() => setIsModalOpen(true)}
-            className="mt-2 bg-slate-300 text-black w-[98px] h-[36px] rounded-[6px] select-none transition-all duration-400 ease-in-out hover:bg-gradient-to-r hover:from-[#d56868] hover:to-[#f8cf55] hover:bg-[length:200%_100%] hover:bg-right"
+            className="mt-2 bg-slate-300 text-black text-xl w-[108px] h-[56px] rounded-[6px] select-none transition-all duration-400 ease-in-out hover:bg-gradient-to-r hover:from-[#d56868] hover:to-[#f8cf55] hover:bg-[length:200%_100%] hover:bg-right"
           >
             <i className="fa-solid fa-ticket"></i> Mua vé
           </button>

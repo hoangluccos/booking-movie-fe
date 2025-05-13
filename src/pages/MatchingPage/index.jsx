@@ -41,7 +41,7 @@ const MatchingPage = () => {
   console.log("Selected Movies: ", selectMovieId);
   console.log("showtime can pick final ", showtimesCanPick);
   console.log("MyId bio ", userId);
-
+  console.log("showtime can pick : ", showtimesCanPick);
   const genderOptions = [
     { name: "Nam", id: 1 },
     { name: "Nữ", id: 0 },
@@ -111,7 +111,12 @@ const MatchingPage = () => {
     const isCreateTicket = notifications.find(
       (noti) => noti.message === "Tạo vé thành công"
     );
-    const props = { dataPartner: null, dataTicket: null, dataMovie: null };
+    const props = {
+      dataPartner: null,
+      dataTicket: null,
+      dataMovie: null,
+      showTime: null,
+    };
     if (isCreateTicket) {
       const isMatched = notifications.find(
         (noti) => noti.message === "Ghép đôi thành công"
@@ -122,19 +127,7 @@ const MatchingPage = () => {
         props.dataRequestMatching = listMovies.find(
           (movieObj) => movieObj.id === selectMovieId
         );
-        /*
-        {
-          "id": "29e5ce02-9783-474b-9ab1-8b7b5725fbc6",
-          "date": "27-04-2025",
-          "time": "22:42:04",
-          "status": false,
-          "userId": "278ae8d6-0c8c-4fbc-b494-6100bc88c535",
-          "ticketAmount": 100000,
-          "foodAmount": 0,
-          "amount": 100000,
-          "showtimeId": "adf00d1d-a3d5-4f6d-b5d9-da8778b336c9"
-      }
-          */
+        props.showTime = showtimesCanPick.find((s) => s.id === selectShowtime);
       }
       toast.success("Hệ thống đã tìm được partner cho bạn!");
       setTimeout(() => {

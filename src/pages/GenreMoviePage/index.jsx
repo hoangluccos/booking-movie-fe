@@ -23,14 +23,16 @@ const GenreMoviePage = () => {
   }, []);
 
   return (
-    <div className="flex-col pt-[80px] px-[100px] min-h-screen bg-gray-900 text-white">
+    <div className="flex-col pt-[40px] px-[100px] min-h-screen bg-gray-900 text-white">
       <div className="content">
         <div className="">
           <p className="text-2xl">Phim {genreInfo?.name}</p>
+          <hr className="text-gray-50 font-semibold" />
         </div>
         {/* Below Section - Movie List */}
         <div className="p-6">
           <h3 className="text-2xl font-semibold mb-4">Các phim đã tham gia</h3>
+
           <div className="grid grid-cols-4 gap-4">
             {listMovieByGenreId.map((movie, index) => (
               <Link

@@ -5,7 +5,7 @@ function ActorComponent({ idPerson, name, image }) {
   return (
     <Link
       to={`/person_page/${idPerson}`}
-      className="flex max-w-[160px] h-[40px] items-center bg-slate-100 shadow-sm rounded-md px-1 transition-transform duration-200 ease-in-out hover:scale-105 hover:shadow-lg"
+      className="flex max-w-[160px] h-[40px] items-center bg-slate-200 shadow-sm  rounded-md px-1 transition-transform duration-200 ease-in-out hover:scale-105 hover:shadow-lg"
     >
       <div className="h-[40px] rounded-full">
         <img

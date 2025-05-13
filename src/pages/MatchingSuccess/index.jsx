@@ -1,12 +1,10 @@
-import React, { useEffect } from "react";
-import matching_congra from "../../assets/matching_success.png";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Tooltip } from "antd";
 import { QuestionCircleOutlined } from "@ant-design/icons";
 import instance from "../../api/instance";
 import { handleRedirect } from "../../utils/common";
 
-function MatchingSuccess(props) {
+function MatchingSuccess() {
   const location = useLocation();
   console.log("data receive", location.state);
   const nav = useNavigate();
@@ -15,30 +13,7 @@ function MatchingSuccess(props) {
   const dataTicket = location.state.dataTicket;
   const ticketId = location.state.dataTicket.id;
   const dataPartner = location.state.dataPartner;
-
-  const movie = {
-    id: "000ce205-71a0-4b0a-a14a-6cf7f83c2a75",
-    name: "Mai",
-    premiere: "15-11-2024",
-    language: "Vietnamese",
-    content:
-      'MAI là câu chuyện về cuộc đời của người phụ nữ cùng tên, với ánh nhìn tĩnh lặng, xuyên thấu " Quá khứ chưa ngủ yên, ngày mai liệu sẽ đến?.."',
-    duration: 120,
-    rate: 5.0,
-    image:
-      "https://res.cloudinary.com/ddwbopzwt/image/upload/v1732207762/MovieImage/t9rax2ryriomf74bs1yt.jpg",
-    canComment: false,
-    genres: [
-      {
-        id: "3a6e1ea3-282c-4ac8-9ca0-61ddcbdadc30",
-        name: "Lãng Mạn",
-      },
-      {
-        id: "bbfb97ac-d6e8-4513-a155-168646a4aaf1",
-        name: "Chính Kịch",
-      },
-    ],
-  };
+  const showTime = location.state.showTime;
 
   const handlePayment = () => {
     const payment = async () => {
@@ -60,9 +35,9 @@ function MatchingSuccess(props) {
   };
   return (
     <div
-      className="min-h-[500px] flex select-none justify-between px-[180px]"
+      className="min-h-[600px] flex-col select-none justify-between px-[180px]"
       style={{
-        backgroundImage: `linear-gradient(to bottom right, #FA9F9E, #7BD5F0), url(${matching_congra})`,
+        backgroundImage: `linear-gradient(to bottom right, #FA9F9E, #7BD5F0)`,
         backgroundSize: "contain",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
@@ -76,15 +51,22 @@ function MatchingSuccess(props) {
             <img src={dataMovie.image} alt="" />
           </div>
           <p>{dataMovie.name}</p>
-          <p>Ngày xuất chiếu - giờ</p>
+          <p>
+            Ngày xuất chiếu {showTime.date} - giờ {showTime.startTime}
+          </p>
         </div>
         <div className="flex flex-col items-center w-[300px] py-2 bg-white rounded-md">
           <p>Thông tin partner</p>
           <p>Tên: {dataPartner.name}</p>
           <p>DOB: {dataPartner.dateOfBirth}</p>
         </div>
+        <div className="flex justify-center items-center w-[300px] py-2 bg-white rounded-md">
+          <p className="my-auto text-lg font-bold">
+            Tổng tiền cần thanh toán: {dataTicket?.amount.toLocaleString()}VND
+          </p>
+        </div>
       </div>
-      <div className="info-btn_payment flex flex-col items-center justify-center">
+      <div className="info-btn_payment flex flex-col items-center justify-center mt-5 ml-5">
         <div className="flex gap-2" onClick={handlePayment}>
           <p className="relative px-9 py-6 bg-[#2eb440] text-white rounded-md overflow-hidden group">
             <span className="absolute inset-0 bg-yellow-400 translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-500 ease-out"></span>
