@@ -3,20 +3,31 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Select, ConfigProvider, DatePicker, Input, Button } from "antd";
 import dayjs, { Dayjs } from "dayjs";
-import instance from "../../../api/instance";
+import instance from "../../../api/instance.js";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { CreateMovieRequest } from "../Data/Data.tsx";
-import { useAppDispatch, useAppSelector } from "../../../redux/store/store.tsx";
-import { createMovie } from "../../../redux/slices/movieSlice.tsx";
+import { useAppDispatch, useAppSelector } from "../../../redux/Store/Store.tsx";
+import {
+  createMovie,
+  getDetailMovie,
+  updateMovie,
+} from "../../../redux/Slices/MovieSlice.tsx";
+import { getAllGenres } from "../../../redux/Slices/GenreSlice.tsx";
+import {
+  getAllActors,
+  getAllDirectors,
+} from "../../../redux/Slices/PersonSlice.tsx";
 
 const { TextArea } = Input;
 
-const CreateMoviePage = () => {
+const CreateUpdateMoviePage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { isLoading, error } = useAppSelector((state) => state.movie);
+  const { isLoading, error, movieDetail } = useAppSelector(
+    (state) => state.movie
+  );
+  const { listGenre } = useAppSelector((state) => state.genre);
 
   const [movie, setMovie] = useState({
     name: "",
@@ -43,7 +54,7 @@ const CreateMoviePage = () => {
     return {
       name: movie.name,
       content: movie.content,
-      premiere: movie.premiere ? dayjs(movie.premiere) : null,
+      premiere: movie.premiere ? dayjs(movie.premiere, "DD-MM-YYYY") : null,
       duration: movie.duration.toString(),
       language: movie.language,
       rate: movie.rate.toString(),
@@ -56,40 +67,45 @@ const CreateMoviePage = () => {
 
   useEffect(() => {
     if (id) {
-      const fetchMovieData = async () => {
-        try {
-          const res = await instance.get(`/movies/${id}`);
-          if (res.data.code === 200) {
-            const movieData = mapMovieDataToFormData(res.data);
-            setMovie(movieData);
-            setPreview(movieData.image);
-            setIsFormDataReady(true);
-          }
-        } catch (error) {
-          console.error("Error fetching movie data:", error);
-          toast.error("Failed to fetch movie data.");
-        }
-      };
-      fetchMovieData();
+      dispatch(getDetailMovie({ movieId: id }));
     } else {
       setIsFormDataReady(true);
     }
-  }, [id]);
+  }, [id, dispatch]);
+
+  useEffect(() => {
+    if (movieDetail) {
+      setMovie({
+        name: movieDetail.name,
+        content: movieDetail.content,
+        premiere: dayjs(movieDetail.premiere),
+        duration: movieDetail.duration.toString(),
+        language: movieDetail.language,
+        rate: movieDetail.rate.toString(),
+        image: null,
+        director: movieDetail.director.id,
+        genresId: movieDetail.genres.map((g) => g.id),
+        actorsId: movieDetail.actors.map((a) => a.id),
+      });
+      setPreview(movieDetail.image);
+      setIsFormDataReady(true);
+    }
+  }, [movieDetail]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [actorsResponse, directorsResponse, genreResponse] =
-          await Promise.all([
-            instance.get("/persons/", { params: { jobName: "Actor" } }),
-            instance.get("/persons/", { params: { jobName: "Director" } }),
-            instance.get("/genres/"),
-          ]);
-        setActors(actorsResponse.data.result || []);
-        setDirectors(directorsResponse.data.result || []);
-        setGenres(genreResponse.data.result || []);
+        const [actorsData, directorsData, genresData] = await Promise.all([
+          dispatch(getAllActors()).unwrap(),
+          dispatch(getAllDirectors()).unwrap(),
+          dispatch(getAllGenres()).unwrap(),
+        ]);
+
+        setActors(actorsData || []);
+        setDirectors(directorsData || []);
+        setGenres(genresData || []);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("Error fetching dropdown data:", error);
         toast.error("Failed to fetch dropdown data.");
       }
     };
@@ -97,7 +113,7 @@ const CreateMoviePage = () => {
     if (isFormDataReady) {
       fetchData();
     }
-  }, [isFormDataReady]);
+  }, [isFormDataReady, dispatch]);
 
   const handleChange = (name: string, value: string | File | null) => {
     setMovie((prev) => ({
@@ -137,37 +153,50 @@ const CreateMoviePage = () => {
       return;
     }
 
-    const movieData: CreateMovieRequest = {
+    const movieData = {
       name: movie.name,
       content: movie.content,
       premiere: premiereDate,
       duration: parseInt(movie.duration) || 60,
       language: movie.language,
       rate: parseFloat(movie.rate) || 1,
-      genresId: movie.genresId, // Use genresId directly
+      genresId: movie.genresId,
       directorId: movie.director,
       actorsId: movie.actorsId,
     };
 
-    console.log("Request data: ", movieData);
-
     try {
+      console.log("Request params: ", movieData);
+      console.log("Image: ", movie.image);
       if (id) {
-        // TODO: Implement updateMovie thunk if needed
-        toast.error("Update functionality not implemented yet.");
+        // Nếu có id, gọi Redux API cập nhật phim
+        await dispatch(
+          updateMovie({
+            movieId: id,
+            movieData,
+            image: movie.image || null, // Đảm bảo image không undefined
+          })
+        ).unwrap();
+        toast.success("Movie updated successfully!");
+        setTimeout(() => navigate("/admin/movies"), 1000);
       } else {
+        // Nếu không có id, gọi Redux API tạo mới
         await dispatch(createMovie({ movieData, image: movie.image })).unwrap();
         toast.success("Movie created successfully!");
         setTimeout(() => navigate("/admin/movies"), 1000);
       }
     } catch (error: any) {
-      toast.error(error || "Failed to create movie.");
+      toast.error(error.message || "Failed to create or update movie.");
+      console.log("Error: ", error);
     }
   };
 
   return (
     <ConfigProvider
       theme={{
+        token: {
+          fontFamily: '"Saira Semi Condensed", sans-serif',
+        },
         components: {
           Select: {
             controlHeight: 48,
@@ -202,7 +231,7 @@ const CreateMoviePage = () => {
     >
       <div className="text-white">
         <ToastContainer />
-        <span className="text-3xl mb-8 flex">
+        <span className="text-3xl mb-8 flex font-saira">
           {id ? "Edit Movie" : "Add New Movie"}
         </span>
         <div className="w-full bg-[#273142] p-10 rounded-2xl shadow-lg max-h-[700px] overflow-y-scroll scrollbar-hidden">
@@ -218,7 +247,7 @@ const CreateMoviePage = () => {
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <span className="text-gray-400 text-center text-sm px-4">
+                  <span className="text-gray-400 text-center text-sm px-4 font-saira">
                     No image selected
                   </span>
                 )}
@@ -230,13 +259,14 @@ const CreateMoviePage = () => {
                   onChange={handleImageChange}
                   className="absolute inset-0 opacity-0 cursor-pointer"
                 />
-                <button
-                  type="button"
+                <Button
+                  type="primary"
+                  size="small"
                   onClick={() => document.getElementById("image")?.click()}
-                  className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-blue-500 hover:bg-blue-600 text-white text-sm px-4 py-1 rounded-md"
+                  className="absolute bottom-2 left-1/2 -translate-x-1/2 font-saira !bg-blue-500 hover:!bg-blue-600 !text-white !text-sm !px-2 !py-1 !rounded-md"
                 >
-                  Chọn ảnh
-                </button>
+                  Select image
+                </Button>
                 {preview && (
                   <button
                     type="button"
@@ -255,7 +285,7 @@ const CreateMoviePage = () => {
             {/* Movie Info */}
             <div className="grid grid-cols-2 gap-6 w-full">
               <div className="flex flex-col">
-                <label className="mb-2">Movie Name</label>
+                <label className="mb-2 font-saira">Movie Name</label>
                 <Input
                   name="name"
                   placeholder="Enter movie name"
@@ -265,18 +295,18 @@ const CreateMoviePage = () => {
                 />
               </div>
               <div className="flex flex-col">
-                <label className="mb-2">Premiere Date</label>
+                <label className="mb-2 font-saira">Premiere Date</label>
                 <DatePicker
                   value={movie.premiere}
                   onChange={handleDateChange}
-                  format="YYYY-MM-DD"
+                  format="DD-MM-YYYY"
                   placeholder="Select premiere date"
                   style={{ width: "100%" }}
                   required
                 />
               </div>
               <div className="flex flex-col">
-                <label className="mb-2">Duration (minutes)</label>
+                <label className="mb-2 font-saira">Duration (minutes)</label>
                 <Input
                   type="number"
                   name="duration"
@@ -288,7 +318,7 @@ const CreateMoviePage = () => {
                 />
               </div>
               <div className="flex flex-col">
-                <label className="mb-2">Rate</label>
+                <label className="mb-2 font-saira">Rate</label>
                 <Input
                   type="number"
                   name="rate"
@@ -301,7 +331,7 @@ const CreateMoviePage = () => {
                 />
               </div>
               <div className="flex flex-col">
-                <label className="mb-2">Language</label>
+                <label className="mb-2 font-saira">Language</label>
                 <Input
                   name="language"
                   placeholder="Enter language"
@@ -311,7 +341,7 @@ const CreateMoviePage = () => {
                 />
               </div>
               <div className="flex flex-col">
-                <label className="mb-2">Director</label>
+                <label className="mb-2 font-saira">Director</label>
                 <Select
                   placeholder="Select director"
                   value={movie.director || undefined}
@@ -326,7 +356,7 @@ const CreateMoviePage = () => {
                 </Select>
               </div>
               <div className="flex flex-col">
-                <label className="mb-2">Genres</label>
+                <label className="mb-2 font-saira">Genres</label>
                 <Select
                   mode="multiple"
                   placeholder="Select genres"
@@ -344,7 +374,7 @@ const CreateMoviePage = () => {
                 </Select>
               </div>
               <div className="flex flex-col">
-                <label className="mb-2">Actors</label>
+                <label className="mb-2 font-saira">Actors</label>
                 <Select
                   mode="multiple"
                   placeholder="Select actors"
@@ -362,7 +392,7 @@ const CreateMoviePage = () => {
                 </Select>
               </div>
               <div className="col-span-2 flex flex-col">
-                <label className="mb-2">Content</label>
+                <label className="mb-2 font-saira">Content</label>
                 <TextArea
                   name="content"
                   placeholder="Enter movie content"
@@ -385,13 +415,17 @@ const CreateMoviePage = () => {
                 borderColor: "#3b82f6",
                 padding: "8px 48px",
                 borderRadius: "8px",
+                transition:
+                  "background-color 0.3s ease, border-color 0.3s ease",
               }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.backgroundColor = "#2563eb")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.backgroundColor = "#3b82f6")
-              }
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = "#2563eb";
+                e.currentTarget.style.borderColor = "#2563eb";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = "#3b82f6";
+                e.currentTarget.style.borderColor = "#3b82f6";
+              }}
               loading={isLoading}
             >
               {id ? "Update Movie" : "Add Now"}
@@ -403,4 +437,4 @@ const CreateMoviePage = () => {
   );
 };
 
-export default CreateMoviePage;
+export default CreateUpdateMoviePage;

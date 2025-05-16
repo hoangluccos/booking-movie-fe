@@ -1,11 +1,23 @@
 // store.ts
 import { configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
-import movieReducer from "../slices/movieSlice.tsx"; //
+import movieReducer from "../Slices/MovieSlice.tsx";
+import userReducer from "../Slices/UserSlice.tsx";
+import genreReducer from "../Slices/GenreSlice.tsx";
+import personReducer from "../Slices/PersonSlice.tsx";
+import theaterReducer from "../Slices/TheaterSlice.tsx";
+import showtimeReducer from "../Slices/ShowtimeSlice.tsx";
+import roomReducer from "../Slices/RoomSlice.tsx";
 
 const Store = configureStore({
   reducer: {
-    movie: movieReducer, // 👈 phải truyền vào đúng reducer
+    movie: movieReducer,
+    user: userReducer,
+    genre: genreReducer,
+    person: personReducer,
+    theater: theaterReducer,
+    showtime: showtimeReducer,
+    room: roomReducer,
   },
 });
 

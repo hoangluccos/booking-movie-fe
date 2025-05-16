@@ -1,112 +1,72 @@
-import React, { useEffect, useState } from "react";
-import { IoIosSearch } from "react-icons/io";
-import { FaRegEdit } from "react-icons/fa";
-import { FaRegTrashCan } from "react-icons/fa6";
+import { Button, ConfigProvider, Popconfirm, Tooltip } from "antd";
+import { useEffect, useState } from "react";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import { MovieType } from "../Data/Data.tsx";
-import {
-  deleteMovie,
-  getAllMovies,
-} from "../../../redux/Slices/MovieSlice.tsx";
+import { ShowimeType } from "../Data/Data";
+import { FaRegEdit } from "react-icons/fa";
+import { FaRegTrashCan } from "react-icons/fa6";
 import { useAppDispatch, useAppSelector } from "../../../redux/Store/Store.tsx";
-import { Button, ConfigProvider, Popconfirm, Spin, Tooltip } from "antd";
+import {
+  deleteShowtime,
+  getAllShowtimes,
+} from "../../../redux/Slices/ShowtimeSlice.tsx";
 import { toast } from "react-toastify";
 
-const MoviePage: React.FC = () => {
+const ShowtimePage = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { listMovie, isLoading, error } = useAppSelector(
-    (state) => state.movie
+  const { error, isLoading, listShowtimes } = useAppSelector(
+    (state) => state.showtime
   );
 
-  const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const moviesPerPage = 4;
 
   useEffect(() => {
-    console.log("Render Movie Page");
-    dispatch(getAllMovies());
+    dispatch(getAllShowtimes());
   }, [dispatch]);
 
-  const filteredData = listMovie.filter((item) =>
-    item.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const totalItems = filteredData.length;
+  const totalItems = listShowtimes.length;
   const totalPages = Math.ceil(totalItems / moviesPerPage);
 
   const startIndex = (currentPage - 1) * moviesPerPage;
   const endIndex = startIndex + moviesPerPage;
-  const currentMovies = filteredData.slice(startIndex, endIndex);
+  const currentShowtimes = listShowtimes.slice(startIndex, endIndex);
 
-  const handleEditMovie = (item: MovieType) => {
-    navigate(`/admin/movies/edit/${item.id}`);
-  };
-
-  const handleDeleteMovie = async (item: MovieType) => {
-    try {
-      console.log("Xoá phim: ", item.name);
-      await dispatch(deleteMovie(item.id));
-      toast.success("Movie deleted successfully!");
-    } catch (error) {
-      console.error("Error deleting movie: ", error);
-      toast.error("Failed to delete movie!");
-    }
-  };
-
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
-    setCurrentPage(1);
-  };
-
-  const showMovieCus = (
-    item: MovieType,
+  const showShowtimeCus = (
+    item: ShowimeType,
     isLastRow: boolean,
     index: number,
-    onEdit: (item: MovieType) => void,
-    onDelete: (item: MovieType) => void
+    onEdit: (item: ShowimeType) => void,
+    onDelete: (item: ShowimeType) => void
   ) => {
     return (
       <div
-        className={`grid grid-cols-9 bg-[#273142] text-white ${
+        className={`grid grid-cols-7 bg-[#273142] text-white ${
           isLastRow ? "rounded-b-xl" : "border-b border-[#979797]"
         }`}
       >
         <div className="flex justify-center items-center p-2">
           <img
-            src={item.image}
-            alt={item.name}
+            src={item.movie.image}
+            alt={item.id}
             className="w-20 h-32 rounded object-cover"
           />
         </div>
         <div className="flex justify-center items-center p-2 font-saira">
-          {item.name}
-        </div>
-        <div
-          className="flex items-center p-2 truncate font-saira"
-          title={item.content}
-        >
-          {item.content}
+          {item.movie.name}
         </div>
         <div className="flex justify-center items-center p-2 font-saira">
-          {item.premiere}
+          {item.date}
         </div>
         <div className="flex justify-center items-center p-2 font-saira">
-          {item.duration} phút
+          {item.startTime.slice(0, 5)} - {item.endTime.slice(0, 5)}
         </div>
         <div className="flex justify-center items-center p-2 font-saira">
-          {item.language}
+          {item.theater.name}
         </div>
         <div className="flex justify-center items-center p-2 font-saira">
-          {item.rate}
-        </div>
-        <div
-          className={`flex justify-center items-center font-saira p-2 ${
-            isLastRow ? "rounded-br-xl" : ""
-          }`}
-        >
-          {item.genres.map((g) => g.name).join(", ")}
+          {item.room.name}
         </div>
         <div className="flex justify-center items-center">
           <Tooltip title="Edit">
@@ -121,12 +81,7 @@ const MoviePage: React.FC = () => {
             <Popconfirm
               title={
                 <span className="font-saira text-sm">
-                  Are you sure to delete this movie?
-                </span>
-              }
-              description={
-                <span className="font-saira text-sm">
-                  {`Movie: "${item.name}"`}
+                  Are you sure to delete this showtime?
                 </span>
               }
               onConfirm={() => onDelete(item)}
@@ -145,7 +100,14 @@ const MoviePage: React.FC = () => {
     );
   };
 
-  if (error) return <div className="text-red-500">Error: {error}</div>;
+  const handleClickEditShowtime = (item: ShowimeType) => {
+    navigate(`/admin/showtimes/edit/${item.id}`);
+  };
+
+  const handleClickDeleteShowtime = async (item: ShowimeType) => {
+    dispatch(deleteShowtime({ showtimeId: item.id }));
+    toast.success("Showtime deleted successfully!");
+  };
 
   return (
     <ConfigProvider
@@ -168,18 +130,8 @@ const MoviePage: React.FC = () => {
       <div className="relative min-h-[750px]">
         {/* Title Page */}
         <div className="flex-row flex justify-between items-center">
-          <span className="text-white text-3xl font-saira">Movies</span>
+          <span className="text-white text-3xl font-saira">Showtimes</span>
           <div className="flex items-center space-x-4">
-            <div className="flex-row flex items-center bg-[#323D4E] px-4 rounded-full space-x-2">
-              <IoIosSearch size={20} color="gray" />
-              <input
-                className="bg-[#323D4E] w-[253px] h-[38px] focus:outline-none text-white placeholder-gray-400 font-saira"
-                type="text"
-                placeholder="Search movie name"
-                value={searchTerm}
-                onChange={handleSearchChange}
-              />
-            </div>
             <Button
               type="primary"
               className="w-[147px] h-[48px] rounded-lg font-saira"
@@ -199,9 +151,9 @@ const MoviePage: React.FC = () => {
                 e.currentTarget.style.backgroundColor = "#3b82f6";
                 e.currentTarget.style.borderColor = "#3b82f6";
               }}
-              onClick={() => navigate("/admin/movies/create")}
+              onClick={() => navigate("/admin/showtimes/create")}
             >
-              Add New Movie
+              Add New Showtime
             </Button>
           </div>
         </div>
@@ -209,40 +161,32 @@ const MoviePage: React.FC = () => {
         {/* Table */}
         <div className="pt-8">
           {/* Title Table */}
-          <div className="grid grid-cols-9">
-            {[
-              "Image",
-              "Name",
-              "Content",
-              "Premiere Day",
-              "Duration",
-              "Language",
-              "Rate",
-              "Genres",
-              "Action",
-            ].map((title, idx) => (
-              <div
-                key={idx}
-                className={`bg-[#313D4F] font-saira text-white h-[48px] flex justify-center items-center p-4 w-full ${
-                  idx === 0 ? "rounded-tl-xl" : ""
-                } ${idx === 8 ? "rounded-tr-xl" : ""}`}
-              >
-                {title}
-              </div>
-            ))}
+          <div className="grid grid-cols-7">
+            {["Image", "Name", "Date", "Time", "Theater", "Room", "Action"].map(
+              (title, idx) => (
+                <div
+                  key={idx}
+                  className={`bg-[#313D4F] font-saira text-white h-[48px] flex justify-center items-center p-4 w-full ${
+                    idx === 0 ? "rounded-tl-xl" : ""
+                  } ${idx === 6 ? "rounded-tr-xl" : ""}`}
+                >
+                  {title}
+                </div>
+              )
+            )}
           </div>
 
           {/* Content Table */}
           <div className="min-h-[448px]">
-            {currentMovies.length > 0 ? (
-              currentMovies.map((item, index) => (
+            {currentShowtimes.length > 0 ? (
+              currentShowtimes.map((item, index) => (
                 <div key={item.id}>
-                  {showMovieCus(
+                  {showShowtimeCus(
                     item,
-                    index === currentMovies.length - 1,
+                    index === currentShowtimes.length - 1,
                     index,
-                    handleEditMovie,
-                    handleDeleteMovie
+                    handleClickEditShowtime,
+                    handleClickDeleteShowtime
                   )}
                 </div>
               ))
@@ -288,4 +232,4 @@ const MoviePage: React.FC = () => {
   );
 };
 
-export default MoviePage;
+export default ShowtimePage;

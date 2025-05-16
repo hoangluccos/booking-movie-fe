@@ -22,7 +22,9 @@ const SlidebarItem = (props: SlidebarItemProps) => {
     >
       {/* Show icon when sidebar is closed, show text when sidebar is open */}
       {isSidebarOpen ? (
-        <span className="overflow-hidden transition-all">{text}</span>
+        <span className="overflow-hidden transition-all font-saira">
+          {text}
+        </span>
       ) : (
         <NavLink
           to={to}

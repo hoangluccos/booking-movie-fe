@@ -9,6 +9,7 @@ import {
   MdQuestionAnswer,
 } from "react-icons/md";
 import { Avatar, Dropdown, Menu } from "antd";
+import { RiSlideshow3Fill } from "react-icons/ri";
 import { FaUsers } from "react-icons/fa";
 import { TbMovie } from "react-icons/tb";
 import { IoPersonSharp } from "react-icons/io5";
@@ -64,6 +65,12 @@ const LayoutAdminPage = () => {
               isSidebarOpen={isSidebarOpen}
             />
             <SlidebarItem
+              icon={<RiSlideshow3Fill />}
+              text="Showtimes"
+              to="/admin/showtimes"
+              isSidebarOpen={isSidebarOpen}
+            />
+            <SlidebarItem
               icon={<FaUsers />}
               text="Users"
               to="/admin/users"
@@ -109,7 +116,7 @@ const LayoutAdminPage = () => {
             <input
               type="text"
               placeholder="Search"
-              className="w-full max-w-md px-4 py-2 rounded-lg bg-[#1B2431] text-white placeholder-gray-400 focus:outline-none"
+              className="w-full max-w-md px-4 py-2 rounded-lg bg-[#1B2431] text-white placeholder-gray-400 focus:outline-none font-saira"
             />
           </div>
 
@@ -120,7 +127,9 @@ const LayoutAdminPage = () => {
             arrow
           >
             <div className="flex items-center space-x-2 cursor-pointer">
-              <span className="text-white hidden md:inline">Admin</span>
+              <span className="text-white hidden md:inline font-saira">
+                Admin
+              </span>
               <Avatar src="https://i.pravatar.cc/150?img=12" size={40} />
             </div>
           </Dropdown>

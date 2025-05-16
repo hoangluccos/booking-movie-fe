@@ -8,7 +8,10 @@ import GenrePage from "./GenrePage/GenrePage.tsx";
 import PersonPage from "./PersonPage/PersonPage.tsx";
 import TheaterPage from "./TheaterManagement/TheaterPage.tsx";
 import FeedbackPage from "./FeedbacksManagement/FeedbackPage.tsx";
-import MovieCreatePage from "./MoviePage/CreateMoviePage.tsx";
+import CreateUpdateMoviePage from "./MoviePage/CreateUpdateMoviePage.tsx";
+import CreateUpdatePersonPage from "./PersonPage/CreateUpdatePersonPage.tsx";
+import ShowtimePage from "./ShowTimePage/ShowtimePage.tsx";
+import CreateUpdateShowtimePage from "./ShowTimePage/CreateUpdateShowtimePage.tsx";
 
 const AdminPage = () => {
   return (
@@ -18,13 +21,26 @@ const AdminPage = () => {
         <Route path="/dashboard" element={<DashboardPage />} />
 
         <Route path="/movies" element={<MoviePage />} />
-        <Route path="movies/create" element={<MovieCreatePage />} />
+        <Route path="/movies/create" element={<CreateUpdateMoviePage />} />
+        <Route path="/movies/edit/:id" element={<CreateUpdateMoviePage />} />
+
+        <Route path="/showtimes" element={<ShowtimePage />} />
+        <Route
+          path="/showtimes/create"
+          element={<CreateUpdateShowtimePage />}
+        />
+        <Route
+          path="/showtimes/edit/:id"
+          element={<CreateUpdateShowtimePage />}
+        />
 
         <Route path="/users" element={<UserPage />} />
 
         <Route path="/genres" element={<GenrePage />} />
 
         <Route path="/persons" element={<PersonPage />} />
+        <Route path="/persons/create" element={<CreateUpdatePersonPage />} />
+        <Route path="/persons/edit/:id" element={<CreateUpdatePersonPage />} />
 
         <Route path="/theaters" element={<TheaterPage />} />
 

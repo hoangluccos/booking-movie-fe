@@ -3,6 +3,11 @@ export type GenreType = {
   name: string;
 };
 
+export type RoleType = {
+  name: string;
+  description: string;
+};
+
 export type MovieType = {
   id: string;
   name: string;
@@ -16,15 +21,78 @@ export type MovieType = {
   genres: GenreType[];
 };
 
-export interface CreateMovieRequest {
+export type UserType = {
+  id: string;
+  username: string;
+  firstName: string;
+  lastName: string;
+  dateOfBirth: string;
+  gender: boolean;
+  email: string;
+  avatar: string;
+  status: boolean;
+};
+
+export type JobType = {
+  id: string;
   name: string;
-  content: string;
+};
+
+export type PersonType = {
+  id: string;
+  name: string;
+  gender: boolean;
+  dateOfBirth: string | null;
+  image: string;
+  job: JobType;
+};
+
+export type TheaterType = {
+  id: string;
+  name: string;
+  location: string;
+};
+
+export type MovieDetailType = {
+  id: string;
+  name: string;
   premiere: string;
-  duration: number;
   language: string;
+  content: string;
+  duration: number;
   rate: number;
-  genresId: string[]; // Change to genresId as string[]
-  directorId: string;
-  actorsId: string[];
-  // Note: image is handled separately as a file in FormData, so it's not included here
-}
+  image: string;
+  canComment: boolean;
+  genres: GenreType[];
+  director: PersonType;
+  actors: PersonType[];
+};
+
+export type ShowtimeType = {
+  id: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  totalSeat: number;
+  emptySeat: number;
+  status: string;
+  theater: TheaterType;
+  movie: MovieDetailType;
+  room: RoomType;
+};
+
+export type SeatType = {
+  id: string;
+  locateRow: string;
+  locateColumn: number;
+  price: number;
+  isCouple: boolean;
+};
+
+export type RoomType = {
+  id: string;
+  name: string;
+  columns: number;
+  rows: number;
+  seats: SeatType[];
+};

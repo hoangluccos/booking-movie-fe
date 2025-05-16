@@ -4,29 +4,13 @@ import { publicRoutes, privateRoutes } from "./routes";
 import { Fragment } from "react";
 import AuthRoute from "./routes/AuthRoute";
 import Authenticate from "./components/Authenticate";
+import { ToastContainer } from "react-toastify";
 function App() {
   return (
-    <Routes>
-      <Route path="/authenticate" element={<Authenticate />} />
-      {publicRoutes.map((route, index) => {
-        const Page = route.component;
-        const Layout = route.layout || Fragment;
-
-        return (
-          <Route
-            key={index}
-            path={route.path}
-            element={
-              <Layout>
-                <Page />
-              </Layout>
-            }
-          />
-        );
-      })}
-      {/* privateRoutes */}
-      <Route path="/admin" element={<AuthRoute />}>
-        {privateRoutes.map((route, index) => {
+    <>
+      <Routes>
+        <Route path="/authenticate" element={<Authenticate />} />
+        {publicRoutes.map((route, index) => {
           const Page = route.component;
           const Layout = route.layout || Fragment;
 
@@ -42,8 +26,29 @@ function App() {
             />
           );
         })}
-      </Route>
-    </Routes>
+        <Route path="/admin" element={<AuthRoute />}>
+          {privateRoutes.map((route, index) => {
+            const Page = route.component;
+            const Layout = route.layout || Fragment;
+
+            return (
+              <Route
+                key={index}
+                path={route.path}
+                element={
+                  <Layout>
+                    <Page />
+                  </Layout>
+                }
+              />
+            );
+          })}
+        </Route>
+      </Routes>
+
+      {/* ✅ Đặt ToastContainer ngoài Routes */}
+      <ToastContainer />
+    </>
   );
 }
 
