@@ -77,6 +77,8 @@ const CreateUpdateShowtimePage = () => {
       roomId: form.roomId,
     };
 
+    console.log("Params: ", params);
+
     try {
       if (id) {
         await dispatch(
