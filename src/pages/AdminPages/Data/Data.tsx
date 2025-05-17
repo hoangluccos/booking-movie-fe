@@ -86,7 +86,7 @@ export type SeatType = {
   locateRow: string;
   locateColumn: number;
   price: number;
-  isCouple: boolean;
+  isCouple: boolean | null;
 };
 
 export type RoomType = {

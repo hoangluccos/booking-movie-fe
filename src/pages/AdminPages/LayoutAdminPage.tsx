@@ -14,6 +14,7 @@ import { FaUsers } from "react-icons/fa";
 import { TbMovie } from "react-icons/tb";
 import { IoPersonSharp } from "react-icons/io5";
 import { GiTheater } from "react-icons/gi";
+import { MdChair } from "react-icons/md";
 
 const LayoutAdminPage = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);

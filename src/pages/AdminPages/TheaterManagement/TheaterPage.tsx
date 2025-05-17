@@ -11,10 +11,13 @@ import {
   deleteTheater,
   getAllTheaters,
 } from "../../../redux/Slices/TheaterSlice.tsx";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import { MdOutlineChair } from "react-icons/md";
 
 const TheaterPage = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const { error, isLoading, listTheaters } = useAppSelector(
     (state) => state.theater
   );
@@ -39,12 +42,73 @@ const TheaterPage = () => {
   const endIndex = startIndex + genresPerPage;
   const currentGenres = filteredData.slice(startIndex, endIndex);
 
-  const handleEdit = (item: TheaterType) => {
+  const showTheaterCus = (
+    item: TheaterType,
+    index: number,
+    onEdit: (item: TheaterType) => void,
+    onDelete: (item: TheaterType) => void,
+    onAddRoom: (item: TheaterType) => void
+  ) => {
+    return (
+      <div
+        key={item.id}
+        className={`grid grid-cols-3 bg-[#273142] text-white ${
+          index === currentGenres.length - 1
+            ? "rounded-b-xl"
+            : "border-b border-[#979797]"
+        }`}
+      >
+        <div className="flex justify-center items-center p-2 font-saira">
+          {item.name}
+        </div>
+        <div className="flex justify-center items-center p-2 font-saira">
+          {item.location}
+        </div>
+        <div className="flex justify-center items-center">
+          <button
+            onClick={() => onEdit(item)}
+            className="bg-[#323D4E] h-[32px] px-4 py-2 rounded-l-lg border-r border-[#979797]"
+          >
+            <FaRegEdit />
+          </button>
+          <button
+            onClick={() => onAddRoom(item)}
+            className="bg-[#323D4E] h-[32px] px-4 py-2 border-r border-[#979797]"
+          >
+            <MdOutlineChair />
+          </button>
+          <Popconfirm
+            title={
+              <span className="font-saira text-sm">
+                Are you sure to delete this theater?
+              </span>
+            }
+            description={
+              <span className="font-saira text-sm">
+                {`Name: "${item.name}"`}
+              </span>
+            }
+            onConfirm={() => onDelete(item)}
+            onCancel={() => {}}
+            okText={<span className="font-saira">Yes</span>}
+            cancelText={<span className="font-saira">No</span>}
+            okType="danger"
+          >
+            <button className="bg-[#323D4E] h-[32px] px-4 py-2 rounded-r-lg">
+              <FaRegTrashCan color="red" />
+            </button>
+          </Popconfirm>
+        </div>
+      </div>
+    );
+  };
+
+  const handleClickEdit = (item: TheaterType) => {
     setSelectedItem(item); // Set the selected genre for editing
     setIsModalOpen(true); // Open the modal
   };
 
-  const handleDelete = (item: TheaterType) => {
+  const handleClickDelete = (item: TheaterType) => {
     dispatch(deleteTheater({ theaterId: item.id }));
     toast.success("Theater deleted successfully!");
   };
@@ -52,6 +116,10 @@ const TheaterPage = () => {
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
     setCurrentPage(1);
+  };
+
+  const handleClickAddRoom = (item: TheaterType) => {
+    navigate(`${item.id}`, { state: item });
   };
 
   return (
@@ -116,52 +184,15 @@ const TheaterPage = () => {
         {/* Content */}
         <div className="min-h-[640px]">
           {currentGenres.length > 0 ? (
-            currentGenres.map((item, index) => (
-              <div
-                key={item.id}
-                className={`grid grid-cols-3 bg-[#273142] text-white ${
-                  index === currentGenres.length - 1
-                    ? "rounded-b-xl"
-                    : "border-b border-[#979797]"
-                }`}
-              >
-                <div className="flex justify-center items-center p-2 font-saira">
-                  {item.name}
-                </div>
-                <div className="flex justify-center items-center p-2 font-saira">
-                  {item.location}
-                </div>
-                <div className="flex justify-center items-center">
-                  <button
-                    onClick={() => handleEdit(item)} // Open modal for editing
-                    className="bg-[#323D4E] h-[32px] px-4 py-2 rounded-l-lg border-r border-[#979797]"
-                  >
-                    <FaRegEdit />
-                  </button>
-                  <Popconfirm
-                    title={
-                      <span className="font-saira text-sm">
-                        Are you sure to delete this theater?
-                      </span>
-                    }
-                    description={
-                      <span className="font-saira text-sm">
-                        {`Name: "${item.name}"`}
-                      </span>
-                    }
-                    onConfirm={() => handleDelete(item)}
-                    onCancel={() => {}}
-                    okText={<span className="font-saira">Yes</span>}
-                    cancelText={<span className="font-saira">No</span>}
-                    okType="danger"
-                  >
-                    <button className="bg-[#323D4E] h-[32px] px-4 py-2 rounded-r-lg">
-                      <FaRegTrashCan color="red" />
-                    </button>
-                  </Popconfirm>
-                </div>
-              </div>
-            ))
+            currentGenres.map((item, index) =>
+              showTheaterCus(
+                item,
+                index,
+                handleClickEdit,
+                handleClickDelete,
+                handleClickAddRoom
+              )
+            )
           ) : (
             <div className="text-white text-center py-4">No genres found</div>
           )}

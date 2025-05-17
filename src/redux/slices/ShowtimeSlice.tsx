@@ -16,14 +16,14 @@ const initialState: ShowtimeState = {
   error: null,
 };
 
-export interface CreateShowtimeRequest {
+interface CreateShowtimeRequest {
   date: string;
   startTime: string;
   movieId: string;
   roomId: string;
 }
 
-export interface UpdateShowtimeRequest {
+interface UpdateShowtimeRequest {
   startTime: string;
   date: string;
   roomId: string;

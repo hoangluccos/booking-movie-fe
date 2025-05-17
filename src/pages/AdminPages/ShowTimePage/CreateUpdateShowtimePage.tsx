@@ -1,22 +1,25 @@
-// CreateUpdateShowtimePage.tsx
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Button, ConfigProvider, DatePicker, Select, TimePicker } from "antd";
+import {
+  Button,
+  ConfigProvider,
+  DatePicker,
+  TimePicker,
+  Cascader,
+  Select,
+} from "antd";
 import { useAppDispatch, useAppSelector } from "../../../redux/Store/Store.tsx";
 import dayjs, { Dayjs } from "dayjs";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { getAllMovies } from "../../../redux/Slices/MovieSlice.tsx";
+import { getAllTheaters } from "../../../redux/Slices/TheaterSlice.tsx";
 import { getAllRooms } from "../../../redux/Slices/RoomSlice.tsx";
 import {
   createShowtime,
-  getAllShowtimes,
   getOneShowtime,
   updateShowtime,
 } from "../../../redux/Slices/ShowtimeSlice.tsx";
-// import { createShowtime, updateShowtime } from "../../../redux/Slices/ShowtimeSlice.tsx";
-
-const { Option } = Select;
 
 const CreateUpdateShowtimePage = () => {
   const { id } = useParams();
@@ -24,15 +27,19 @@ const CreateUpdateShowtimePage = () => {
   const dispatch = useAppDispatch();
 
   const { listMovie } = useAppSelector((state) => state.movie);
-  const { listRooms } = useAppSelector((state) => state.room);
-  const { showtimeInfo, isLoading, error } = useAppSelector(
-    (state) => state.showtime
-  );
+  const { listTheaters } = useAppSelector((state) => state.theater);
+  const { showtimeInfo, isLoading } = useAppSelector((state) => state.showtime);
 
-  useEffect(() => {
-    dispatch(getAllMovies());
-    dispatch(getAllRooms());
-  }, []);
+  const [options, setOptions] = useState<
+    {
+      value: string;
+      label: string;
+      isLeaf: boolean;
+      children?: { label: string; value: string; isLeaf: boolean }[];
+    }[]
+  >([]);
+
+  const [selectedValue, setSelectedValue] = useState<string[]>([]);
 
   const [form, setForm] = useState({
     date: null as Dayjs | null,
@@ -41,20 +48,111 @@ const CreateUpdateShowtimePage = () => {
     roomId: undefined as string | undefined,
   });
 
+  // Load danh sách theaters và movies khi mount
+  useEffect(() => {
+    dispatch(getAllTheaters());
+    dispatch(getAllMovies());
+  }, [dispatch]);
+
+  // Cập nhật options khi listTheaters thay đổi
+  useEffect(() => {
+    const theaterOptions = listTheaters.map((theater) => ({
+      value: theater.id,
+      label: theater.name,
+      isLeaf: false,
+    }));
+    setOptions(theaterOptions);
+  }, [listTheaters]);
+
+  // Load showtime khi edit
   useEffect(() => {
     if (id) {
       dispatch(getOneShowtime({ showtimeId: id }));
-      if (showtimeInfo) {
-        setForm({
-          date: dayjs(showtimeInfo.date, "DD-MM-YYYY"),
-          startTime: dayjs(showtimeInfo.startTime, "HH:mm"),
-          movieId: showtimeInfo.movie.id,
-          roomId: showtimeInfo.room.id,
-        });
-      }
+    }
+  }, [id, dispatch]);
+
+  // Set form và cascader khi có showtimeInfo (chế độ edit)
+  useEffect(() => {
+    if (showtimeInfo) {
+      setForm({
+        date: dayjs(showtimeInfo.date, "DD-MM-YYYY"),
+        startTime: dayjs(showtimeInfo.startTime, "HH:mm"),
+        movieId: showtimeInfo.movie.id,
+        roomId: showtimeInfo.room.id,
+      });
+
+      const theaterId = showtimeInfo.theater.id || "";
+      setSelectedValue([theaterId, showtimeInfo.room.id]);
+
+      dispatch(getAllRooms({ theaterId })).then((res: any) => {
+        const rooms = res.payload || [];
+        setOptions((prevOptions) =>
+          prevOptions.map((theater) =>
+            theater.value === theaterId
+              ? {
+                  ...theater,
+                  children: rooms.map((room: any) => ({
+                    label: room.name,
+                    value: room.id,
+                    isLeaf: true,
+                  })),
+                }
+              : theater
+          )
+        );
+      });
+    }
+  }, [showtimeInfo, dispatch]);
+
+  // Reset form khi thêm mới (id undefined)
+  useEffect(() => {
+    if (!id) {
+      setForm({
+        date: null,
+        startTime: null,
+        movieId: undefined,
+        roomId: undefined,
+      });
+      setSelectedValue([]);
     }
   }, [id]);
 
+  // Lazy load rooms trong cascader
+  const loadData = async (selectedOptions: any[]) => {
+    const targetOption = selectedOptions[selectedOptions.length - 1];
+    targetOption.loading = true;
+
+    try {
+      const res = await dispatch(
+        getAllRooms({ theaterId: targetOption.value })
+      ).unwrap();
+      targetOption.loading = false;
+
+      targetOption.children = res.map((room: any) => ({
+        label: room.name,
+        value: room.id,
+        isLeaf: true,
+      }));
+
+      setOptions([...options]);
+    } catch (error) {
+      targetOption.loading = false;
+      setOptions([...options]);
+      toast.error("Failed to load rooms");
+    }
+  };
+
+  // Xử lý thay đổi chọn cascader (theater, room)
+  const onCascaderChange = (value: string[]) => {
+    setSelectedValue(value);
+    if (value.length === 2) {
+      setForm((prev) => ({ ...prev, roomId: value[1] }));
+    } else {
+      setForm((prev) => ({ ...prev, roomId: undefined }));
+    }
+  };
+
+  // Thay đổi các trường khác trong form
   const handleChange = (field: string, value: any) => {
     setForm((prev) => ({
       ...prev,
@@ -62,6 +160,7 @@ const CreateUpdateShowtimePage = () => {
     }));
   };
 
+  // Submit form tạo hoặc cập nhật showtime
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -76,8 +175,6 @@ const CreateUpdateShowtimePage = () => {
       movieId: form.movieId,
       roomId: form.roomId,
     };
-
-    console.log("Params: ", params);
 
     try {
       if (id) {
@@ -104,6 +201,25 @@ const CreateUpdateShowtimePage = () => {
           fontFamily: '"Saira Semi Condensed", sans-serif',
         },
         components: {
+          Cascader: {
+            controlHeight: 48,
+            colorBgContainer: "#323D4E",
+            colorText: "white",
+            colorBorder: "transparent",
+            borderRadius: 8,
+            colorTextPlaceholder: "rgba(255, 255, 255, 0.5)",
+            optionSelectedBg: "#1e2632",
+            colorBgElevated: "#323D4E",
+          },
+          DatePicker: {
+            controlHeight: 48,
+            colorBgContainer: "#323D4E",
+            colorText: "white",
+            colorBorder: "transparent",
+            borderRadius: 8,
+            colorTextPlaceholder: "rgba(255, 255, 255, 0.5)",
+            colorBgElevated: "#323D4E",
+          },
           Select: {
             controlHeight: 48,
             colorBgContainer: "#323D4E",
@@ -122,15 +238,6 @@ const CreateUpdateShowtimePage = () => {
             colorBorder: "transparent",
             borderRadius: 8,
             colorTextPlaceholder: "rgba(255, 255, 255, 0.5)",
-          },
-          DatePicker: {
-            controlHeight: 48,
-            colorBgContainer: "#323D4E",
-            colorText: "white",
-            colorBorder: "transparent",
-            borderRadius: 8,
-            colorTextPlaceholder: "rgba(255, 255, 255, 0.5)",
-            colorBgElevated: "#323D4E",
           },
         },
       }}
@@ -169,28 +276,26 @@ const CreateUpdateShowtimePage = () => {
                 placeholder="Select movie"
                 onChange={(value) => handleChange("movieId", value)}
                 disabled={Boolean(id)}
-              >
-                {listMovie.map((movie) => (
-                  <Option key={movie.id} value={movie.id}>
-                    {movie.name}
-                  </Option>
-                ))}
-              </Select>
+                options={listMovie.map((movie) => ({
+                  label: movie.name,
+                  value: movie.id,
+                }))}
+              />
             </div>
+
             <div className="flex flex-col">
-              <label className="mb-2 font-saira">Room</label>
-              <Select
-                value={form.roomId}
-                placeholder="Select room"
-                onChange={(value) => handleChange("roomId", value)}
-              >
-                {listRooms.map((room) => (
-                  <Option key={room.id} value={room.id}>
-                    {room.name}
-                  </Option>
-                ))}
-              </Select>
+              <label className="mb-2 font-saira">Theater & Room</label>
+              <Cascader
+                options={options}
+                loadData={loadData}
+                onChange={onCascaderChange}
+                value={selectedValue}
+                changeOnSelect={false}
+                placeholder="Select theater and room"
+                style={{ width: "100%" }}
+              />
             </div>
+
             <div className="col-span-2 flex justify-center mt-8">
               <Button
                 type="primary"
@@ -215,6 +320,7 @@ const CreateUpdateShowtimePage = () => {
             </div>
           </form>
         </div>
+        <ToastContainer />
       </div>
     </ConfigProvider>
   );

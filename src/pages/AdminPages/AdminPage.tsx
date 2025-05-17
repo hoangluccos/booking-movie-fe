@@ -12,6 +12,8 @@ import CreateUpdateMoviePage from "./MoviePage/CreateUpdateMoviePage.tsx";
 import CreateUpdatePersonPage from "./PersonPage/CreateUpdatePersonPage.tsx";
 import ShowtimePage from "./ShowTimePage/ShowtimePage.tsx";
 import CreateUpdateShowtimePage from "./ShowTimePage/CreateUpdateShowtimePage.tsx";
+import RoomPage from "./RoomPage/RoomPage.tsx";
+import CreateRoomPage from "./RoomPage/CreateRoomPage.tsx";
 
 const AdminPage = () => {
   return (
@@ -43,6 +45,10 @@ const AdminPage = () => {
         <Route path="/persons/edit/:id" element={<CreateUpdatePersonPage />} />
 
         <Route path="/theaters" element={<TheaterPage />} />
+        <Route path="/theaters/:id" element={<RoomPage />} />
+        <Route path="/theaters/:id/create" element={<CreateRoomPage />} />
+
+        <Route path="/rooms" element={<RoomPage />} />
 
         <Route path="/feedbacks" element={<FeedbackPage />} />
       </Route>
