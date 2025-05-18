@@ -19,7 +19,7 @@ const TicketModal = ({ isOpen, onRequestClose }) => {
     return date;
   });
 
-  const locations = ["Hồ Chí Minh", "Hà Nội", "Cần Thơ"];
+  const locations = ["Hồ Chí Minh", "Hà Nội", "Đà Nẵng"];
 
   useEffect(() => {
     if (isOpen) {
@@ -86,7 +86,10 @@ const TicketModal = ({ isOpen, onRequestClose }) => {
             className={`p-2 border rounded-md ${
               selectedLocation === location ? "bg-gray-300" : "bg-white"
             }`}
-            onClick={() => setSelectedLocation(location)}
+            onClick={() => {
+              setSelectedLocation(location);
+              // handleDateSelect(selectedDate);
+            }}
           >
             {location}
           </button>

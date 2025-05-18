@@ -29,6 +29,7 @@ function MovieDetail() {
   const [rate, setRate] = useState(0);
   const [bioData, setBioData] = useState(null); //store email in bioData
 
+  //send feedback
   const handleSubmit = () => {
     if (!comment.trim() || rate === 0) {
       toast.error("Vui lòng nhập đánh giá và chọn số sao!");
