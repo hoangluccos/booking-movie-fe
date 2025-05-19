@@ -229,9 +229,9 @@ function MovieDetail() {
               <TicketModal isOpen={isModalOpen} onRequestClose={closeModal} />
             </div>
           </div>
-          <div className="flex justify-center">
+          {/* <div className="flex justify-center">
             <CustomCalendar />
-          </div>
+          </div> */}
           <div className="coupons mt-3">
             <p className="font-bold text-xl text-center">ƯU ĐÃI HIỆN CÓ</p>
             <div className="flex flex-wrap gap-[10px] justify-center ">
