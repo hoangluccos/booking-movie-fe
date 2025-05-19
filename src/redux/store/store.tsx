@@ -8,6 +8,7 @@ import personReducer from "../Slices/PersonSlice.tsx";
 import theaterReducer from "../Slices/TheaterSlice.tsx";
 import showtimeReducer from "../Slices/ShowtimeSlice.tsx";
 import roomReducer from "../Slices/RoomSlice.tsx";
+import feedbackReducer from "../Slices/FeedbackSlice.tsx";
 
 const Store = configureStore({
   reducer: {
@@ -18,6 +19,7 @@ const Store = configureStore({
     theater: theaterReducer,
     showtime: showtimeReducer,
     room: roomReducer,
+    feedback: feedbackReducer,
   },
 });
 

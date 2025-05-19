@@ -2,13 +2,13 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { UserType } from "../../pages/AdminPages/Data/Data";
 import instance from "../../api/instance";
 
-interface MovieState {
+interface UserState {
   listUser: UserType[];
   isLoading: boolean;
   error: string | null;
 }
 
-const initialState: MovieState = {
+const initialState: UserState = {
   listUser: [],
   isLoading: false,
   error: null,
@@ -76,7 +76,7 @@ const UserSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // get all movie
+      // get all user
       .addCase(getAllUsers.pending, (state) => {
         state.isLoading = true;
         state.error = null;
@@ -90,7 +90,7 @@ const UserSlice = createSlice({
         state.error = action.payload as string;
       })
 
-      // update movie
+      // update user
       .addCase(updateStatus.pending, (state) => {
         state.isLoading = true;
         state.error = null;

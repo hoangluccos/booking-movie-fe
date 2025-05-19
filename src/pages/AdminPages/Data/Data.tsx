@@ -96,3 +96,15 @@ export type RoomType = {
   rows: number;
   seats: SeatType[];
 };
+
+export type FeedbackType = {
+  id: string;
+  content: string;
+  rate: number;
+  date: string;
+  time: string;
+  byName: string;
+  byEmail: string;
+  movieId: string;
+  status: boolean;
+};

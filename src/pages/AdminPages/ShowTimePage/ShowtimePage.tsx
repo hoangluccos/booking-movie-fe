@@ -375,7 +375,7 @@ const ShowtimePage = () => {
           {/* Reset Filter Button */}
           <Button
             onClick={resetFilters}
-            className="w-[147px] h-[48px] rounded-md font-saira flex items-center space-x-2 px-3 bg-[#323D4E] text-white"
+            className="w-[147px] h-[48px] rounded-md font-saira flex items-center px-3 bg-[#323D4E] text-white"
             style={{ border: "transparent" }}
           >
             <span className="text-xl">↺</span> Reset Filter
