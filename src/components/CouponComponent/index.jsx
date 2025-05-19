@@ -58,6 +58,9 @@ function CouponComponent({ totalPrice, onApplyCoupon }) {
     if (appliedCoupon.discountType === "Percentage") {
       return Math.max(totalPrice * (1 - appliedCoupon.discountValue / 100), 0);
     }
+    if (appliedCoupon.discountType === "Other") {
+      return appliedCoupon.discountValue;
+    }
 
     return totalPrice;
   };
