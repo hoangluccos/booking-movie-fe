@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Modal, Input, Form, ConfigProvider } from "antd";
+import { Modal, Input, ConfigProvider } from "antd";
 import { useAppDispatch } from "../../../redux/Store/Store.tsx";
 import { createGenre, updateGenre } from "../../../redux/Slices/GenreSlice.tsx";
 import { toast } from "react-toastify";
+import { CloseOutlined } from "@ant-design/icons";
 
 interface ModalCreateUpdateGenreProps {
   open: boolean;
   onClose: () => void;
-  initialData?: { id: string; name: string } | null; // nếu có dữ liệu thì là update
+  initialData?: { id: string; name: string } | null;
 }
 
 const ModalCreateUpdateGenre: React.FC<ModalCreateUpdateGenreProps> = ({
@@ -16,28 +17,29 @@ const ModalCreateUpdateGenre: React.FC<ModalCreateUpdateGenreProps> = ({
   initialData,
 }) => {
   const dispatch = useAppDispatch();
-  const [form] = Form.useForm();
   const isEditMode = Boolean(initialData);
+  const [name, setName] = useState("");
 
   useEffect(() => {
     if (initialData) {
-      form.setFieldsValue({ name: initialData.name });
+      setName(initialData.name);
     } else {
-      form.resetFields();
+      setName("");
     }
-  }, [initialData, form]);
+  }, [initialData]);
 
   const handleSubmit = async () => {
+    if (!name) {
+      toast.error("Please input genre name!");
+      return;
+    }
+
     try {
-      const values = await form.validateFields();
       if (isEditMode && initialData) {
-        await dispatch(
-          updateGenre({ genreId: initialData.id, name: values.name })
-        );
+        await dispatch(updateGenre({ genreId: initialData.id, name }));
         toast.success("Genre updated successfully!");
       } else {
-        await dispatch(createGenre({ name: values.name }));
-        console.log("Add genre success");
+        await dispatch(createGenre({ name }));
         toast.success("Genre created successfully!");
       }
       onClose();
@@ -52,12 +54,39 @@ const ModalCreateUpdateGenre: React.FC<ModalCreateUpdateGenreProps> = ({
         token: {
           fontFamily: '"Saira Semi Condensed", sans-serif',
         },
+        components: {
+          Modal: {
+            colorBgContainer: "#273142",
+            colorBgElevated: "#273142",
+            colorText: "white",
+            colorBorder: "transparent",
+            borderRadius: 8,
+            colorBgMask: "rgba(0, 0, 0, 0.8)",
+          },
+          Input: {
+            controlHeight: 48,
+            colorBgContainer: "#323D4E",
+            colorText: "white",
+            colorBorder: "transparent",
+            borderRadius: 8,
+            colorTextPlaceholder: "rgba(255, 255, 255, 0.5)",
+          },
+          Button: {
+            controlHeight: 48,
+            colorBgContainer: "#3b82f6",
+            colorBorder: "#3b82f6",
+            borderRadius: 8,
+            colorText: "white",
+            defaultHoverBg: "#2563eb",
+            defaultHoverBorderColor: "#2563eb",
+          },
+        },
       }}
     >
       <Modal
         open={open}
         title={
-          <span className="font-saira text-lg">
+          <span className="font-saira text-lg text-white">
             {isEditMode ? "Update Genre" : "Create New Genre"}
           </span>
         }
@@ -65,17 +94,26 @@ const ModalCreateUpdateGenre: React.FC<ModalCreateUpdateGenreProps> = ({
         onCancel={onClose}
         okText={<span className="font-saira">Save</span>}
         cancelText={<span className="font-saira">Cancel</span>}
+        cancelButtonProps={{
+          className:
+            "font-saira !bg-gray-500 !border-gray-500 !text-white hover:!bg-gray-600 hover:!border-gray-600",
+        }}
+        closeIcon={<CloseOutlined style={{ color: "white" }} />}
         destroyOnClose
       >
-        <Form form={form} layout="vertical" name="genreForm">
-          <Form.Item
-            label={<span className="font-saira">Genre Name</span>}
-            name="name"
-            rules={[{ required: true, message: "Please input genre name!" }]}
-          >
-            <Input className="font-saira" placeholder="Enter genre name" />
-          </Form.Item>
-        </Form>
+        <div className="space-y-6">
+          <div>
+            <label className="text-white mb-2 block text-[16px] font-saira">
+              Genre Name
+            </label>
+            <Input
+              className="font-saira"
+              placeholder="Enter genre name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
+        </div>
       </Modal>
     </ConfigProvider>
   );

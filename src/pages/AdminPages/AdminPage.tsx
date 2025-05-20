@@ -14,6 +14,9 @@ import ShowtimePage from "./ShowTimePage/ShowtimePage.tsx";
 import CreateUpdateShowtimePage from "./ShowTimePage/CreateUpdateShowtimePage.tsx";
 import RoomPage from "./RoomPage/RoomPage.tsx";
 import CreateRoomPage from "./RoomPage/CreateRoomPage.tsx";
+import CouponPage from "./CouponPage/CouponPage.tsx";
+import FoodPage from "./FoodPage/FoodPage.tsx";
+import CreateUpdateCouponPage from "./CouponPage/CreateUpdateCouponPage.tsx";
 
 const AdminPage = () => {
   return (
@@ -49,6 +52,12 @@ const AdminPage = () => {
         <Route path="/theaters/:id/create" element={<CreateRoomPage />} />
 
         <Route path="/rooms" element={<RoomPage />} />
+
+        <Route path="/coupons" element={<CouponPage />} />
+        <Route path="/coupons/create" element={<CreateUpdateCouponPage />} />
+        <Route path="/coupons/edit/:id" element={<CreateUpdateCouponPage />} />
+
+        <Route path="/foods" element={<FoodPage />} />
 
         <Route path="/feedbacks" element={<FeedbackPage />} />
       </Route>

@@ -40,6 +40,7 @@ const CreateUpdateMoviePage = () => {
     director: "",
     genresId: [] as string[],
     actorsId: [] as string[],
+    existingImageUrl: "" as string,
   });
   const [preview, setPreview] = useState<string | null>(null);
   const [actors, setActors] = useState<{ id: string; name: string }[]>([]);
@@ -48,22 +49,6 @@ const CreateUpdateMoviePage = () => {
   );
   const [genres, setGenres] = useState<{ id: string; name: string }[]>([]);
   const [isFormDataReady, setIsFormDataReady] = useState(false);
-
-  const mapMovieDataToFormData = (apiResponse: any) => {
-    const movie = apiResponse.result;
-    return {
-      name: movie.name,
-      content: movie.content,
-      premiere: movie.premiere ? dayjs(movie.premiere, "DD-MM-YYYY") : null,
-      duration: movie.duration.toString(),
-      language: movie.language,
-      rate: movie.rate.toString(),
-      image: movie.image,
-      director: movie.director.id,
-      genresId: movie.genres.map((g: any) => g.id),
-      actorsId: movie.actors.map((a: any) => a.id),
-    };
-  };
 
   useEffect(() => {
     if (id) {
@@ -78,7 +63,9 @@ const CreateUpdateMoviePage = () => {
       setMovie({
         name: movieDetail.name,
         content: movieDetail.content,
-        premiere: dayjs(movieDetail.premiere),
+        premiere: movieDetail.premiere
+          ? dayjs(movieDetail.premiere, "DD-MM-YYYY")
+          : null,
         duration: movieDetail.duration.toString(),
         language: movieDetail.language,
         rate: movieDetail.rate.toString(),
@@ -86,6 +73,7 @@ const CreateUpdateMoviePage = () => {
         director: movieDetail.director.id,
         genresId: movieDetail.genres.map((g) => g.id),
         actorsId: movieDetail.actors.map((a) => a.id),
+        existingImageUrl: movieDetail.image || "",
       });
       setPreview(movieDetail.image);
       setIsFormDataReady(true);
@@ -167,14 +155,14 @@ const CreateUpdateMoviePage = () => {
 
     try {
       console.log("Request params: ", movieData);
-      console.log("Image: ", movie.image);
+      console.log("Image: ", movie.existingImageUrl);
       if (id) {
         // Nếu có id, gọi Redux API cập nhật phim
         await dispatch(
           updateMovie({
             movieId: id,
             movieData,
-            image: movie.image || null, // Đảm bảo image không undefined
+            image: movie.image || movie.existingImageUrl, // Đảm bảo image không undefined
           })
         ).unwrap();
         toast.success("Movie updated successfully!");
@@ -238,7 +226,9 @@ const CreateUpdateMoviePage = () => {
           <form onSubmit={handleSubmit} className="flex flex-col items-center">
             {/* Upload Poster */}
             <div className="mb-8 flex flex-col items-center">
-              <label className="text-white mb-2 block text-lg">Poster</label>
+              <label className="text-white mb-2 block text-lg font-saira">
+                Poster
+              </label>
               <div className="relative w-[200px] h-[300px] bg-[#323D4E] rounded-xl flex items-center justify-center overflow-hidden">
                 {preview ? (
                   <img

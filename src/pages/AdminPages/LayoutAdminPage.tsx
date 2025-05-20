@@ -14,7 +14,8 @@ import { FaUsers } from "react-icons/fa";
 import { TbMovie } from "react-icons/tb";
 import { IoPersonSharp } from "react-icons/io5";
 import { GiTheater } from "react-icons/gi";
-import { MdChair } from "react-icons/md";
+import { IoFastFood } from "react-icons/io5";
+import { RiCoupon2Fill } from "react-icons/ri";
 
 const LayoutAdminPage = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -93,6 +94,18 @@ const LayoutAdminPage = () => {
               icon={<GiTheater />}
               text="Theaters"
               to="/admin/theaters"
+              isSidebarOpen={isSidebarOpen}
+            />
+            <SlidebarItem
+              icon={<RiCoupon2Fill />}
+              text="Coupons"
+              to="/admin/coupons"
+              isSidebarOpen={isSidebarOpen}
+            />
+            <SlidebarItem
+              icon={<IoFastFood />}
+              text="Foods"
+              to="/admin/foods"
               isSidebarOpen={isSidebarOpen}
             />
             <SlidebarItem

@@ -108,3 +108,25 @@ export type FeedbackType = {
   movieId: string;
   status: boolean;
 };
+
+export type CouponType = {
+  id: string;
+  code: string;
+  discountType: string;
+  discountValue: number;
+  startDate: string;
+  endDate: string;
+  minValue: number;
+  description: string;
+  image: string;
+  publicId: string;
+  status: boolean;
+};
+
+export type FoodType = {
+  id: string;
+  name: string;
+  price: number;
+  image: string;
+  publicId: string;
+};

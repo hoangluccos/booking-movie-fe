@@ -27,6 +27,7 @@ const MoviePage: React.FC = () => {
   useEffect(() => {
     console.log("Render Movie Page");
     dispatch(getAllMovies());
+    console.log("List movie: ", listMovie);
   }, [dispatch]);
 
   const filteredData = listMovie.filter((item) =>

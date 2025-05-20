@@ -1,11 +1,11 @@
-import { ConfigProvider, Form, Input, Modal } from "antd";
-import { useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "../../../redux/Store/Store.tsx";
+import { ConfigProvider, Input, Modal } from "antd";
+import { useEffect, useState } from "react";
+import { useAppDispatch } from "../../../redux/Store/Store.tsx";
 import {
   createTheater,
   updateTheater,
 } from "../../../redux/Slices/TheaterSlice.tsx";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 
 interface ModalCreateUpdateTheaterProps {
   open: boolean;
@@ -17,26 +17,32 @@ const ModalCreateUpdateTheater = (props: ModalCreateUpdateTheaterProps) => {
   const { onClose, open, initialData } = props;
 
   const dispatch = useAppDispatch();
-  const { error, isLoading, listPerson } = useAppSelector(
-    (state) => state.person
-  );
-  const [form] = Form.useForm();
   const isEditMode = Boolean(initialData);
+  const [name, setName] = useState("");
+  const [location, setLocation] = useState("");
 
   useEffect(() => {
     if (initialData) {
-      form.setFieldsValue({
-        name: initialData.name,
-        location: initialData.location, // ✅ Gán location vào form
-      });
+      setName(initialData.name);
+      setLocation(initialData.location);
     } else {
-      form.resetFields();
+      setName("");
+      setLocation("");
     }
-  }, [initialData, form]);
+  }, [initialData]);
 
   const handleSubmit = async () => {
+    if (!name) {
+      toast.error("Please input theater name!");
+      return;
+    }
+    if (!location) {
+      toast.error("Please input theater location!");
+      return;
+    }
+
     try {
-      const values = await form.validateFields();
+      const values = { name, location };
       if (isEditMode && initialData) {
         await dispatch(updateTheater({ theaterId: initialData.id, ...values }));
         toast.success("Theater updated successfully!");
@@ -56,12 +62,39 @@ const ModalCreateUpdateTheater = (props: ModalCreateUpdateTheaterProps) => {
         token: {
           fontFamily: '"Saira Semi Condensed", sans-serif',
         },
+        components: {
+          Modal: {
+            colorBgContainer: "#273142",
+            colorBgElevated: "#273142",
+            colorText: "white",
+            colorBorder: "transparent",
+            borderRadius: 8,
+            colorBgMask: "rgba(0, 0, 0, 0.8)",
+          },
+          Input: {
+            controlHeight: 48,
+            colorBgContainer: "#323D4E",
+            colorText: "white",
+            colorBorder: "transparent",
+            borderRadius: 8,
+            colorTextPlaceholder: "rgba(255, 255, 255, 0.5)",
+          },
+          Button: {
+            controlHeight: 48,
+            colorBgContainer: "#3b82f6",
+            colorBorder: "#3b82f6",
+            borderRadius: 8,
+            colorText: "white",
+            defaultHoverBg: "#2563eb",
+            defaultHoverBorderColor: "#2563eb",
+          },
+        },
       }}
     >
       <Modal
         open={open}
         title={
-          <span className="font-saira text-lg">
+          <span className="font-saira text-lg text-white">
             {isEditMode ? "Update Theater" : "Create New Theater"}
           </span>
         }
@@ -69,30 +102,36 @@ const ModalCreateUpdateTheater = (props: ModalCreateUpdateTheaterProps) => {
         onCancel={onClose}
         okText={<span className="font-saira">Save</span>}
         cancelText={<span className="font-saira">Cancel</span>}
+        cancelButtonProps={{
+          className:
+            "font-saira !bg-gray-500 !border-gray-500 !text-white hover:!bg-gray-600 hover:!border-gray-600",
+        }}
         destroyOnClose
       >
-        <Form form={form} layout="vertical" name="theaterForm">
-          <Form.Item
-            label={<span className="font-saira">Theater Name</span>}
-            name="name"
-            rules={[{ required: true, message: "Please input theater name!" }]}
-          >
-            <Input className="font-saira" placeholder="Enter theater name" />
-          </Form.Item>
-
-          <Form.Item
-            label={<span className="font-saira">Theater Location</span>}
-            name="location"
-            rules={[
-              { required: true, message: "Please input theater location!" },
-            ]}
-          >
+        <div className="space-y-6">
+          <div>
+            <label className="text-white mb-2 block text-[16px] font-saira">
+              Theater Name
+            </label>
+            <Input
+              className="font-saira"
+              placeholder="Enter theater name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
+          <div>
+            <label className="text-white mb-2 block text-[16px] font-saira">
+              Theater Location
+            </label>
             <Input
               className="font-saira"
               placeholder="Enter theater location"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
             />
-          </Form.Item>
-        </Form>
+          </div>
+        </div>
       </Modal>
     </ConfigProvider>
   );
