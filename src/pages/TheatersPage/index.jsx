@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import CouponItem from "../../components/CouponItem";
 import instance from "../../api/instance";
 import { useNavigate } from "react-router-dom";
 import img from "../../assets/cinema.jpg";
+import TheaterItemBasic from "../../components/TheaterItemBasic";
 function TheatersPage() {
   const [theaters, setTheaters] = useState([]);
   const navigate = useNavigate();
@@ -29,12 +29,12 @@ function TheatersPage() {
       <div className="theater-page flex flex-wrap gap-[10px]">
         {theaters.map((theater) => {
           return (
-            <CouponItem
+            <TheaterItemBasic
               key={theater.id}
               img={img}
               title={theater.name}
               detail={theater.location}
-            ></CouponItem>
+            ></TheaterItemBasic>
           );
         })}
       </div>

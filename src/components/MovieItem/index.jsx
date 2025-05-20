@@ -29,7 +29,7 @@ function MovieItem({ image, title, subtitle, duration, id }) {
         <div className="mt-1">
           <h3 className="text-lg font-normal m-0">{title}</h3>
           <p className="text-sm text-gray-400">Ngôn ngữ: {subtitle}</p>
-          <p className="text-sm text-gray-400">Thời lượng: {duration}</p>
+          <p className="text-sm text-gray-400">Thời lượng: {duration} phút</p>
         </div>
       </div>
     </div>

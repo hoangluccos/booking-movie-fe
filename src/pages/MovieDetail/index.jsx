@@ -2,13 +2,13 @@ import React, { useEffect, useState, useMemo, act } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import instance from "../../api/instance";
 import TicketModal from "../../components/TicketModal";
-import CouponItem from "../../components/CouponItem";
 import FeedbackItem from "../../components/FeedbackItem";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CustomCalendar from "../../components/CustomCalendar";
 import ActorComponent from "../../components/ActorComponent";
 import GenreComponent from "../../components/GenreComponent";
+import TheaterItemBasic from "../../components/TheaterItemBasic";
 
 function useQuery() {
   const location = useLocation();
@@ -235,17 +235,17 @@ function MovieDetail() {
           <div className="coupons mt-3">
             <p className="font-bold text-xl text-center">ƯU ĐÃI HIỆN CÓ</p>
             <div className="flex flex-wrap gap-[10px] justify-center ">
-              <CouponItem
+              <TheaterItemBasic
                 img={img}
                 title="Cơ hội sở hữu LABUBU FLIP WITH ME 40cm tại HL-Theaters !"
                 detail="Đến 3HL Movies mua combo để có cơ hội sở hữu LABUBU miễn phí ngay nhéee"
               />
-              <CouponItem
+              <TheaterItemBasic
                 img="https://bhdstar.vn/wp-content/uploads/2024/11/466793530_1003149731851513_661564586689858699_n.jpg"
                 title="Siêu bão miễn phí vé"
                 detail="Đến 3HL Movies mua combo để có cơ hội sở hữu LABUBU miễn phí ngay nhéee"
               />
-              <CouponItem
+              <TheaterItemBasic
                 img="https://bhdstar.vn/wp-content/uploads/2024/11/bap-free-vui-het-y.jpg"
                 title="Bắp Free tại HL-Theaters !"
                 detail="Tặng ngay bắp miễn phí KHÔNG phụ thu đổi vị dành cho 2 người khi xem phim."
