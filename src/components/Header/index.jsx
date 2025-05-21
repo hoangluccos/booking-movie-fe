@@ -192,7 +192,7 @@ function Header() {
             </div>
           </div>
 
-          <div className="navigation_desktop flex justify-evenly gap-10 w-full mt-2 mb-2">
+          <div className="navigation_desktop flex justify-evenly gap-10 w-full mt-2 mb-3">
             <ButtonNavHeader navTo={"/"} text={"TRANG CHỦ"} />
             <ButtonNavHeader navTo={"/theaters"} text={"RẠP PHIM"} />
             <ButtonNavHeader navTo={"/contact"} text={"LIÊN HỆ"} />

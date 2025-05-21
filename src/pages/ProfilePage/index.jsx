@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ProfileImage from "../../assets/profile.png";
-import instance from "../../api/instance";
+import instance, { otpInstance } from "../../api/instance";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { profileSchema } from "../../utils/validationSchema";
@@ -75,7 +75,10 @@ const ProfilePage = () => {
       const res = await instance.put("/users/avatar", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      toast.success("Tải lên Avatar thành công!");
+      toast.success(res.data.message);
+      //hide toggle save
+      setAvatar(null);
+      console.log(res.data);
     } catch (error) {
       toast.error("Tải lên Avatar thất bại!");
       console.error(error);
@@ -119,7 +122,7 @@ const ProfilePage = () => {
               <img
                 src={previewAvatar || ProfileImage}
                 alt="avatar"
-                className="w-24 h-24 rounded-full mx-auto mb-3 cursor-pointer"
+                className="w-24 h-24 rounded-full mx-auto mb-3 cursor-pointer object-cover"
                 onError={(e) => {
                   e.target.onerror = null;
                   e.target.src = ProfileImage;
