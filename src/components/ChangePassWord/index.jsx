@@ -21,11 +21,13 @@ function ChangePassWord({ userData }) {
       try {
         console.log(userData.email);
         const res = await otpInstance.post(
-          "/verify/registration",
+          "/verify/forgotPassword",
           userData.email
         );
         console.log(res);
-        if (res.data.code === 200) setIsSendedOTP(true);
+        if (res.data.code === 200) {
+          setIsSendedOTP(true);
+        }
       } catch (error) {
         console.log(error);
       }
