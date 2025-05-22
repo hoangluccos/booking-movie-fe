@@ -11,6 +11,7 @@ import roomReducer from "../Slices/RoomSlice.tsx";
 import feedbackReducer from "../Slices/FeedbackSlice.tsx";
 import couponReducer from "../Slices/CouponSlice.tsx";
 import foodReducer from "../Slices/FoodSlice.tsx";
+import invoiceReducer from "../Slices/InvoiceSlice.tsx";
 
 const Store = configureStore({
   reducer: {
@@ -24,6 +25,7 @@ const Store = configureStore({
     feedback: feedbackReducer,
     coupon: couponReducer,
     food: foodReducer,
+    invoice: invoiceReducer,
   },
 });
 

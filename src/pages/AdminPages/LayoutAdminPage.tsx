@@ -16,6 +16,7 @@ import { IoPersonSharp } from "react-icons/io5";
 import { GiTheater } from "react-icons/gi";
 import { IoFastFood } from "react-icons/io5";
 import { RiCoupon2Fill } from "react-icons/ri";
+import { FaFileInvoice } from "react-icons/fa6";
 
 const LayoutAdminPage = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -70,6 +71,12 @@ const LayoutAdminPage = () => {
               icon={<RiSlideshow3Fill />}
               text="Showtimes"
               to="/admin/showtimes"
+              isSidebarOpen={isSidebarOpen}
+            />
+            <SlidebarItem
+              icon={<FaFileInvoice />}
+              text="Invoices"
+              to="/admin/invoices"
               isSidebarOpen={isSidebarOpen}
             />
             <SlidebarItem

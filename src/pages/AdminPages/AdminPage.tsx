@@ -17,6 +17,8 @@ import CreateRoomPage from "./RoomPage/CreateRoomPage.tsx";
 import CouponPage from "./CouponPage/CouponPage.tsx";
 import FoodPage from "./FoodPage/FoodPage.tsx";
 import CreateUpdateCouponPage from "./CouponPage/CreateUpdateCouponPage.tsx";
+import InvoicePage from "./InvoicePage/InvoicePage.tsx";
+import InvoiceDetailPage from "./InvoicePage/InvoiceDetailPage.tsx";
 
 const AdminPage = () => {
   return (
@@ -38,6 +40,9 @@ const AdminPage = () => {
           path="/showtimes/edit/:id"
           element={<CreateUpdateShowtimePage />}
         />
+
+        <Route path="/invoices" element={<InvoicePage />} />
+        <Route path="/invoices/:id" element={<InvoiceDetailPage />} />
 
         <Route path="/users" element={<UserPage />} />
 

@@ -130,3 +130,32 @@ export type FoodType = {
   image: string;
   publicId: string;
 };
+
+export type FoodDetailType = {
+  id: string;
+  name: string;
+  price: number;
+  image: string;
+  quantity: number;
+  publicId: string;
+};
+
+export type InvoiceType = {
+  id: string;
+  date: string;
+  time: string;
+  status: boolean;
+  amount: number;
+  user: UserType;
+  showtime: ShowtimeType;
+  room: RoomType;
+  food: FoodDetailType;
+  coupon: CouponType;
+};
+
+export type InvoiceDetailType = {
+  id: string;
+  price: number;
+  ticketId: string;
+  seat: SeatType;
+};

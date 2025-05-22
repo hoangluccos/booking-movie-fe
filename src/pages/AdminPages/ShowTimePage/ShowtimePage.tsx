@@ -25,19 +25,19 @@ import {
 } from "../../../redux/Slices/ShowtimeSlice.tsx";
 import { toast } from "react-toastify";
 
-// Define filter interface
-interface Filters {
-  movie: string[];
-  theater: string[];
-  date: string;
-}
-
 const ShowtimePage = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { listShowtimes } = useAppSelector((state) => state.showtime);
-
   const [currentPage, setCurrentPage] = useState(1);
+
+  // Define filter interface
+  interface Filters {
+    movie: string[];
+    theater: string[];
+    date: string;
+  }
+
   const [filters, setFilters] = useState<Filters>({
     movie: [],
     theater: [],
