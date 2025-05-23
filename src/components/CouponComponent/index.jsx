@@ -2,17 +2,18 @@ import React, { useEffect, useState } from "react";
 import instance from "../../api/instance";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import SelectCoupon from "./SelectCoupon";
 
 function CouponComponent({ totalPrice, onApplyCoupon }) {
   const [coupons, setCoupons] = useState("");
   const [listCoupons, setListCoupons] = useState([]);
   const [appliedCoupon, setAppliedCoupon] = useState(null);
+  const [isSelect, setIsSelect] = useState("");
 
   useEffect(() => {
     const fetchCoupons = async () => {
       try {
         const res = await instance.get("/coupons/");
-        console.log("Danh sách mã giảm giá NE: ", res.data);
         console.log("Danh sách mã giảm giá: ", res.data.result);
         setListCoupons(res.data.result);
       } catch (error) {
@@ -57,12 +58,26 @@ function CouponComponent({ totalPrice, onApplyCoupon }) {
     if (appliedCoupon.discountType === "Percentage") {
       return Math.max(totalPrice * (1 - appliedCoupon.discountValue / 100), 0);
     }
+    if (appliedCoupon.discountType === "Other") {
+      return appliedCoupon.discountValue;
+    }
 
     return totalPrice;
   };
 
+  const calculateDiscountAmount = () => {
+    if (!appliedCoupon) return 0;
+    return totalPrice - calculateFinalPrice();
+  };
+
   const formatCurrency = (value) => {
-    return value.toLocaleString(); // Thêm dấu phân cách hàng nghìn
+    return value.toLocaleString();
+  };
+
+  const handleSelectCoupon = (id, code) => {
+    setCoupons(code);
+    onApplyCoupon(id);
+    setIsSelect(id);
   };
 
   return (
@@ -82,6 +97,15 @@ function CouponComponent({ totalPrice, onApplyCoupon }) {
           onChange={(e) => setCoupons(e.target.value)}
           className="border w-full rounded p-1"
         />
+        {listCoupons.map((c, id) => (
+          <SelectCoupon
+            key={id}
+            image={c.image}
+            name={c.code}
+            handleSelect={() => handleSelectCoupon(c.id, c.code)}
+            isSelect={isSelect === c.id}
+          />
+        ))}
         <button
           onClick={handleApplyCoupon}
           className="bg-blue-500 text-white px-4 py-2 mt-2 rounded w-full"
@@ -94,13 +118,7 @@ function CouponComponent({ totalPrice, onApplyCoupon }) {
         <div className="text-green-500">
           <p>Giá ban đầu: {formatCurrency(totalPrice)} VND</p>
           <p className="text-red-400">
-            Số tiền được giảm:{" "}
-            {appliedCoupon.discountType === "Fixed"
-              ? formatCurrency(appliedCoupon.discountValue)
-              : formatCurrency(
-                  Math.max(totalPrice * (appliedCoupon.discountValue / 100), 0)
-                )}{" "}
-            VND
+            Số tiền được giảm: {formatCurrency(calculateDiscountAmount())} VND
           </p>
         </div>
       ) : (

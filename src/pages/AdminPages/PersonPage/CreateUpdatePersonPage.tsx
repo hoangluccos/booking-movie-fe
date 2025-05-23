@@ -6,12 +6,12 @@ import dayjs, { Dayjs } from "dayjs";
 import instance from "../../../api/instance";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useAppDispatch, useAppSelector } from "../../../redux/Store/Store.tsx";
+import { useAppDispatch, useAppSelector } from "../../../redux/store/store.tsx";
 import {
   createActor,
   createDirector,
   updatePerson,
-} from "../../../redux/Slices/PersonSlice.tsx";
+} from "../../../redux/slices/PersonSlice.tsx";
 
 const { Option } = Select;
 

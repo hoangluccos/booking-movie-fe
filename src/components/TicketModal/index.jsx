@@ -19,7 +19,7 @@ const TicketModal = ({ isOpen, onRequestClose }) => {
     return date;
   });
 
-  const locations = ["Hồ Chí Minh", "Hà Nội", "Cần Thơ"];
+  const locations = ["Hồ Chí Minh", "Hà Nội", "Đà Nẵng"];
 
   useEffect(() => {
     if (isOpen) {
@@ -32,31 +32,52 @@ const TicketModal = ({ isOpen, onRequestClose }) => {
     };
   }, [isOpen]);
 
-  const handleDateSelect = async (index) => {
+  const handleDateSelect = (index) => {
     setSelectedDate(index);
 
-    const selectedDateValue = days[index];
+    // const selectedDateValue = days[index];
+    // const formattedDate = selectedDateValue.toISOString().split("T")[0]; // Format YYYY-MM-DD
+    // const request = {
+    //   movieId,
+    //   date: formattedDate,
+    //   location: selectedLocation,
+    // };
+
+    // try {
+    //   const response = await instance.post("/showtimes/all", request);
+    //   console.log("list showtime by movies: ", response.data.result);
+    //   setShowtimes(response.data.result);
+    // } catch (error) {
+    //   console.error("Error fetching showtimes:", error);
+    //   setShowtimes([]);
+    // }
+  };
+  //fetch showtime api when change: location - date
+  useEffect(() => {
+    const selectedDateValue = days[selectedDate];
     const formattedDate = selectedDateValue.toISOString().split("T")[0]; // Format YYYY-MM-DD
     const request = {
       movieId,
       date: formattedDate,
       location: selectedLocation,
     };
-
-    try {
-      const response = await instance.post("/showtimes/all", request);
-      setShowtimes(response.data.result);
-    } catch (error) {
-      console.error("Error fetching showtimes:", error);
-      setShowtimes([]);
-    }
-  };
-
+    const fetch = async () => {
+      try {
+        const response = await instance.post("/showtimes/all", request);
+        console.log("list showtime by movies: ", response.data.result);
+        setShowtimes(response.data.result);
+      } catch (error) {
+        console.error("Error fetching showtimes:", error);
+        setShowtimes([]);
+      }
+    };
+    fetch();
+  }, [selectedDate, selectedLocation]);
   return (
     <Modal
       isOpen={isOpen}
       onRequestClose={onRequestClose}
-      className="modal-ticket bg-white p-6 rounded-md w-[75%] mx-auto mt-[140px] overflow-y-auto max-h-[80vh]"
+      className="modal-ticket bg-white p-6 rounded-md w-[75%] mx-auto mt-[160px] overflow-y-auto max-h-[80vh]"
       overlayClassName="fixed inset-0 bg-black bg-opacity-50"
     >
       <div className="flex justify-end mb-4">
@@ -85,7 +106,10 @@ const TicketModal = ({ isOpen, onRequestClose }) => {
             className={`p-2 border rounded-md ${
               selectedLocation === location ? "bg-gray-300" : "bg-white"
             }`}
-            onClick={() => setSelectedLocation(location)}
+            onClick={() => {
+              setSelectedLocation(location);
+              // handleDateSelect(selectedDate);
+            }}
           >
             {location}
           </button>

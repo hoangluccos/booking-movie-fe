@@ -1,25 +1,42 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import vnpay from "../../assets/vnpay.jpg";
 import instance from "../../api/instance";
 import CouponComponent from "../../components/CouponComponent";
+import FoodComponent from "../../components/FoodComponent";
+import { handleRedirect } from "../../utils/common";
 
 const PaymentMethods = () => {
   const [selectedMethod, setSelectedMethod] = useState("null");
   const [selectedCouponId, setSelectedCouponId] = useState(null);
+  const [listFood, setListFood] = useState([1, 2]);
+  const [selectFood, setSelectFood] = useState("");
   const location = useLocation();
   console.log("state: ", location.state);
   console.log("seatPriceTotal: ", location.state.seatId.length * 100000, "VND");
   console.log(selectedMethod);
   const nav = useNavigate();
-  const handleRedirect = (url) => {
-    const isInternalRoute = url.startsWith("/");
-    if (isInternalRoute) {
-      nav(url);
-    } else {
-      window.location.href = url;
-    }
+
+  useEffect(() => {
+    const fetchFoods = async () => {
+      try {
+        const res = await instance.get("/foods/");
+        if (res) {
+          console.log("food: ", res);
+          setListFood(res.data.result);
+        }
+      } catch (error) {
+        console.log("Error when fetchFoods", error);
+      }
+    };
+    fetchFoods();
+  }, []);
+
+  const handleSelectFood = (id) => {
+    console.log("select food ", id);
+    setSelectFood(id);
   };
+
   const paymentMethods = [
     {
       id: "VNPay",
@@ -37,6 +54,7 @@ const PaymentMethods = () => {
         showtimeId: location.state.showtimeId,
         seatId: location.state.seatId,
         couponId: selectedCouponId,
+        orderRequests: [{ foodId: selectFood, quantity: 1 }],
       };
       console.log(req);
       try {
@@ -55,7 +73,7 @@ const PaymentMethods = () => {
               },
             });
             console.log(response.data.result);
-            handleRedirect(response.data.result);
+            handleRedirect(response.data.result, nav);
           } catch (error) {
             console.error("Error payment", error);
           }
@@ -70,48 +88,70 @@ const PaymentMethods = () => {
 
   return (
     <div className="content flex gap-x-1 justify-center">
-      <div className="content p-4 border rounded">
-        <h1 className="text-xl text-center font-bold mb-4">
-          HÌNH THỨC THANH TOÁN
-        </h1>
-        <ul>
-          {paymentMethods.map((method) => (
-            <li key={method.id} className="flex items-center mb-4">
-              <input
-                type="radio"
-                name="paymentMethod"
-                id={method.id}
-                value={method.id}
-                checked={selectedMethod === method.id}
-                onChange={() => setSelectedMethod(method.id)}
-                className="mr-2"
+      <div className="content border rounded">
+        {/* buying food  */}
+        <div className="p-3">
+          <h1 className="text-center text-xl font-bold uppercase">
+            Chọn combo đi cùng
+          </h1>
+          <div className="flex gap-x-5 my-3">
+            {listFood.map((food, i) => (
+              <FoodComponent
+                key={i}
+                image={food.image}
+                name={food.name}
+                price={food.price}
+                selectHandle={() => handleSelectFood(food.id)}
+                isSelect={selectFood === food.id}
               />
-              <label
-                htmlFor={method.id}
-                className="flex items-center cursor-pointer"
-              >
-                <img
-                  src={method.logo}
-                  alt={method.name}
-                  className="w-8 h-8 mr-2"
+            ))}
+          </div>
+        </div>
+        <hr className="mx-8" />
+        {/* select type of payment */}
+        <div className="p-4 ">
+          <h1 className="text-xl text-center font-bold mb-4">
+            HÌNH THỨC THANH TOÁN
+          </h1>
+          <ul>
+            {paymentMethods.map((method) => (
+              <li key={method.id} className="flex items-center mb-4">
+                <input
+                  type="radio"
+                  name="paymentMethod"
+                  id={method.id}
+                  value={method.id}
+                  checked={selectedMethod === method.id}
+                  onChange={() => setSelectedMethod(method.id)}
+                  className="mr-2"
                 />
-                {method.name}
-              </label>
-            </li>
-          ))}
-        </ul>
-        <div className="flex justify-center">
-          <button
-            onClick={() => handleBook()}
-            className={`p-2 rounded text-center ${
-              selectedMethod !== "null"
-                ? "bg-blue-500 text-white cursor-pointer"
-                : "bg-white text-gray-500 border border-gray-300 cursor-not-allowed"
-            }`}
-            disabled={selectedMethod === "null"}
-          >
-            Thanh toán
-          </button>
+                <label
+                  htmlFor={method.id}
+                  className="flex items-center cursor-pointer"
+                >
+                  <img
+                    src={method.logo}
+                    alt={method.name}
+                    className="w-8 h-8 mr-2"
+                  />
+                  {method.name}
+                </label>
+              </li>
+            ))}
+          </ul>
+          <div className="flex justify-center">
+            <button
+              onClick={() => handleBook()}
+              className={`p-2 rounded text-center ${
+                selectedMethod !== "null" && selectFood !== ""
+                  ? "bg-blue-500 text-white cursor-pointer"
+                  : "bg-white text-gray-500 border border-gray-300 cursor-not-allowed"
+              }`}
+              disabled={selectedMethod === "null" || selectFood === ""}
+            >
+              Thanh toán
+            </button>
+          </div>
         </div>
       </div>
       <CouponComponent

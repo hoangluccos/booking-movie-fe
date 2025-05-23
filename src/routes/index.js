@@ -27,6 +27,10 @@ import CommonLayout from "../components/Layout/CommonLayout";
 import NotSlider from "../components/Layout/NotSlider";
 import AdminLayout from "../components/Layout/AdminLayout";
 import FeedbacksManagement from "../pages/AdminPages/FeedbacksManagement";
+import MatchingPage from "../pages/MatchingPage";
+import MatchingSuccess from "../pages/MatchingSuccess";
+import PersonPage from "../pages/PersonPage";
+import GenreMoviePage from "../pages/GenreMoviePage";
 
 // Admin
 import AdminPage from "../pages/AdminPages/AdminPage.tsx";
@@ -102,6 +106,26 @@ const publicRoutes = [
   {
     path: "/search",
     component: SearchPage,
+    layout: NotSlider,
+  },
+  {
+    path: "/matching",
+    component: MatchingPage,
+    layout: NotSlider,
+  },
+  {
+    path: "/matching_success",
+    component: MatchingSuccess,
+    layout: NotSlider,
+  },
+  {
+    path: "/person_page/:id",
+    component: PersonPage,
+    layout: NotSlider,
+  },
+  {
+    path: "/genre_page/:id",
+    component: GenreMoviePage,
     layout: NotSlider,
   },
 ];

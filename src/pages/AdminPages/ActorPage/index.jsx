@@ -3,6 +3,7 @@ import instance from "../../../api/instance";
 import instanceImg from "../../../assets/profile.png";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
 function DirectorPage() {
   const [actors, setActors] = useState([]);
   const [newActor, setNewActor] = useState({

@@ -1,10 +1,10 @@
 import { ConfigProvider, Input, Modal } from "antd";
 import { useEffect, useState } from "react";
-import { useAppDispatch } from "../../../redux/Store/Store.tsx";
+import { useAppDispatch } from "../../../redux/store/store.tsx";
 import {
   createTheater,
   updateTheater,
-} from "../../../redux/Slices/TheaterSlice.tsx";
+} from "../../../redux/slices/TheaterSlice.tsx";
 import { toast } from "react-toastify";
 
 interface ModalCreateUpdateTheaterProps {

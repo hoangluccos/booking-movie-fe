@@ -1,11 +1,11 @@
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../../redux/Store/Store.tsx";
+import { useAppDispatch, useAppSelector } from "../../../redux/store/store.tsx";
 import { useEffect, useState } from "react";
 import { FoodType } from "../Data/Data";
 import { Button, ConfigProvider, Popconfirm, Tooltip } from "antd";
 import { FaRegTrashCan } from "react-icons/fa6";
 import { IoIosSearch } from "react-icons/io";
-import { deleteFood, getAllFoods } from "../../../redux/Slices/FoodSlice.tsx";
+import { deleteFood, getAllFoods } from "../../../redux/slices/FoodSlice.tsx";
 import { toast } from "react-toastify";
 import ModalCreateUpdateFood from "./ModalCreateUpdateFood.tsx";
 

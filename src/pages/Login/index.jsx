@@ -79,7 +79,7 @@ function LoginForm() {
       style={{ backgroundImage: `url(${cinemaImage})` }}
     >
       <div className="absolute inset-0 bg-black bg-opacity-30" />
-      <ToastContainer />
+      {/* <ToastContainer /> */}
       <div className="relative z-10 w-full max-w-md p-6 bg-white rounded-lg shadow-lg">
         <img
           src={profileImage}

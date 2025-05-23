@@ -1,17 +1,17 @@
 // store.ts
 import { configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
-import movieReducer from "../Slices/MovieSlice.tsx";
-import userReducer from "../Slices/UserSlice.tsx";
-import genreReducer from "../Slices/GenreSlice.tsx";
-import personReducer from "../Slices/PersonSlice.tsx";
-import theaterReducer from "../Slices/TheaterSlice.tsx";
-import showtimeReducer from "../Slices/ShowtimeSlice.tsx";
-import roomReducer from "../Slices/RoomSlice.tsx";
-import feedbackReducer from "../Slices/FeedbackSlice.tsx";
-import couponReducer from "../Slices/CouponSlice.tsx";
-import foodReducer from "../Slices/FoodSlice.tsx";
-import invoiceReducer from "../Slices/InvoiceSlice.tsx";
+import movieReducer from "../slices/MovieSlice.tsx";
+import userReducer from "../slices/UserSlice.tsx";
+import genreReducer from "../slices/GenreSlice.tsx";
+import personReducer from "../slices/PersonSlice.tsx";
+import theaterReducer from "../slices/TheaterSlice.tsx";
+import showtimeReducer from "../slices/ShowtimeSlice.tsx";
+import roomReducer from "../slices/RoomSlice.tsx";
+import feedbackReducer from "../slices/FeedbackSlice.tsx";
+import couponReducer from "../slices/CouponSlice.tsx";
+import foodReducer from "../slices/FoodSlice.tsx";
+import invoiceReducer from "../slices/InvoiceSlice.tsx";
 
 const Store = configureStore({
   reducer: {

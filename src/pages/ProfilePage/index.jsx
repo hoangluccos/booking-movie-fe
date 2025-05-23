@@ -2,11 +2,9 @@ import React, { useEffect, useState } from "react";
 import ProfileImage from "../../assets/profile.png";
 import instance from "../../api/instance";
 import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { profileSchema } from "../../utils/validationSchema";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import ChangePassWord from "../../components/ChangePassWord";
 
 const ProfilePage = () => {
@@ -14,6 +12,14 @@ const ProfilePage = () => {
   const [avatar, setAvatar] = useState(null);
   const [previewAvatar, setPreviewAvatar] = useState(ProfileImage);
   const nav = useNavigate();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm();
+
   const handleLogout = () => {
     (async () => {
       try {
@@ -32,28 +38,24 @@ const ProfilePage = () => {
     })();
   };
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm({
-    resolver: zodResolver(profileSchema),
-  });
-
   const onSubmit = (data) => {
-    console.log(data);
+    console.log("raw data", data);
     const formattedData = {
       ...data,
-      dateOfBirth: data.dateOfBirth.toISOString().split("T")[0],
+      dateOfBirth: data.dateOfBirth
+        ? new Date(data.dateOfBirth).toISOString().split("T")[0]
+        : null,
       avatar: null,
     };
-    console.log(formattedData);
+    console.log("formattedData", formattedData);
     (async () => {
-      const res = await instance.put("/users/bio", formattedData);
-      console.log(res);
-      toast.success("Bạn đã update thành công!");
-      reset(formattedData);
+      try {
+        const res = await instance.put("/users/bio", formattedData);
+        toast.success("Bạn đã update thành công!");
+        reset({ ...formattedData });
+      } catch (error) {
+        console.log(error);
+      }
     })();
   };
 
@@ -61,21 +63,21 @@ const ProfilePage = () => {
     const file = e.target.files[0];
     if (file) {
       setAvatar(file);
-      setPreviewAvatar(URL.createObjectURL(file)); // Hiển thị ảnh preview
+      setPreviewAvatar(URL.createObjectURL(file));
     }
   };
 
   const handleAvatarSave = async () => {
     if (!avatar) return;
-
     const formData = new FormData();
     formData.append("file", avatar);
-
     try {
       const res = await instance.put("/users/avatar", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      toast.success("Tải lên Avatar thành công!");
+      toast.success(res.data.message);
+      //hide toggle
+      setAvatar(null);
     } catch (error) {
       toast.error("Tải lên Avatar thất bại!");
       console.error(error);
@@ -92,7 +94,6 @@ const ProfilePage = () => {
     (async () => {
       try {
         const res = await instance.get("users/bio");
-        console.log("bio : ", res);
         const formattedData = {
           ...res.data.result,
           dateOfBirth: formatDate(res.data.result.dateOfBirth),
@@ -111,19 +112,14 @@ const ProfilePage = () => {
   return (
     <div className="my-4 flex-grow">
       <div className="content mx-auto my-4">
-        <ToastContainer />
+        {/* <ToastContainer /> */}
         <div className="flex profile-info">
-          {/* Sidebar */}
           <div className="form-avatar bg-white border rounded p-5 text-center w-1/3">
             <div className="avatar">
               <img
                 src={previewAvatar || ProfileImage}
                 alt="avatar"
-                className="w-24 h-24 rounded-full mx-auto mb-3 cursor-pointer"
-                onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.src = ProfileImage;
-                }}
+                className="w-24 h-24 rounded-full mx-auto mb-3 cursor-pointer object-cover"
                 onClick={() => document.getElementById("avatarInput").click()}
               />
               <input
@@ -152,7 +148,6 @@ const ProfilePage = () => {
             </div>
           </div>
 
-          {/* Form Section */}
           <form
             className="form-input bg-white border rounded p-5 ml-5 flex-grow"
             onSubmit={handleSubmit(onSubmit)}
@@ -201,7 +196,13 @@ const ProfilePage = () => {
                 <label className="block mb-2">Email</label>
                 <input
                   type="text"
-                  {...register("email")}
+                  {...register("email", {
+                    required: "Email is required",
+                    pattern: {
+                      value: /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/,
+                      message: "Email không hợp lệ",
+                    },
+                  })}
                   className="w-full p-2 border border-gray-300 rounded-lg"
                 />
                 {errors.email && (

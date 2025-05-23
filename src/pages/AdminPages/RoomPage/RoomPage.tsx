@@ -5,8 +5,8 @@ import { RoomType, SeatType, TheaterType } from "../Data/Data";
 import { useLocation, useNavigate } from "react-router-dom";
 import { FaRegTrashCan } from "react-icons/fa6";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
-import { useAppDispatch, useAppSelector } from "../../../redux/Store/Store.tsx";
-import { deleteRoom, getAllRooms } from "../../../redux/Slices/RoomSlice.tsx";
+import { useAppDispatch, useAppSelector } from "../../../redux/store/store.tsx";
+import { deleteRoom, getAllRooms } from "../../../redux/slices/RoomSlice.tsx";
 import { toast } from "react-toastify";
 
 const RoomPage = () => {

@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../../redux/Store/Store.tsx";
+import { useAppDispatch, useAppSelector } from "../../../redux/store/store.tsx";
 import { useEffect, useMemo, useState } from "react";
-import { getAllInvoices } from "../../../redux/Slices/InvoiceSlice.tsx";
+import { getAllInvoices } from "../../../redux/slices/InvoiceSlice.tsx";
 import { InvoiceType } from "../Data/Data";
 import dayjs from "dayjs";
 import { Button, ConfigProvider, DatePicker, Popover, Tooltip } from "antd";
@@ -260,6 +260,9 @@ const InvoicePage = () => {
     navigate(`${item.id}`, { state: item });
   };
 
+  if (error) {
+    console.log(error);
+  }
   return (
     <ConfigProvider
       theme={{

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import SlidebarItem from "./SlidebarItem.tsx";
 import {
   MdDashboard,
@@ -17,8 +17,29 @@ import { GiTheater } from "react-icons/gi";
 import { IoFastFood } from "react-icons/io5";
 import { RiCoupon2Fill } from "react-icons/ri";
 import { FaFileInvoice } from "react-icons/fa6";
+import instance from "../../api/instance.js";
+import { toast } from "react-toastify";
 
 const LayoutAdminPage = () => {
+  const nav = useNavigate();
+  const handleLogout = () => {
+    (async () => {
+      try {
+        const token = JSON.parse(localStorage.getItem("token"));
+        await instance.post("/auth/logout", token);
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        toast.error("Bạn đã logout");
+        setTimeout(() => {
+          nav("/login");
+          window.location.reload();
+        }, 2000);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  };
+
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const toggleSidebar = () => {
@@ -28,6 +49,7 @@ const LayoutAdminPage = () => {
   const handleMenuClick = ({ key }) => {
     if (key === "logout") {
       // Logic đăng xuất ở đây
+      handleLogout();
       console.log("User logged out");
     }
   };

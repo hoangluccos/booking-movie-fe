@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Input, ConfigProvider, Button, InputNumber } from "antd";
-import { useAppDispatch } from "../../../redux/Store/Store.tsx";
-import { createFood, updateFood } from "../../../redux/Slices/FoodSlice.tsx";
+import { useAppDispatch } from "../../../redux/store/store.tsx";
+import { createFood, updateFood } from "../../../redux/slices/FoodSlice.tsx";
 import { toast } from "react-toastify";
 
 interface ModalCreateUpdateFoodProps {

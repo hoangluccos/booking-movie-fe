@@ -8,7 +8,7 @@ function ContactPage() {
       </div>
       <div className="mt-4">
         <h2 className="text-3xl font-bold">HL team</h2>
-        <h3>This project belong to us</h3>
+        <h3>This project belong to HoangLuc - QuocHuy</h3>
         <p>Location : 1-Vo Van Ngan - Thu Duc - Ho Chi Minh City</p>
       </div>
     </div>

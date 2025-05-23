@@ -4,10 +4,14 @@ import { publicRoutes, privateRoutes } from "./routes";
 import { Fragment } from "react";
 import AuthRoute from "./routes/AuthRoute";
 import Authenticate from "./components/Authenticate";
+import "antd/dist/reset.css"; // Ant Design css
+import ScrollToTop from "./components/ScrollToTop";
 import { ToastContainer } from "react-toastify";
+
 function App() {
   return (
     <>
+      <ScrollToTop />
       <Routes>
         <Route path="/authenticate" element={<Authenticate />} />
         {publicRoutes.map((route, index) => {
@@ -26,6 +30,7 @@ function App() {
             />
           );
         })}
+        {/* privateRoutes */}
         <Route path="/admin" element={<AuthRoute />}>
           {privateRoutes.map((route, index) => {
             const Page = route.component;
@@ -45,8 +50,6 @@ function App() {
           })}
         </Route>
       </Routes>
-
-      {/* ✅ Đặt ToastContainer ngoài Routes */}
       <ToastContainer />
     </>
   );
