@@ -32,6 +32,9 @@ import MatchingSuccess from "../pages/MatchingSuccess";
 import PersonPage from "../pages/PersonPage";
 import GenreMoviePage from "../pages/GenreMoviePage";
 
+// Admin
+import AdminPage from "../pages/AdminPages/AdminPage.tsx";
+
 //public
 const publicRoutes = [
   {
@@ -129,59 +132,63 @@ const publicRoutes = [
 //private
 const privateRoutes = [
   {
-    path: "/admin",
-    component: Dashboard,
-    layout: AdminLayout,
+    path: "/admin/*",
+    component: AdminPage,
   },
-  {
-    path: "/admin/movies",
-    component: HomeAdmin,
-    layout: AdminLayout,
-  },
-  {
-    path: "/admin/showtime/:id",
-    component: ShowTimePage,
-    layout: AdminLayout,
-  },
-  {
-    path: "/admin/users",
-    component: Users,
-    layout: AdminLayout,
-  },
-  {
-    path: "/admin/add-movie",
-    component: MovieForm,
-    layout: AdminLayout,
-  },
-  {
-    path: "/admin/edit-movie/:id",
-    component: MovieForm,
-    layout: AdminLayout,
-  },
-  {
-    path: "/admin/genres",
-    component: GenrePage,
-    layout: AdminLayout,
-  },
-  {
-    path: "/admin/actors",
-    component: ActorPage,
-    layout: AdminLayout,
-  },
-  {
-    path: "/admin/directors",
-    component: DirectorPage,
-    layout: AdminLayout,
-  },
-  {
-    path: "/admin/theaters",
-    component: TheaterManagement,
-    layout: AdminLayout,
-  },
-  {
-    path: "/admin/feedbacks",
-    component: FeedbacksManagement,
-    layout: AdminLayout,
-  },
+  // {
+  //   path: "/admin",
+  //   component: Dashboard,
+  //   layout: AdminLayout,
+  // },
+  // {
+  //   path: "/admin/movies",
+  //   component: HomeAdmin,
+  //   layout: AdminLayout,
+  // },
+  // {
+  //   path: "/admin/showtime/:id",
+  //   component: ShowTimePage,
+  //   layout: AdminLayout,
+  // },
+  // {
+  //   path: "/admin/users",
+  //   component: Users,
+  //   layout: AdminLayout,
+  // },
+  // {
+  //   path: "/admin/add-movie",
+  //   component: MovieForm,
+  //   layout: AdminLayout,
+  // },
+  // {
+  //   path: "/admin/edit-movie/:id",
+  //   component: MovieForm,
+  //   layout: AdminLayout,
+  // },
+  // {
+  //   path: "/admin/genres",
+  //   component: GenrePage,
+  //   layout: AdminLayout,
+  // },
+  // {
+  //   path: "/admin/actors",
+  //   component: ActorPage,
+  //   layout: AdminLayout,
+  // },
+  // {
+  //   path: "/admin/directors",
+  //   component: DirectorPage,
+  //   layout: AdminLayout,
+  // },
+  // {
+  //   path: "/admin/theaters",
+  //   component: TheaterManagement,
+  //   layout: AdminLayout,
+  // },
+  // {
+  //   path: "/admin/feedbacks",
+  //   component: FeedbacksManagement,
+  //   layout: AdminLayout,
+  // },
 ];
 export { publicRoutes, privateRoutes };

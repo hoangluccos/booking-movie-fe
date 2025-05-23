@@ -6,6 +6,7 @@ import AuthRoute from "./routes/AuthRoute";
 import Authenticate from "./components/Authenticate";
 import "antd/dist/reset.css"; // Ant Design css
 import ScrollToTop from "./components/ScrollToTop";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   return (
@@ -49,6 +50,7 @@ function App() {
           })}
         </Route>
       </Routes>
+      <ToastContainer />
     </>
   );
 }
