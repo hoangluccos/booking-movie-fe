@@ -1,9 +1,9 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../../redux/Store/Store.tsx";
+import { useAppDispatch, useAppSelector } from "../../../redux/store/store.tsx";
 import { ConfigProvider } from "antd";
 import { InvoiceDetailType, InvoiceType } from "../Data/Data.tsx";
 import { useEffect } from "react";
-import { getAllInvoiceDetails } from "../../../redux/Slices/InvoiceSlice.tsx";
+import { getAllInvoiceDetails } from "../../../redux/slices/InvoiceSlice.tsx";
 
 const InvoiceDetailPage = () => {
   const navigate = useNavigate();

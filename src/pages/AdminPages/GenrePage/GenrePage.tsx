@@ -5,12 +5,12 @@ import { FaRegTrashCan } from "react-icons/fa6";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { Button, Modal, Popconfirm } from "antd";
-import { useAppDispatch, useAppSelector } from "../../../redux/Store/Store.tsx";
+import { useAppDispatch, useAppSelector } from "../../../redux/store/store.tsx";
 import { GenreType } from "../Data/Data";
 import {
   deleteGenre,
   getAllGenres,
-} from "../../../redux/Slices/GenreSlice.tsx";
+} from "../../../redux/slices/GenreSlice.tsx";
 import ModalCreateUpdateGenre from "./ModalCreateUpdateGenre.tsx";
 import { toast } from "react-toastify";
 

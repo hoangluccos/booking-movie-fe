@@ -10,11 +10,11 @@ import React, { useEffect, useState } from "react";
 import { IoIosSearch } from "react-icons/io";
 import { PersonType } from "../Data/Data";
 import patternBg from "../../../assets/Pattern.png";
-import { useAppDispatch, useAppSelector } from "../../../redux/Store/Store.tsx";
+import { useAppDispatch, useAppSelector } from "../../../redux/store/store.tsx";
 import {
   deletePerson,
   getAllPersons,
-} from "../../../redux/Slices/PersonSlice.tsx";
+} from "../../../redux/slices/PersonSlice.tsx";
 import { useNavigate } from "react-router-dom";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { toast } from "react-toastify";

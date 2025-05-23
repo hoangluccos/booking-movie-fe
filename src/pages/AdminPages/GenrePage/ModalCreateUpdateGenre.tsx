@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Input, ConfigProvider } from "antd";
-import { useAppDispatch } from "../../../redux/Store/Store.tsx";
-import { createGenre, updateGenre } from "../../../redux/Slices/GenreSlice.tsx";
+import { useAppDispatch } from "../../../redux/store/store.tsx";
+import { createGenre, updateGenre } from "../../../redux/slices/GenreSlice.tsx";
 import { toast } from "react-toastify";
 import { CloseOutlined } from "@ant-design/icons";
 

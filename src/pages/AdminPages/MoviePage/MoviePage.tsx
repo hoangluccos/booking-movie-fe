@@ -8,8 +8,8 @@ import { MovieType } from "../Data/Data.tsx";
 import {
   deleteMovie,
   getAllMovies,
-} from "../../../redux/Slices/MovieSlice.tsx";
-import { useAppDispatch, useAppSelector } from "../../../redux/Store/Store.tsx";
+} from "../../../redux/slices/MovieSlice.tsx";
+import { useAppDispatch, useAppSelector } from "../../../redux/store/store.tsx";
 import { Button, ConfigProvider, Popconfirm, Spin, Tooltip } from "antd";
 import { toast } from "react-toastify";
 

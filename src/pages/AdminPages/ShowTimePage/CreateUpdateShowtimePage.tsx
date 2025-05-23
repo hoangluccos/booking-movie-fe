@@ -8,18 +8,18 @@ import {
   Cascader,
   Select,
 } from "antd";
-import { useAppDispatch, useAppSelector } from "../../../redux/Store/Store.tsx";
+import { useAppDispatch, useAppSelector } from "../../../redux/store/store.tsx";
 import dayjs, { Dayjs } from "dayjs";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { getAllMovies } from "../../../redux/Slices/MovieSlice.tsx";
-import { getAllTheaters } from "../../../redux/Slices/TheaterSlice.tsx";
-import { getAllRooms } from "../../../redux/Slices/RoomSlice.tsx";
+import { getAllMovies } from "../../../redux/slices/MovieSlice.tsx";
+import { getAllTheaters } from "../../../redux/slices/TheaterSlice.tsx";
+import { getAllRooms } from "../../../redux/slices/RoomSlice.tsx";
 import {
   createShowtime,
   getOneShowtime,
   updateShowtime,
-} from "../../../redux/Slices/ShowtimeSlice.tsx";
+} from "../../../redux/slices/ShowtimeSlice.tsx";
 
 const CreateUpdateShowtimePage = () => {
   const { id } = useParams();

@@ -18,13 +18,13 @@ import {
 import { FaRegTrashCan } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import dayjs, { Dayjs } from "dayjs";
-import { useAppDispatch, useAppSelector } from "../../../redux/Store/Store.tsx";
+import { useAppDispatch, useAppSelector } from "../../../redux/store/store.tsx";
 import { CouponType } from "../Data/Data.tsx";
 import {
   deleteCoupon,
   getAllCoupons,
   toggleCouponStatus,
-} from "../../../redux/Slices/CouponSlice.tsx";
+} from "../../../redux/slices/CouponSlice.tsx";
 import { toast } from "react-toastify";
 
 // Define filter interface

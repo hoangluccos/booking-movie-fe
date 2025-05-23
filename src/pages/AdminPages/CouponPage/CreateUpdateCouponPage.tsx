@@ -4,11 +4,11 @@ import { ConfigProvider, DatePicker, Input, Button, Select } from "antd";
 import dayjs, { Dayjs } from "dayjs";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useAppDispatch, useAppSelector } from "../../../redux/Store/Store.tsx";
+import { useAppDispatch, useAppSelector } from "../../../redux/store/store.tsx";
 import {
   createCoupon,
   updateCoupon,
-} from "../../../redux/Slices/CouponSlice.tsx";
+} from "../../../redux/slices/CouponSlice.tsx";
 import { CouponType } from "../Data/Data.tsx";
 
 const { TextArea } = Input;

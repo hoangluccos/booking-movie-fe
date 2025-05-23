@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import { UserType } from "../Data/Data";
 import { Avatar, Button, Popconfirm } from "antd";
-import { useAppDispatch, useAppSelector } from "../../../redux/Store/Store.tsx";
-import { getAllUsers, updateStatus } from "../../../redux/Slices/UserSlice.tsx";
+import { useAppDispatch, useAppSelector } from "../../../redux/store/store.tsx";
+import { getAllUsers, updateStatus } from "../../../redux/slices/UserSlice.tsx";
 import { toast } from "react-toastify";
 
 const UserPage = () => {

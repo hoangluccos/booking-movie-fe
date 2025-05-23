@@ -6,13 +6,13 @@ import {
   FaAngleLeft,
   FaAngleRight,
 } from "react-icons/fa";
-import { useAppDispatch, useAppSelector } from "../../../redux/Store/Store.tsx";
+import { useAppDispatch, useAppSelector } from "../../../redux/store/store.tsx";
 import { toast } from "react-toastify";
 import {
   deleteFeedback,
   getAllFeedbacks,
-} from "../../../redux/Slices/FeedbackSlice.tsx";
-import { getDetailMovie } from "../../../redux/Slices/MovieSlice.tsx";
+} from "../../../redux/slices/FeedbackSlice.tsx";
+import { getDetailMovie } from "../../../redux/slices/MovieSlice.tsx";
 import { FaRegTrashCan } from "react-icons/fa6";
 
 const FeedbackPage = () => {

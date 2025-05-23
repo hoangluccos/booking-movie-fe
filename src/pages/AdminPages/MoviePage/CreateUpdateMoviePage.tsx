@@ -3,20 +3,19 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Select, ConfigProvider, DatePicker, Input, Button } from "antd";
 import dayjs, { Dayjs } from "dayjs";
-import instance from "../../../api/instance.js";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useAppDispatch, useAppSelector } from "../../../redux/Store/Store.tsx";
+import { useAppDispatch, useAppSelector } from "../../../redux/store/store.tsx";
 import {
   createMovie,
   getDetailMovie,
   updateMovie,
-} from "../../../redux/Slices/MovieSlice.tsx";
-import { getAllGenres } from "../../../redux/Slices/GenreSlice.tsx";
+} from "../../../redux/slices/MovieSlice.tsx";
+import { getAllGenres } from "../../../redux/slices/GenreSlice.tsx";
 import {
   getAllActors,
   getAllDirectors,
-} from "../../../redux/Slices/PersonSlice.tsx";
+} from "../../../redux/slices/PersonSlice.tsx";
 
 const { TextArea } = Input;
 

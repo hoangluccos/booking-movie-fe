@@ -17,12 +17,12 @@ import {
 import { FaRegTrashCan } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
-import { useAppDispatch, useAppSelector } from "../../../redux/Store/Store.tsx";
+import { useAppDispatch, useAppSelector } from "../../../redux/store/store.tsx";
 import { ShowtimeType } from "../Data/Data.tsx";
 import {
   deleteShowtime,
   getAllShowtimes,
-} from "../../../redux/Slices/ShowtimeSlice.tsx";
+} from "../../../redux/slices/ShowtimeSlice.tsx";
 import { toast } from "react-toastify";
 
 const ShowtimePage = () => {

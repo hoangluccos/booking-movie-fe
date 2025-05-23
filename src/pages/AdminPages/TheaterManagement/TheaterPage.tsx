@@ -6,11 +6,11 @@ import { FaRegEdit } from "react-icons/fa";
 import { FaRegTrashCan } from "react-icons/fa6";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
 import ModalCreateUpdateTheater from "../MoviePage/ModalCreateUpdateTheater.tsx";
-import { useAppDispatch, useAppSelector } from "../../../redux/Store/Store.tsx";
+import { useAppDispatch, useAppSelector } from "../../../redux/store/store.tsx";
 import {
   deleteTheater,
   getAllTheaters,
-} from "../../../redux/Slices/TheaterSlice.tsx";
+} from "../../../redux/slices/TheaterSlice.tsx";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { MdOutlineChair } from "react-icons/md";

@@ -3,8 +3,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { InputNumber, Select, Button, ConfigProvider, Form, Input } from "antd";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useAppDispatch, useAppSelector } from "../../../redux/Store/Store.tsx";
-import { createRoom } from "../../../redux/Slices/RoomSlice.tsx";
+import { useAppDispatch, useAppSelector } from "../../../redux/store/store.tsx";
+import { createRoom } from "../../../redux/slices/RoomSlice.tsx";
 import { TheaterType } from "../Data/Data.tsx";
 
 const { Option } = Select;

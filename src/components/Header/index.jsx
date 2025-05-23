@@ -21,6 +21,7 @@ function Header() {
   console.log("Token: ", token);
   const [Search, setSearch] = useState("");
   console.log(Search);
+  //logout function
   const handleLogout = () => {
     (async () => {
       try {
