@@ -1,5 +1,4 @@
-// CreateUpdatePersonPage.tsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Input, Select, DatePicker, Button, ConfigProvider } from "antd";
 import dayjs, { Dayjs } from "dayjs";
@@ -12,6 +11,7 @@ import {
   createDirector,
   updatePerson,
 } from "../../../redux/slices/PersonSlice.tsx";
+import { LeftOutlined } from "@ant-design/icons";
 
 const { Option } = Select;
 
@@ -32,6 +32,7 @@ const CreateUpdatePersonPage = () => {
   });
 
   const [preview, setPreview] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null); // Ref để reset input file
 
   useEffect(() => {
     if (id) {
@@ -64,7 +65,11 @@ const CreateUpdatePersonPage = () => {
     if (file) {
       setPerson((prev) => ({ ...prev, image: file }));
       setPreview(URL.createObjectURL(file));
+    } else {
+      setPreview(null);
+      setPerson((prev) => ({ ...prev, image: null }));
     }
+    console.log("File selected:", file); // Debug
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -86,19 +91,16 @@ const CreateUpdatePersonPage = () => {
       console.log("Image: ", preview);
 
       if (id) {
-        // Nếu có id, gọi Redux API cập nhật person
-        console.log("Id", id);
         await dispatch(
           updatePerson({
             personId: id,
             updatePersonRequest: params,
-            image: preview || null, // Đảm bảo image không undefined
+            image: person.image || null,
           })
         ).unwrap();
         toast.success("Person updated successfully!");
         setTimeout(() => navigate("/admin/persons"), 1000);
       } else {
-        // Nếu không có id, gọi API tạo mới dựa trên job (Actor hoặc Director)
         if (person.job === "Actor") {
           await dispatch(
             createActor({ createPersonRequest: params, image: person.image })
@@ -118,6 +120,18 @@ const CreateUpdatePersonPage = () => {
     } catch (error: any) {
       toast.error(error.message || "Failed to create or update person.");
       console.log("Error: ", error);
+    }
+  };
+
+  const handleClickGoBack = () => {
+    navigate(-1);
+  };
+
+  const handleRemoveImage = () => {
+    setPreview(null);
+    setPerson((prev) => ({ ...prev, image: null }));
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ""; // Reset input file
     }
   };
 
@@ -161,9 +175,17 @@ const CreateUpdatePersonPage = () => {
     >
       <div className="text-white">
         <ToastContainer />
-        <span className="text-3xl mb-8 flex font-saira">
-          {id ? "Edit Person" : "Add New Person"}
-        </span>
+        <div className="flex items-center mb-8">
+          <Button
+            type="text"
+            icon={<LeftOutlined />}
+            onClick={handleClickGoBack}
+            className="text-white mr-4 font-saira transition-all duration-300 ease-in-out hover:!text-blue-400 hover:scale-110"
+          />
+          <span className="text-3xl font-saira">
+            {id ? "Edit Person" : "Add New Person"}
+          </span>
+        </div>
         <div className="w-full bg-[#273142] p-10 rounded-2xl shadow-lg">
           <form onSubmit={handleSubmit} className="flex flex-col items-center">
             {/* Upload image */}
@@ -186,12 +208,13 @@ const CreateUpdatePersonPage = () => {
                   id="image"
                   accept="image/*"
                   onChange={handleImageChange}
+                  ref={fileInputRef}
                   className="absolute inset-0 opacity-0 cursor-pointer"
                 />
                 <Button
                   type="primary"
                   size="small"
-                  onClick={() => document.getElementById("image")?.click()}
+                  onClick={() => fileInputRef.current?.click()}
                   className="absolute bottom-2 left-1/2 -translate-x-1/2 !bg-blue-500 hover:!bg-blue-600 !text-white !text-sm !px-2 !py-1"
                 >
                   Select image
@@ -199,10 +222,7 @@ const CreateUpdatePersonPage = () => {
                 {preview && (
                   <button
                     type="button"
-                    onClick={() => {
-                      setPreview(null);
-                      setPerson((prev) => ({ ...prev, image: null }));
-                    }}
+                    onClick={handleRemoveImage}
                     className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white w-6 h-6 flex items-center justify-center rounded-full"
                   >
                     ✕
@@ -224,7 +244,7 @@ const CreateUpdatePersonPage = () => {
               <div className="flex flex-col">
                 <label className="mb-2 font-saira">Gender</label>
                 <Select
-                  value={true}
+                  value={person.gender}
                   onChange={(value) => handleChange("gender", value)}
                 >
                   <Option value={true}>Male</Option>

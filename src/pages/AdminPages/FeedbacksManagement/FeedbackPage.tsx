@@ -1,4 +1,11 @@
-import { Button, ConfigProvider, Popconfirm, Popover } from "antd";
+import {
+  Button,
+  ConfigProvider,
+  Popconfirm,
+  Popover,
+  Skeleton,
+  Empty,
+} from "antd";
 import { useEffect, useState } from "react";
 import {
   FaFilter,
@@ -17,7 +24,9 @@ import { FaRegTrashCan } from "react-icons/fa6";
 
 const FeedbackPage = () => {
   const dispatch = useAppDispatch();
-  const { listFeedbacks } = useAppSelector((state) => state.feedback);
+  const { listFeedbacks, isLoading } = useAppSelector(
+    (state) => state.feedback
+  );
 
   const [currentPage, setCurrentPage] = useState(1);
   const [filters, setFilters] = useState<Filters>({ movie: [] });
@@ -255,6 +264,112 @@ const FeedbackPage = () => {
     toast.success("Feedback deleted successfully!");
   };
 
+  const renderSkeleton = () => (
+    <div>
+      {[...Array(feedbacksPerPage)].map((_, idx) => (
+        <div
+          key={idx}
+          className={`grid grid-cols-6 bg-[#273142] text-white min-h-[48px] ${
+            idx === feedbacksPerPage - 1
+              ? "rounded-b-xl"
+              : "border-b border-[#979797]"
+          }`}
+        >
+          {[...Array(5)].map((_, colIdx) => (
+            <div
+              key={colIdx}
+              className="flex items-center justify-center font-saira"
+            >
+              <Skeleton
+                active
+                title
+                paragraph={false}
+                style={{ width: "90%" }}
+              />
+            </div>
+          ))}
+          <div className="flex items-center justify-center">
+            <Skeleton.Button
+              active
+              size="small"
+              style={{ width: 64, height: 32, borderRadius: 8 }}
+            />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+
+  const renderPaginationInfo = () => {
+    if (isLoading) {
+      return (
+        <Skeleton
+          active
+          title={{ width: "120px" }}
+          paragraph={false}
+          style={{ marginTop: 8 }}
+        />
+      );
+    }
+    if (totalItems === 0) {
+      return <span className="text-white font-saira">Showing 0-0 of 0</span>;
+    }
+    return (
+      <span className="text-white font-saira">
+        Showing {Math.min(startIndex + 1, totalItems)}-
+        {Math.min(endIndex, totalItems)} of {totalItems}
+      </span>
+    );
+  };
+
+  const renderPaginationButtons = () => {
+    if (isLoading) {
+      return (
+        <div className="flex">
+          <Skeleton.Button
+            active
+            size="small"
+            style={{
+              width: 32,
+              height: 32,
+              borderRadius: "8px 0 0 8px",
+              marginRight: 1,
+            }}
+          />
+          <Skeleton.Button
+            active
+            size="small"
+            style={{ width: 32, height: 32, borderRadius: "0 8px 8px 0" }}
+          />
+        </div>
+      );
+    }
+    return (
+      <div className="flex">
+        <button
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          className={`bg-[#323D4E] h-[32px] px-4 py-2 rounded-l-lg border-r border-[#979797] ${
+            currentPage === 1 || totalItems === 0 ? "opacity-50" : ""
+          }`}
+          disabled={currentPage === 1 || totalItems === 0}
+        >
+          <FaAngleLeft color="white" />
+        </button>
+        <button
+          onClick={() =>
+            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+          }
+          className={`bg-[#323D4E] h-[32px] px-4 py-2 rounded-r-lg ${
+            currentPage === totalPages || totalItems === 0 ? "opacity-50" : ""
+          }`}
+          disabled={currentPage === totalPages || totalItems === 0}
+        >
+          <FaAngleRight color="white" />
+        </button>
+      </div>
+    );
+  };
+
   return (
     <ConfigProvider
       theme={{
@@ -279,10 +394,18 @@ const FeedbackPage = () => {
             colorBorder: "transparent",
             borderRadius: 8,
           },
+          Skeleton: {
+            color: "#3A4657",
+            colorGradientEnd: "#2A3444",
+          },
+          Empty: {
+            colorText: "#FFFFFF",
+            colorTextDescription: "#FFFFFF",
+          },
         },
       }}
     >
-      <div className="min-h-[750px]">
+      <div className="min-h-[750px] relative">
         {/* Title */}
         <div className="flex justify-between items-center mb-3">
           <span className="text-white text-3xl font-saira">Feedbacks</span>
@@ -308,7 +431,7 @@ const FeedbackPage = () => {
             placement="bottomLeft"
           >
             <Button
-              className="w-[180px] h-[48px] rounded-md font-saira flex items-center justify-between px-3 bg-[#323D4E] text-white"
+              className="w-[180px] h-[48px] rounded-md font-saira flex items-center justify-between px-3 bg-[#273142] text-white"
               style={{ border: "transparent" }}
             >
               {filters.movie.length > 0
@@ -321,7 +444,7 @@ const FeedbackPage = () => {
           {/* Reset Filter Button */}
           <Button
             onClick={resetFilters}
-            className="w-[147px] h-[48px] rounded-md font-saira flex items-center px-3 bg-[#323D4E] text-white focus:outline-none active:outline-none"
+            className="w-[147px] h-[48px] rounded-md font-saira flex items-center px-3 bg-[#273142] text-white focus:outline-none active:outline-none"
           >
             <span className="text-xl">↺</span>
             <span>Reset Filter</span>
@@ -345,51 +468,38 @@ const FeedbackPage = () => {
         </div>
 
         {/* Table Body */}
-        <div className="min-h-[548px]">
-          {currentFeedbacks.length > 0 ? (
+        <div className="bg-[#273142] rounded-b-xl">
+          {isLoading ? (
+            renderSkeleton()
+          ) : currentFeedbacks.length > 0 ? (
             currentFeedbacks.map((item, index) => (
               <div key={item.id}>
                 {showFeedback(
                   item,
-                  index === currentFeedbacks.length - 1,
+                  index === currentFeedbacks.length - 1 &&
+                    currentFeedbacks.length < 4,
                   handleClickDeleteFeedback
                 )}
               </div>
             ))
           ) : (
-            <div className="text-white text-center py-4">
-              No feedbacks found
+            <div className="flex justify-center items-center min-h-[96px]">
+              <Empty
+                description={
+                  <span className="text-white font-saira">
+                    No feedbacks found
+                  </span>
+                }
+              />
             </div>
           )}
         </div>
 
         {/* Pagination */}
-        <div className="flex justify-between items-center pt-4 space-x-4">
-          <span className="text-white font-saira">
-            Showing {Math.min(startIndex + 1, totalItems)}-
-            {Math.min(endIndex, totalItems)} of {totalItems}
-          </span>
-          <div className="flex">
-            <button
-              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-              className={`bg-[#323D4E] h-[32px] px-4 py-2 rounded-l-lg border-r border-[#979797] ${
-                currentPage === 1 ? "opacity-50" : ""
-              }`}
-              disabled={currentPage === 1}
-            >
-              <FaAngleLeft color="white" />
-            </button>
-            <button
-              onClick={() =>
-                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-              }
-              className={`bg-[#323D4E] h-[32px] px-4 py-2 rounded-r-lg ${
-                currentPage === totalPages ? "opacity-50" : ""
-              }`}
-              disabled={currentPage === totalPages}
-            >
-              <FaAngleRight color="white" />
-            </button>
+        <div className="absolute bottom-0 left-0 right-0 flex justify-between items-center pt-4 space-x-4">
+          {renderPaginationInfo()}
+          <div className="flex items-center space-x-4">
+            {renderPaginationButtons()}
           </div>
         </div>
       </div>

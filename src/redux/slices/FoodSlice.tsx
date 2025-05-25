@@ -4,13 +4,19 @@ import instance from "../../api/instance";
 
 interface FoodState {
   listFoods: FoodType[];
-  isLoading: boolean;
+  listLoading: boolean;
+  createLoading: boolean;
+  updateLoading: boolean;
+  deleteLoading: boolean;
   error: null | string;
 }
 
 const initialState: FoodState = {
   listFoods: [],
-  isLoading: false,
+  listLoading: false,
+  createLoading: false,
+  updateLoading: false,
+  deleteLoading: false,
   error: null,
 };
 
@@ -174,39 +180,39 @@ const FoodSlice = createSlice({
     builder
       // get all food
       .addCase(getAllFoods.pending, (state) => {
-        state.isLoading = true;
+        state.listLoading = true;
         state.error = null;
       })
       .addCase(getAllFoods.fulfilled, (state, action) => {
-        state.isLoading = false;
+        state.listLoading = false;
         state.listFoods = action.payload;
       })
       .addCase(getAllFoods.rejected, (state, action) => {
-        state.isLoading = false;
+        state.listLoading = false;
         state.error = action.payload as string;
       })
 
       // create food
       .addCase(createFood.pending, (state) => {
-        state.isLoading = true;
+        state.createLoading = true;
         state.error = null;
       })
       .addCase(createFood.fulfilled, (state, action) => {
-        state.isLoading = false;
+        state.createLoading = false;
         state.listFoods.push(action.payload);
       })
       .addCase(createFood.rejected, (state, action) => {
-        state.isLoading = false;
+        state.createLoading = false;
         state.error = action.payload as string;
       })
 
       // update food
       .addCase(updateFood.pending, (state) => {
-        state.isLoading = true;
+        state.updateLoading = true;
         state.error = null;
       })
       .addCase(updateFood.fulfilled, (state, action) => {
-        state.isLoading = false;
+        state.updateLoading = false;
         const updateFood = action.payload;
         const index = state.listFoods.findIndex(
           (foods) => foods.id === updateFood.id
@@ -216,23 +222,23 @@ const FoodSlice = createSlice({
         }
       })
       .addCase(updateFood.rejected, (state, action) => {
-        state.isLoading = false;
+        state.updateLoading = false;
         state.error = action.payload as string;
       })
 
       // delete food
       .addCase(deleteFood.pending, (state) => {
-        state.isLoading = true;
+        state.deleteLoading = true;
         state.error = null;
       })
       .addCase(deleteFood.fulfilled, (state, action) => {
-        state.isLoading = false;
+        state.deleteLoading = false;
         state.listFoods = state.listFoods.filter(
           (food) => food.id !== action.payload
         );
       })
       .addCase(deleteFood.rejected, (state, action) => {
-        state.isLoading = false;
+        state.deleteLoading = false;
         state.error = action.payload as string;
       });
   },

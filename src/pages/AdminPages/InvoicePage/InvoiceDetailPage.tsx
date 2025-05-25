@@ -23,7 +23,7 @@ const InvoiceDetailPage = () => {
   }, [invoiceInfo.id]);
 
   const totalSeatPrice = listInvoiceDetails.reduce((acc, item) => {
-    if (invoiceInfo.coupon.discountType === "Other") {
+    if (invoiceInfo.coupon?.discountType === "Other") {
       return acc + invoiceInfo.coupon.discountValue;
     }
     return acc + item.seat.price;
@@ -34,9 +34,9 @@ const InvoiceDetailPage = () => {
     : 0;
 
   let discountAmount = 0;
-  if (invoiceInfo.coupon.discountType === "Fixed") {
+  if (invoiceInfo.coupon?.discountType === "Fixed") {
     discountAmount = invoiceInfo.coupon.discountValue;
-  } else if (invoiceInfo.coupon.discountType === "Percentage") {
+  } else if (invoiceInfo.coupon?.discountType === "Percentage") {
     discountAmount = (totalSeatPrice * invoiceInfo.coupon.discountValue) / 100;
   }
 
@@ -61,8 +61,8 @@ const InvoiceDetailPage = () => {
         {item.seat.locateColumn}
       </div>
       <div className="flex justify-center items-center p-2 font-saira">
-        {invoiceInfo.coupon.discountType === "Other"
-          ? `${invoiceInfo.coupon.discountValue.toLocaleString("vi-VN")}đ`
+        {invoiceInfo.coupon?.discountType === "Other"
+          ? `${invoiceInfo.coupon?.discountValue.toLocaleString("vi-VN")}đ`
           : `${item.seat.price.toLocaleString("vi-VN")}đ`}
       </div>
     </div>
@@ -164,13 +164,13 @@ const InvoiceDetailPage = () => {
 
               <span>
                 Voucher:{" "}
-                {invoiceInfo.coupon.discountType === "Fixed"
-                  ? `-${invoiceInfo.coupon.discountValue.toLocaleString(
+                {invoiceInfo.coupon?.discountType === "Fixed"
+                  ? `-${invoiceInfo.coupon?.discountValue.toLocaleString(
                       "vi-VN"
                     )}đ`
-                  : invoiceInfo.coupon.discountType === "Percentage"
-                  ? `-${invoiceInfo.coupon.discountValue}%`
-                  : invoiceInfo.coupon.discountType === "Other"
+                  : invoiceInfo.coupon?.discountType === "Percentage"
+                  ? `-${invoiceInfo.coupon?.discountValue}%`
+                  : invoiceInfo.coupon?.discountType === "Other"
                   ? "Other"
                   : "No voucher usage"}
               </span>

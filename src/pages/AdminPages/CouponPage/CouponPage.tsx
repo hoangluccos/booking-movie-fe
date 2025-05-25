@@ -6,6 +6,8 @@ import {
   DatePicker,
   Popover,
   Switch,
+  Skeleton,
+  Empty,
 } from "antd";
 import { useEffect, useState } from "react";
 import {
@@ -55,7 +57,7 @@ const formatDate = (dateStr: string): string => {
 const CouponPage = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { listCoupons } = useAppSelector((state) => state.coupon);
+  const { listCoupons, isLoading } = useAppSelector((state) => state.coupon);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [filters, setFilters] = useState<Filters>({
@@ -132,11 +134,11 @@ const CouponPage = () => {
 
     // Case 1: Only filterStartDate is set
     if (filterStartDate && !filterEndDate) {
-      matchDate = itemStartDate.isSame(filterStartDate, "day"); // Exact match for startDate
+      matchDate = itemStartDate.isSame(filterStartDate, "day");
     }
     // Case 2: Only filterEndDate is set
     else if (!filterStartDate && filterEndDate) {
-      matchDate = itemEndDate.isSame(filterEndDate, "day"); // Exact match for endDate
+      matchDate = itemEndDate.isSame(filterEndDate, "day");
     }
     // Case 3: Both filterStartDate and filterEndDate are set
     else if (filterStartDate && filterEndDate) {
@@ -146,7 +148,6 @@ const CouponPage = () => {
         (itemEndDate.isSame(filterEndDate, "day") ||
           itemEndDate.isBefore(filterEndDate));
     }
-    // Case 4: No date filters (matchDate remains true)
 
     return matchDiscountType && matchStatus && matchDate;
   });
@@ -285,6 +286,127 @@ const CouponPage = () => {
     </div>
   );
 
+  const renderSkeleton = () => (
+    <div>
+      {[...Array(5)].map((_, idx) => (
+        <div
+          key={idx}
+          className={`grid grid-cols-10 bg-[#273142] text-white min-h-[92px] ${
+            idx === 4 ? "rounded-b-xl" : "border-b border-[#979797]"
+          }`}
+        >
+          {[...Array(8)].map((_, colIdx) => (
+            <div
+              key={colIdx}
+              className="flex items-center justify-center font-saira"
+            >
+              <Skeleton
+                active
+                title
+                paragraph={false}
+                style={{ width: "90%" }}
+              />
+            </div>
+          ))}
+          <div className="flex items-center justify-center">
+            <Skeleton.Button
+              active
+              size="small"
+              style={{ width: 32, height: 32, borderRadius: 8 }}
+            />
+          </div>
+          <div className="flex justify-center items-center">
+            <Skeleton.Button
+              active
+              size="small"
+              style={{
+                width: 64,
+                height: 32,
+                borderRadius: "8px 0 0 8px",
+                marginRight: 1,
+              }}
+            />
+            <Skeleton.Button
+              active
+              size="small"
+              style={{ width: 64, height: 32, borderRadius: "0 8px 8px 0" }}
+            />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+
+  const renderPaginationInfo = () => {
+    if (isLoading) {
+      return (
+        <Skeleton
+          active
+          title={{ width: "120px" }}
+          paragraph={false}
+          style={{ marginTop: 8 }}
+        />
+      );
+    }
+    if (totalItems === 0) {
+      return <span className="text-white font-saira">Showing 0-0 of 0</span>;
+    }
+    return (
+      <span className="text-white font-saira">
+        Showing {Math.min(startIndex + 1, totalItems)}-
+        {Math.min(endIndex, totalItems)} of {totalItems}
+      </span>
+    );
+  };
+
+  const renderPaginationButtons = () => {
+    if (isLoading) {
+      return (
+        <div className="flex">
+          <Skeleton.Button
+            active
+            size="small"
+            style={{
+              width: 32,
+              height: 32,
+              borderRadius: "8px 0 0 8px",
+              marginRight: 1,
+            }}
+          />
+          <Skeleton.Button
+            active
+            size="small"
+            style={{ width: 32, height: 32, borderRadius: "0 8px 8px 0" }}
+          />
+        </div>
+      );
+    }
+    return (
+      <div className="flex">
+        <button
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          className={`bg-[#323D4E] h-[32px] px-4 py-2 rounded-l-lg border-r border-[#979797] ${
+            currentPage === 1 || totalItems === 0 ? "opacity-50" : ""
+          }`}
+          disabled={currentPage === 1 || totalItems === 0}
+        >
+          <FaAngleLeft color="white" />
+        </button>
+        <button
+          onClick={() =>
+            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+          }
+          className={`bg-[#323D4E] h-[32px] px-4 py-2 rounded-r-lg ${
+            currentPage === totalPages || totalItems === 0 ? "opacity-50" : ""
+          }`}
+          disabled={currentPage === totalPages || totalItems === 0}
+        >
+          <FaAngleRight color="white" />
+        </button>
+      </div>
+    );
+  };
+
   const SelectablePopover = (
     options: { label: string; value: string }[],
     selected: string[],
@@ -384,10 +506,18 @@ const CouponPage = () => {
             colorPrimary: "#4880FF",
             colorPrimaryHover: "#4880FF",
           },
+          Skeleton: {
+            color: "#3A4657",
+            colorGradientEnd: "#2A3444",
+          },
+          Empty: {
+            colorText: "#FFFFFF",
+            colorTextDescription: "#FFFFFF",
+          },
         },
       }}
     >
-      <div className="min-h-[750px]">
+      <div className="min-h-[750px] relative">
         {/* Title + Button */}
         <div className="flex flex-wrap justify-between items-center mb-3">
           <span className="text-white text-3xl font-saira">Coupons</span>
@@ -526,13 +656,16 @@ const CouponPage = () => {
         </div>
 
         {/* Table Body */}
-        <div className="min-h-[548px]">
-          {currentCoupons.length > 0 ? (
+        <div className="bg-[#273142] rounded-b-xl">
+          {isLoading ? (
+            renderSkeleton()
+          ) : currentCoupons.length > 0 ? (
             currentCoupons.map((item, index) => (
               <div key={item.id}>
                 {showCouponCus(
                   item,
-                  index === currentCoupons.length - 1,
+                  index === currentCoupons.length - 1 &&
+                    currentCoupons.length < 4,
                   handleClickEditCoupon,
                   handleClickDeleteCoupon,
                   handleToggleStatus
@@ -540,37 +673,23 @@ const CouponPage = () => {
               </div>
             ))
           ) : (
-            <div className="text-white text-center py-4">No coupons found</div>
+            <div className="flex justify-center items-center min-h-[184px]">
+              <Empty
+                description={
+                  <span className="text-white font-saira">
+                    No coupons found
+                  </span>
+                }
+              />
+            </div>
           )}
         </div>
 
         {/* Pagination */}
-        <div className="flex justify-between items-center pt-4 space-x-4">
-          <span className="text-white font-saira">
-            Showing {Math.min(startIndex + 1, totalItems)}-
-            {Math.min(endIndex, totalItems)} of {totalItems}
-          </span>
-          <div className="flex">
-            <button
-              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-              className={`bg-[#323D4E] h-[32px] px-4 py-2 rounded-l-lg border-r border-[#979797] ${
-                currentPage === 1 ? "opacity-50" : ""
-              }`}
-              disabled={currentPage === 1}
-            >
-              <FaAngleLeft color="white" />
-            </button>
-            <button
-              onClick={() =>
-                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-              }
-              className={`bg-[#323D4E] h-[32px] px-4 py-2 rounded-r-lg ${
-                currentPage === totalPages ? "opacity-50" : ""
-              }`}
-              disabled={currentPage === totalPages}
-            >
-              <FaAngleRight color="white" />
-            </button>
+        <div className="absolute bottom-0 left-0 right-0 flex justify-between items-center pt-4 space-x-4">
+          {renderPaginationInfo()}
+          <div className="flex items-center space-x-4">
+            {renderPaginationButtons()}
           </div>
         </div>
       </div>

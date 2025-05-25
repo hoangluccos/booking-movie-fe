@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Modal, Input, ConfigProvider, Button, InputNumber } from "antd";
-import { useAppDispatch } from "../../../redux/store/store.tsx";
+import { useAppDispatch, useAppSelector } from "../../../redux/store/store.tsx";
 import { createFood, updateFood } from "../../../redux/slices/FoodSlice.tsx";
 import { toast } from "react-toastify";
 
@@ -22,10 +22,14 @@ const ModalCreateUpdateFood: React.FC<ModalCreateUpdateFoodProps> = ({
 }) => {
   const dispatch = useAppDispatch();
   const isEditMode = Boolean(initialData);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [image, setImage] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [name, setName] = useState("");
   const [price, setPrice] = useState<number | null>(null);
+  const { error, updateLoading, createLoading } = useAppSelector(
+    (state) => state.food
+  );
 
   useEffect(() => {
     if (initialData) {
@@ -42,7 +46,7 @@ const ModalCreateUpdateFood: React.FC<ModalCreateUpdateFoodProps> = ({
   }, [initialData]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files ? e.target.files[0] : null;
+    const file = e.target.files?.[0];
     if (file) {
       setImage(file);
       setPreview(URL.createObjectURL(file));
@@ -142,6 +146,7 @@ const ModalCreateUpdateFood: React.FC<ModalCreateUpdateFoodProps> = ({
           className:
             "font-saira !bg-gray-500 !border-gray-500 !text-white hover:!bg-gray-600 hover:!border-gray-600",
         }}
+        confirmLoading={isEditMode ? updateLoading : createLoading}
         destroyOnClose
       >
         <div className="space-y-6">
@@ -162,9 +167,8 @@ const ModalCreateUpdateFood: React.FC<ModalCreateUpdateFoodProps> = ({
                 </span>
               )}
               <input
+                ref={fileInputRef}
                 type="file"
-                id="image"
-                name="image"
                 accept="image/*"
                 onChange={handleImageChange}
                 className="absolute inset-0 opacity-0 cursor-pointer"
@@ -172,7 +176,7 @@ const ModalCreateUpdateFood: React.FC<ModalCreateUpdateFoodProps> = ({
               <Button
                 type="primary"
                 size="small"
-                onClick={() => document.getElementById("image")?.click()}
+                onClick={() => fileInputRef.current?.click()}
                 className="absolute bottom-2 left-1/2 -translate-x-1/2 font-saira !bg-blue-500 hover:!bg-blue-600 !text-white !text-sm !px-2 !py-1 !rounded-md"
               >
                 Select image
@@ -183,6 +187,7 @@ const ModalCreateUpdateFood: React.FC<ModalCreateUpdateFoodProps> = ({
                   onClick={() => {
                     setPreview(null);
                     setImage(null);
+                    if (fileInputRef.current) fileInputRef.current.value = "";
                   }}
                   className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white w-6 h-6 flex items-center justify-center rounded-full"
                 >
@@ -191,6 +196,7 @@ const ModalCreateUpdateFood: React.FC<ModalCreateUpdateFoodProps> = ({
               )}
             </div>
           </div>
+
           <div>
             <label className="text-white mb-2 block text-[16px] font-saira">
               Food Name
@@ -202,6 +208,7 @@ const ModalCreateUpdateFood: React.FC<ModalCreateUpdateFoodProps> = ({
               onChange={(e) => setName(e.target.value)}
             />
           </div>
+
           <div>
             <label className="text-white mb-2 block text-[16px] font-saira">
               Price

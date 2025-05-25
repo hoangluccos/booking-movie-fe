@@ -1,7 +1,7 @@
-// CreateMoviePage.tsx
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Select, ConfigProvider, DatePicker, Input, Button } from "antd";
+import { LeftOutlined } from "@ant-design/icons";
 import dayjs, { Dayjs } from "dayjs";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -50,15 +50,28 @@ const CreateUpdateMoviePage = () => {
   const [isFormDataReady, setIsFormDataReady] = useState(false);
 
   useEffect(() => {
-    if (id) {
-      dispatch(getDetailMovie({ movieId: id }));
+    if (!id) {
+      setMovie({
+        name: "",
+        content: "",
+        premiere: null,
+        duration: "",
+        language: "",
+        rate: "",
+        image: null,
+        director: "",
+        genresId: [],
+        actorsId: [],
+        existingImageUrl: "",
+      });
+      setPreview(null);
     } else {
-      setIsFormDataReady(true);
+      dispatch(getDetailMovie({ movieId: id }));
     }
   }, [id, dispatch]);
 
   useEffect(() => {
-    if (movieDetail) {
+    if (movieDetail && id) {
       setMovie({
         name: movieDetail.name,
         content: movieDetail.content,
@@ -77,7 +90,7 @@ const CreateUpdateMoviePage = () => {
       setPreview(movieDetail.image);
       setIsFormDataReady(true);
     }
-  }, [movieDetail]);
+  }, [movieDetail, id]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -97,10 +110,10 @@ const CreateUpdateMoviePage = () => {
       }
     };
 
-    if (isFormDataReady) {
+    if (isFormDataReady || !id) {
       fetchData();
     }
-  }, [isFormDataReady, dispatch]);
+  }, [isFormDataReady, id, dispatch]);
 
   const handleChange = (name: string, value: string | File | null) => {
     setMovie((prev) => ({
@@ -156,18 +169,16 @@ const CreateUpdateMoviePage = () => {
       console.log("Request params: ", movieData);
       console.log("Image: ", movie.existingImageUrl);
       if (id) {
-        // Nếu có id, gọi Redux API cập nhật phim
         await dispatch(
           updateMovie({
             movieId: id,
             movieData,
-            image: movie.image || movie.existingImageUrl, // Đảm bảo image không undefined
+            image: movie.image || movie.existingImageUrl,
           })
         ).unwrap();
         toast.success("Movie updated successfully!");
         setTimeout(() => navigate("/admin/movies"), 1000);
       } else {
-        // Nếu không có id, gọi Redux API tạo mới
         await dispatch(createMovie({ movieData, image: movie.image })).unwrap();
         toast.success("Movie created successfully!");
         setTimeout(() => navigate("/admin/movies"), 1000);
@@ -176,6 +187,10 @@ const CreateUpdateMoviePage = () => {
       toast.error(error.message || "Failed to create or update movie.");
       console.log("Error: ", error);
     }
+  };
+
+  const handleClickGoBack = () => {
+    navigate(-1);
   };
 
   return (
@@ -218,9 +233,17 @@ const CreateUpdateMoviePage = () => {
     >
       <div className="text-white">
         <ToastContainer />
-        <span className="text-3xl mb-8 flex font-saira">
-          {id ? "Edit Movie" : "Add New Movie"}
-        </span>
+        <div className="flex items-center mb-8">
+          <Button
+            type="text"
+            icon={<LeftOutlined />}
+            onClick={handleClickGoBack}
+            className="text-white mr-4 font-saira transition-all duration-300 ease-in-out hover:!text-blue-400 hover:scale-110"
+          />
+          <span className="text-3xl font-saira">
+            {id ? "Edit Movie" : "Add New Movie"}
+          </span>
+        </div>
         <div className="w-full bg-[#273142] p-10 rounded-2xl shadow-lg max-h-[700px] overflow-y-scroll scrollbar-hidden">
           <form onSubmit={handleSubmit} className="flex flex-col items-center">
             {/* Upload Poster */}

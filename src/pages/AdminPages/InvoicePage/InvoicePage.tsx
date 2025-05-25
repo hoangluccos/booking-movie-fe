@@ -4,7 +4,15 @@ import { useEffect, useMemo, useState } from "react";
 import { getAllInvoices } from "../../../redux/slices/InvoiceSlice.tsx";
 import { InvoiceType } from "../Data/Data";
 import dayjs from "dayjs";
-import { Button, ConfigProvider, DatePicker, Popover, Tooltip } from "antd";
+import {
+  Button,
+  ConfigProvider,
+  DatePicker,
+  Popover,
+  Skeleton,
+  Tooltip,
+  Empty,
+} from "antd";
 import {
   FaAngleDown,
   FaAngleLeft,
@@ -20,6 +28,14 @@ const InvoicePage = () => {
     (state) => state.invoice
   );
   const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    dispatch(getAllInvoices());
+  }, [dispatch]);
+
+  useEffect(() => {
+    console.log("Invoices from Redux store:", listInvoices);
+  }, [listInvoices]);
 
   interface Filters {
     movie: string[];
@@ -45,22 +61,18 @@ const InvoicePage = () => {
   const [theaterPopoverOpen, setTheaterPopoverOpen] = useState(false);
 
   const movieOptions = Array.from(
-    new Set(listInvoices.map((item) => item.showtime.movie.name))
+    new Set(listInvoices.map((item) => item.showtime?.movie?.name))
   ).map((name) => ({
     label: name,
     value: name,
   }));
 
   const theaterOptions = Array.from(
-    new Set(listInvoices.map((item) => item.showtime.theater.name))
+    new Set(listInvoices.map((item) => item.showtime?.theater?.name))
   ).map((name) => ({
     label: name,
     value: name,
   }));
-
-  useEffect(() => {
-    dispatch(getAllInvoices());
-  }, [dispatch]);
 
   const filteredInvoice = listInvoices.filter((item) => {
     const matchMovie =
@@ -93,12 +105,10 @@ const InvoicePage = () => {
     return matchMovie && matchTheater && matchDate;
   });
 
-  // Tính tổng amount dựa trên filteredInvoice
   const totalAmount = useMemo(() => {
     return filteredInvoice.reduce((sum, item) => sum + item.amount, 0);
   }, [filteredInvoice]);
 
-  // Reset currentPage khi danh sách rỗng
   useEffect(() => {
     if (filteredInvoice.length === 0 && currentPage !== 1) {
       setCurrentPage(1);
@@ -175,13 +185,13 @@ const InvoicePage = () => {
         {item.amount.toLocaleString("vi-VN")}đ
       </div>
       <div className="flex justify-center items-center p-2 font-saira">
-        {item.showtime.movie.name}
+        {item.showtime?.movie.name}
       </div>
       <div className="flex justify-center items-center p-2 font-saira">
-        {item.showtime.theater.name}
+        {item.showtime?.theater.name}
       </div>
       <div className="flex justify-center items-center p-2 font-saira">
-        {item.showtime.room.name}
+        {item.showtime?.room.name}
       </div>
       <div className="flex justify-center items-center p-2 font-saira">
         {item.user.firstName} {item.user.lastName}
@@ -198,6 +208,116 @@ const InvoicePage = () => {
       </div>
     </div>
   );
+
+  const renderSkeleton = () => (
+    <div>
+      {[...Array(4)].map((_, idx) => (
+        <div
+          key={idx}
+          className={`grid grid-cols-8 bg-[#273142] text-white min-h-[48px] ${
+            idx === 3 ? "rounded-b-xl" : "border-b border-[#979797]"
+          }`}
+        >
+          {[...Array(7)].map((_, colIdx) => (
+            <div
+              key={colIdx}
+              className="flex justify-center items-center font-saira"
+            >
+              <Skeleton
+                active
+                title={{
+                  width: colIdx === 0 ? "80%" : "60%",
+                }}
+                paragraph={false}
+                style={{ width: "90%" }}
+              />
+            </div>
+          ))}
+          <div
+            className={`flex justify-center items-center ${
+              idx === 3 ? "rounded-br-xl" : ""
+            }`}
+          >
+            <Skeleton.Button
+              active
+              size="small"
+              style={{ width: 64, height: 32, borderRadius: 8 }}
+            />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+
+  const renderPaginationInfo = () => {
+    if (isLoading) {
+      return (
+        <Skeleton
+          active
+          title={{ width: "120px" }}
+          paragraph={false}
+          style={{ marginTop: 8 }}
+        />
+      );
+    }
+    if (totalItems === 0) {
+      return <span className="text-white font-saira">Showing 0-0 of 0</span>;
+    }
+    return (
+      <span className="text-white font-saira">
+        Showing {Math.min(startIndex + 1, totalItems)}-
+        {Math.min(endIndex, totalItems)} of {totalItems}
+      </span>
+    );
+  };
+
+  const renderPaginationButtons = () => {
+    if (isLoading) {
+      return (
+        <div className="flex">
+          <Skeleton.Button
+            active
+            size="small"
+            style={{
+              width: 32,
+              height: 32,
+              borderRadius: "8px 0 0 8px",
+              marginRight: 1,
+            }}
+          />
+          <Skeleton.Button
+            active
+            size="small"
+            style={{ width: 32, height: 32, borderRadius: "0 8px 8px 0" }}
+          />
+        </div>
+      );
+    }
+    return (
+      <div className="flex">
+        <button
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          className={`bg-[#323D4E] h-[32px] px-4 py-2 rounded-l-lg border-r border-[#979797] ${
+            currentPage === 1 || totalItems === 0 ? "opacity-50" : ""
+          }`}
+          disabled={currentPage === 1 || totalItems === 0}
+        >
+          <FaAngleLeft color="white" />
+        </button>
+        <button
+          onClick={() =>
+            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+          }
+          className={`bg-[#323D4E] h-[32px] px-4 py-2 rounded-r-lg ${
+            currentPage === totalPages || totalItems === 0 ? "opacity-50" : ""
+          }`}
+          disabled={currentPage === totalPages || totalItems === 0}
+        >
+          <FaAngleRight color="white" />
+        </button>
+      </div>
+    );
+  };
 
   const SelectablePopover = (
     options: { label: string; value: string }[],
@@ -263,6 +383,7 @@ const InvoicePage = () => {
   if (error) {
     console.log(error);
   }
+
   return (
     <ConfigProvider
       theme={{
@@ -306,10 +427,18 @@ const InvoicePage = () => {
             colorBorder: "transparent",
             borderRadius: 8,
           },
+          Skeleton: {
+            color: "#3A4657",
+            colorGradientEnd: "#2A3444",
+          },
+          Empty: {
+            colorText: "#FFFFFF",
+            colorTextDescription: "#FFFFFF",
+          },
         },
       }}
     >
-      <div className="min-h-[750px]">
+      <div className="relative min-h-[750px]">
         <div className="flex flex-wrap justify-between items-center mb-3">
           <span className="text-white text-3xl font-saira">Invoices</span>
           <div className="flex flex-wrap gap-2 items-center"></div>
@@ -432,8 +561,10 @@ const InvoicePage = () => {
           ))}
         </div>
 
-        <div className="min-h-[548px]">
-          {currentShowtimes.length > 0 ? (
+        <div className="min-h-[136px] bg-[#273142] rounded-b-xl">
+          {isLoading ? (
+            renderSkeleton()
+          ) : currentShowtimes.length > 0 ? (
             currentShowtimes.map((item, index) => (
               <div key={item.id}>
                 {showInvoiceCus(
@@ -444,44 +575,22 @@ const InvoicePage = () => {
               </div>
             ))
           ) : (
-            <div className="text-white text-center py-4">
-              No showtimes found
+            <div className="flex justify-center items-center min-h-[136px] rounded-b">
+              <Empty
+                description={
+                  <span className="text-white font-saira">
+                    No invoices found
+                  </span>
+                }
+              />
             </div>
           )}
         </div>
 
-        <div className="flex justify-between items-center pt-4 space-x-4">
-          <span className="text-white font-saira">
-            {totalItems > 0
-              ? `Showing ${Math.min(startIndex + 1, totalItems)}-${Math.min(
-                  endIndex,
-                  totalItems
-                )} of ${totalItems}`
-              : "Showing 0-0 of 0"}
-          </span>
-          <div className="flex">
-            <button
-              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-              className={`bg-[#323D4E] h-[32px] px-4 py-2 rounded-l-lg border-r border-[#979797] ${
-                currentPage === 1 || totalItems === 0 ? "opacity-50" : ""
-              }`}
-              disabled={currentPage === 1 || totalItems === 0}
-            >
-              <FaAngleLeft color="white" />
-            </button>
-            <button
-              onClick={() =>
-                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-              }
-              className={`bg-[#323D4E] h-[32px] px-4 py-2 rounded-r-lg ${
-                currentPage === totalPages || totalItems === 0
-                  ? "opacity-50"
-                  : ""
-              }`}
-              disabled={currentPage === totalPages || totalItems === 0}
-            >
-              <FaAngleRight color="white" />
-            </button>
+        <div className="absolute bottom-0 left-0 right-0 flex justify-between items-center pt-4 space-x-4">
+          {renderPaginationInfo()}
+          <div className="flex items-center space-x-4">
+            {renderPaginationButtons()}
           </div>
         </div>
       </div>

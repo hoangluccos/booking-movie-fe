@@ -5,6 +5,8 @@ import {
   Tooltip,
   DatePicker,
   Popover,
+  Empty,
+  Skeleton,
 } from "antd";
 import { useEffect, useState } from "react";
 import {
@@ -28,10 +30,11 @@ import { toast } from "react-toastify";
 const ShowtimePage = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { listShowtimes } = useAppSelector((state) => state.showtime);
+  const { listShowtimes, isLoading } = useAppSelector(
+    (state) => state.showtime
+  );
   const [currentPage, setCurrentPage] = useState(1);
 
-  // Define filter interface
   interface Filters {
     movie: string[];
     theater: string[];
@@ -54,7 +57,6 @@ const ShowtimePage = () => {
 
   const moviesPerPage = 4;
 
-  // Dynamic options for movies and theaters
   const movieOptions = Array.from(
     new Set(listShowtimes.map((item) => item.movie.name))
   ).map((name) => ({
@@ -73,7 +75,6 @@ const ShowtimePage = () => {
     dispatch(getAllShowtimes());
   }, [dispatch]);
 
-  // Filter logic
   const filteredShowtimes = listShowtimes.filter((item) => {
     const matchMovie =
       !filters.movie.length || filters.movie.includes(item.movie.name);
@@ -125,7 +126,7 @@ const ShowtimePage = () => {
     onDelete: (item: ShowtimeType) => void
   ) => (
     <div
-      className={`grid grid-cols-7 bg-[#273142] text-white ${
+      className={`grid grid-cols-7 bg-[#273142] text-white min-h-[136px] ${
         isLastRow ? "rounded-b-xl" : "border-b border-[#979797]"
       }`}
     >
@@ -239,6 +240,122 @@ const ShowtimePage = () => {
     );
   };
 
+  const renderSkeleton = () => (
+    <div>
+      {[...Array(4)].map((_, idx) => (
+        <div
+          key={idx}
+          className={`grid grid-cols-7 bg-[#273142] text-white min-h-[136px] ${
+            idx === 3 ? "rounded-b-xl" : "border-b border-[#979797]"
+          }`}
+        >
+          <div className="flex justify-center items-center">
+            <Skeleton.Image
+              active
+              style={{ width: 80, height: 120, borderRadius: 8 }}
+            />
+          </div>
+          {[...Array(5)].map((_, colIdx) => (
+            <div
+              key={colIdx}
+              className="flex justify-center items-center font-saira"
+            >
+              <Skeleton
+                active
+                title={{
+                  width: colIdx === 0 ? "80%" : "60%",
+                }}
+                paragraph={false}
+                style={{ width: "100%" }}
+              />
+            </div>
+          ))}
+          <div
+            className={`flex justify-center items-center${
+              idx === 3 ? "rounded-br-xl" : ""
+            }`}
+          >
+            <Skeleton.Button
+              active
+              size="small"
+              style={{ width: 64, height: 32, borderRadius: 8 }}
+            />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+
+  const renderPaginationInfo = () => {
+    if (isLoading) {
+      return (
+        <Skeleton
+          active
+          title={{ width: "120px" }}
+          paragraph={false}
+          style={{ marginTop: 8 }}
+        />
+      );
+    }
+    if (totalItems === 0) {
+      return <span className="text-white font-saira">Showing 0-0 of 0</span>;
+    }
+    return (
+      <span className="text-white font-saira">
+        Showing {Math.min(startIndex + 1, totalItems)}-
+        {Math.min(endIndex, totalItems)} of {totalItems}
+      </span>
+    );
+  };
+
+  const renderPaginationButtons = () => {
+    if (isLoading) {
+      return (
+        <div className="flex">
+          <Skeleton.Button
+            active
+            size="small"
+            style={{
+              width: 32,
+              height: 32,
+              borderRadius: "8px 0 0 8px",
+              marginRight: 1,
+            }}
+          />
+          <Skeleton.Button
+            active
+            size="small"
+            style={{ width: 32, height: 32, borderRadius: "0 8px 8px 0" }}
+          />
+        </div>
+      );
+    }
+    return (
+      <div className="flex">
+        <button
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          className={`bg-[#323D4E] h-[32px] px-4 py-2 rounded-l-lg border-r border-[#979797] ${
+            currentPage === 1 || totalItems === 0 ? "opacity-50" : ""
+          }`}
+          disabled={currentPage === 1 || totalItems === 0}
+        >
+          <FaAngleLeft color="white" />
+        </button>
+        <button
+          onClick={() =>
+            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+          }
+          className={`bg-[#323D4E] h-[32px] px-4 py-2 rounded-r-lg ${
+            currentPage === totalPages || totalItems === 0 ? "opacity-50" : ""
+          }`}
+          disabled={currentPage === totalPages || totalItems === 0}
+        >
+          <FaAngleRight color="white" />
+        </button>
+      </div>
+    );
+  };
+
   return (
     <ConfigProvider
       theme={{
@@ -282,11 +399,14 @@ const ShowtimePage = () => {
             colorBorder: "transparent",
             borderRadius: 8,
           },
+          Empty: {
+            colorTextDescription: "#FFFFFF",
+            fontFamily: '"Saira Semi Condensed", sans-serif',
+          },
         },
       }}
     >
-      <div className="min-h-[750px]">
-        {/* Title + Filter + Button */}
+      <div className="relative min-h-[770px]">
         <div className="flex flex-wrap justify-between items-center mb-3">
           <span className="text-white text-3xl font-saira">Showtimes</span>
           <div className="flex flex-wrap gap-2 items-center">
@@ -303,13 +423,10 @@ const ShowtimePage = () => {
             </Button>
           </div>
         </div>
-
         {/* Filter Section */}
         <div className="flex items-center gap-4 mb-6 text-white font-saira text-sm">
           <FaFilter size={25} />
           <span className="font-saira">Filter By</span>
-
-          {/* Movie Name Popover */}
           <Popover
             title={null}
             trigger="click"
@@ -334,8 +451,6 @@ const ShowtimePage = () => {
               <FaAngleDown />
             </Button>
           </Popover>
-
-          {/* Date Picker */}
           <DatePicker
             allowClear
             placeholder="Date"
@@ -345,8 +460,6 @@ const ShowtimePage = () => {
             value={filters.date ? dayjs(filters.date, "DD-MM-YYYY") : null}
             style={{ backgroundColor: "#323D4E" }}
           />
-
-          {/* Theater Popover */}
           <Popover
             title={null}
             trigger="click"
@@ -371,8 +484,6 @@ const ShowtimePage = () => {
               <FaAngleDown />
             </Button>
           </Popover>
-
-          {/* Reset Filter Button */}
           <Button
             onClick={resetFilters}
             className="w-[147px] h-[48px] rounded-md font-saira flex items-center px-3 bg-[#323D4E] text-white"
@@ -381,7 +492,6 @@ const ShowtimePage = () => {
             <span className="text-xl">↺</span> Reset Filter
           </Button>
         </div>
-
         {/* Table Header */}
         <div className="grid grid-cols-7">
           {[
@@ -403,54 +513,40 @@ const ShowtimePage = () => {
             </div>
           ))}
         </div>
-
-        {/* Table Body */}
-        <div className="min-h-[548px]">
-          {currentShowtimes.length > 0 ? (
-            currentShowtimes.map((item, index) => (
-              <div key={item.id}>
-                {showShowtimeCus(
-                  item,
-                  index === currentShowtimes.length - 1,
-                  handleClickEditShowtime,
-                  handleClickDeleteShowtime
-                )}
-              </div>
-            ))
+        {/* Content Table */}
+        <div className="bg-[#273142] rounded-b-xl">
+          {isLoading ? (
+            renderSkeleton()
+          ) : currentShowtimes.length > 0 ? (
+            <>
+              {currentShowtimes.map((item, index) => (
+                <div key={item.id}>
+                  {showShowtimeCus(
+                    item,
+                    index === currentShowtimes.length - 1,
+                    handleClickEditShowtime,
+                    handleClickDeleteShowtime
+                  )}
+                </div>
+              ))}
+            </>
           ) : (
-            <div className="text-white text-center py-4">
-              No showtimes found
+            <div className="flex justify-center items-center min-h-[136px]">
+              <Empty
+                description={
+                  <span className="text-white font-saira">
+                    No showtimes found
+                  </span>
+                }
+              />
             </div>
           )}
         </div>
-
         {/* Pagination */}
-        <div className="flex justify-between items-center pt-4 space-x-4">
-          <span className="text-white font-saira">
-            Showing {Math.min(startIndex + 1, totalItems)}-
-            {Math.min(endIndex, totalItems)} of {totalItems}
-          </span>
-          <div className="flex">
-            <button
-              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-              className={`bg-[#323D4E] h-[32px] px-4 py-2 rounded-l-lg border-r border-[#979797] ${
-                currentPage === 1 ? "opacity-50" : ""
-              }`}
-              disabled={currentPage === 1}
-            >
-              <FaAngleLeft color="white" />
-            </button>
-            <button
-              onClick={() =>
-                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-              }
-              className={`bg-[#323D4E] h-[32px] px-4 py-2 rounded-r-lg ${
-                currentPage === totalPages ? "opacity-50" : ""
-              }`}
-              disabled={currentPage === totalPages}
-            >
-              <FaAngleRight color="white" />
-            </button>
+        <div className="absolute bottom-0 left-0 right-0 flex justify-between items-center pt-4 space-x-4">
+          {renderPaginationInfo()}
+          <div className="flex items-center space-x-4">
+            {renderPaginationButtons()}
           </div>
         </div>
       </div>

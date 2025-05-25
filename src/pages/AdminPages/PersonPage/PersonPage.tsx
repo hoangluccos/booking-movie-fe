@@ -5,6 +5,8 @@ import {
   ConfigProvider,
   Popconfirm,
   Tooltip,
+  Skeleton,
+  Empty,
 } from "antd";
 import React, { useEffect, useState } from "react";
 import { IoIosSearch } from "react-icons/io";
@@ -36,7 +38,7 @@ const PersonPage = () => {
     setSearchTerm(e.target.value);
   };
 
-  // Lọc danh sách người theo tên
+  // Filter persons by name
   const filteredPersons = listPerson.filter((item) =>
     item.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -133,6 +135,64 @@ const PersonPage = () => {
     );
   };
 
+  const renderSkeleton = () =>
+    [...Array(8)].map((_, idx) => (
+      <div key={idx} className="w-full max-w-[350px] max-h-[400px] mx-auto">
+        <div className="bg-[#293243] rounded-xl overflow-hidden w-full h-full">
+          <div className="relative py-6 px-4">
+            {/* Skeleton for the avatar */}
+            <div className="flex justify-center items-center h-52">
+              <Skeleton.Avatar
+                active
+                size={200}
+                shape="circle"
+                style={{ backgroundColor: "#3A4657" }}
+              />
+            </div>
+            {/* Skeleton for name */}
+            <Skeleton
+              active
+              title={{ width: "80%" }}
+              paragraph={false}
+              style={{
+                marginBottom: 8,
+                marginTop: 16,
+                marginLeft: "auto",
+                marginRight: "auto",
+              }}
+            />
+            {/* Skeleton for job, date of birth, and gender */}
+            <Skeleton
+              active
+              title={{ width: "60%" }}
+              paragraph={false}
+              style={{
+                marginBottom: 8,
+                marginLeft: "auto",
+                marginRight: "auto",
+              }}
+            />
+            <Skeleton
+              active
+              title={{ width: "60%" }}
+              paragraph={false}
+              style={{
+                marginBottom: 8,
+                marginLeft: "auto",
+                marginRight: "auto",
+              }}
+            />
+            <Skeleton
+              active
+              title={{ width: "40%" }}
+              paragraph={false}
+              style={{ marginLeft: "auto", marginRight: "auto" }}
+            />
+          </div>
+        </div>
+      </div>
+    ));
+
   const handleEditPerson = (item: PersonType) => {
     navigate(`/admin/persons/edit/${item.id}`);
   };
@@ -153,6 +213,14 @@ const PersonPage = () => {
             fontSize: 13,
             padding: 8,
             fontFamily: "Saira, sans-serif",
+          },
+          Skeleton: {
+            color: "#3A4657",
+            colorGradientEnd: "#2A3444",
+          },
+          Empty: {
+            colorText: "#FFFFFF",
+            colorTextDescription: "#FFFFFF",
           },
         },
       }}
@@ -196,10 +264,12 @@ const PersonPage = () => {
             </Button>
           </div>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-h-[705px] overflow-y-scroll scrollbar-hidden">
-          {filteredPersons.length > 0 ? (
+        <div className="w-full grid grid-cols-4 gap-6 max-h-[705px] overflow-y-auto scrollbar-hidden">
+          {isLoading ? (
+            renderSkeleton()
+          ) : filteredPersons.length > 0 ? (
             filteredPersons.map((item) => (
-              <div key={item.id}>
+              <div key={item.id} className="w-full flex justify-center">
                 {showPersonCus(
                   item,
                   () => handleEditPerson(item),
@@ -208,7 +278,15 @@ const PersonPage = () => {
               </div>
             ))
           ) : (
-            <div className="text-white text-center py-4">No person found</div>
+            <div className="flex justify-center items-center col-span-full min-h-[400px]">
+              <Empty
+                description={
+                  <span className="text-white font-saira">
+                    No persons found
+                  </span>
+                }
+              />
+            </div>
           )}
         </div>
       </div>

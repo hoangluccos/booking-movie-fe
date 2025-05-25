@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { ConfigProvider, DatePicker, Input, Button, Select } from "antd";
 import dayjs, { Dayjs } from "dayjs";
@@ -10,6 +10,7 @@ import {
   updateCoupon,
 } from "../../../redux/slices/CouponSlice.tsx";
 import { CouponType } from "../Data/Data.tsx";
+import { LeftOutlined } from "@ant-design/icons";
 
 const { TextArea } = Input;
 
@@ -17,7 +18,7 @@ const CreateUpdateCouponPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const couponData = location.state.coupon as CouponType;
+  const couponData = location.state?.coupon as CouponType;
 
   const dispatch = useAppDispatch();
   const { isLoading, error } = useAppSelector((state) => state.coupon);
@@ -31,10 +32,11 @@ const CreateUpdateCouponPage = () => {
     minValue: "",
     description: "",
     image: null as File | null,
-    existingImageUrl: "" as string, // Thêm trường này
+    existingImageUrl: "" as string,
   });
   const [preview, setPreview] = useState<string | null>(null);
   const [isFormDataReady, setIsFormDataReady] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null); // Ref để reset input file
 
   // Utility function to format numbers with thousand separators
   const formatNumber = (value: string | number): string => {
@@ -62,7 +64,7 @@ const CreateUpdateCouponPage = () => {
         minValue: couponData.minValue.toString(),
         description: couponData.description,
         image: null,
-        existingImageUrl: couponData.image || "", // Lưu URL hình ảnh hiện tại
+        existingImageUrl: couponData.image || "",
       });
       setPreview(couponData.image || null);
       setIsFormDataReady(true);
@@ -91,11 +93,11 @@ const CreateUpdateCouponPage = () => {
         }
       } else {
         const parsedValue = parseFormattedNumber(value);
-        newValue = parsedValue || "1"; // Lưu giá trị gốc (chưa format)
+        newValue = parsedValue || "1";
       }
     } else if (name === "minValue") {
       const parsedValue = parseFormattedNumber(value);
-      newValue = parsedValue || "1"; // Lưu giá trị gốc (chưa format)
+      newValue = parsedValue || "1";
     }
 
     setCoupon((prev) => ({
@@ -121,6 +123,18 @@ const CreateUpdateCouponPage = () => {
     if (file) {
       setCoupon((prev) => ({ ...prev, image: file }));
       setPreview(URL.createObjectURL(file));
+    } else {
+      setPreview(null);
+      setCoupon((prev) => ({ ...prev, image: null }));
+    }
+    console.log("File selected:", file); // Debug
+  };
+
+  const handleRemoveImage = () => {
+    setPreview(null);
+    setCoupon((prev) => ({ ...prev, image: null }));
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ""; // Reset input file
     }
   };
 
@@ -154,7 +168,7 @@ const CreateUpdateCouponPage = () => {
           updateCoupon({
             couponId: id,
             couponData: params,
-            image: coupon.image || coupon.existingImageUrl, // Truyền URL nếu không có hình mới
+            image: coupon.image || coupon.existingImageUrl,
           })
         ).unwrap();
         toast.success("Coupon updated successfully!");
@@ -170,6 +184,10 @@ const CreateUpdateCouponPage = () => {
       toast.error(error.message || "Fail to create or update coupon");
       console.log("Eror: ", error);
     }
+  };
+
+  const handleClickGoBack = () => {
+    navigate(-1);
   };
 
   return (
@@ -212,9 +230,17 @@ const CreateUpdateCouponPage = () => {
     >
       <div className="text-white">
         <ToastContainer />
-        <span className="text-3xl mb-8 flex font-saira">
-          {id ? "Edit Coupon" : "Add New Coupon"}
-        </span>
+        <div className="flex items-center mb-8">
+          <Button
+            type="text"
+            icon={<LeftOutlined />}
+            onClick={handleClickGoBack}
+            className="text-white mr-4 font-saira transition-all duration-300 ease-in-out hover:!text-blue-400 hover:scale-110"
+          />
+          <span className="text-3xl font-saira">
+            {id ? "Edit Coupon" : "Add New Coupon"}
+          </span>
+        </div>
         <div className="w-full bg-[#273142] p-10 rounded-2xl shadow-lg max-h-[700px] overflow-y-scroll scrollbar-hidden">
           <form onSubmit={handleSubmit} className="flex flex-col items-center">
             {/* Upload Image */}
@@ -222,7 +248,7 @@ const CreateUpdateCouponPage = () => {
               <label className="text-white mb-2 block text-lg">
                 Coupon Image
               </label>
-              <div className="relative w-[200px] h-[200px] bg-[#323D4E] rounded-xl flex items-center justify-center overflow-hidden">
+              <div className="relative w-[600px] h-[250px] bg-[#323D4E] rounded-xl flex items-center justify-center overflow-hidden">
                 {preview ? (
                   <img
                     src={preview}
@@ -240,12 +266,13 @@ const CreateUpdateCouponPage = () => {
                   name="image"
                   accept="image/*"
                   onChange={handleImageChange}
+                  ref={fileInputRef} // Gắn ref để reset input
                   className="absolute inset-0 opacity-0 cursor-pointer"
                 />
                 <Button
                   type="primary"
                   size="small"
-                  onClick={() => document.getElementById("image")?.click()}
+                  onClick={() => fileInputRef.current?.click()}
                   className="absolute bottom-2 left-1/2 -translate-x-1/2 font-saira !bg-blue-500 hover:!bg-blue-600 !text-white !text-sm !px-2 !py-1 !rounded-md"
                 >
                   Select image
@@ -253,10 +280,7 @@ const CreateUpdateCouponPage = () => {
                 {preview && (
                   <button
                     type="button"
-                    onClick={() => {
-                      setPreview(null);
-                      setCoupon((prev) => ({ ...prev, image: null }));
-                    }}
+                    onClick={handleRemoveImage}
                     className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white w-6 h-6 flex items-center justify-center rounded-full"
                   >
                     ✕

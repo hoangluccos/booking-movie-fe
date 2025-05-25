@@ -1,13 +1,13 @@
-import { useAppDispatch, useAppSelector } from "../../../redux/Store/Store.tsx";
+import { useAppDispatch, useAppSelector } from "../../../redux/store/store.tsx";
 import { useEffect, useState, useMemo } from "react";
-import { getAllUsers } from "../../../redux/Slices/UserSlice.tsx";
+import { getAllUsers } from "../../../redux/slices/UserSlice.tsx";
 import { FaUserFriends } from "react-icons/fa";
 import StatisticComponent from "./StatisticComponent.tsx";
-import { getAllMovies } from "../../../redux/Slices/MovieSlice.tsx";
+import { getAllMovies } from "../../../redux/slices/MovieSlice.tsx";
 import { MdMovieFilter } from "react-icons/md";
-import { getAllInvoices } from "../../../redux/Slices/InvoiceSlice.tsx";
+import { getAllInvoices } from "../../../redux/slices/InvoiceSlice.tsx";
 import { FaDongSign } from "react-icons/fa6";
-import { getAllShowtimes } from "../../../redux/Slices/ShowtimeSlice.tsx";
+import { getAllShowtimes } from "../../../redux/slices/ShowtimeSlice.tsx";
 import { BiSolidSlideshow } from "react-icons/bi";
 import { Line } from "react-chartjs-2";
 import {

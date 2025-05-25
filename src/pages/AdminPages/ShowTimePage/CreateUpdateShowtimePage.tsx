@@ -20,6 +20,7 @@ import {
   getOneShowtime,
   updateShowtime,
 } from "../../../redux/slices/ShowtimeSlice.tsx";
+import { LeftOutlined } from "@ant-design/icons";
 
 const CreateUpdateShowtimePage = () => {
   const { id } = useParams();
@@ -194,6 +195,10 @@ const CreateUpdateShowtimePage = () => {
     }
   };
 
+  const handleClickGoBack = () => {
+    navigate(-1);
+  };
+
   return (
     <ConfigProvider
       theme={{
@@ -243,9 +248,18 @@ const CreateUpdateShowtimePage = () => {
       }}
     >
       <div className="text-white">
-        <span className="text-3xl mb-8 flex font-saira">
-          {id ? "Edit Showtime" : "Add New Showtime"}
-        </span>
+        <ToastContainer />
+        <div className="flex items-center mb-8">
+          <Button
+            type="text"
+            icon={<LeftOutlined />}
+            onClick={handleClickGoBack}
+            className="text-white mr-4 font-saira transition-all duration-300 ease-in-out hover:!text-blue-400 hover:scale-110"
+          />
+          <span className="text-3xl font-saira">
+            {id ? "Edit Showtime" : "Add New Showtime"}
+          </span>
+        </div>
         <div className="w-full bg-[#273142] p-10 rounded-2xl shadow-lg">
           <form
             onSubmit={handleSubmit}

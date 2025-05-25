@@ -2,7 +2,14 @@ import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../redux/store/store.tsx";
 import { useEffect, useState } from "react";
 import { FoodType } from "../Data/Data";
-import { Button, ConfigProvider, Popconfirm, Tooltip } from "antd";
+import {
+  Button,
+  ConfigProvider,
+  Popconfirm,
+  Tooltip,
+  Skeleton,
+  Empty,
+} from "antd";
 import { FaRegTrashCan } from "react-icons/fa6";
 import { IoIosSearch } from "react-icons/io";
 import { deleteFood, getAllFoods } from "../../../redux/slices/FoodSlice.tsx";
@@ -12,7 +19,9 @@ import ModalCreateUpdateFood from "./ModalCreateUpdateFood.tsx";
 const FoodPage = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { error, isLoading, listFoods } = useAppSelector((state) => state.food);
+  const { error, listLoading, listFoods } = useAppSelector(
+    (state) => state.food
+  );
 
   const [searchTerm, setSearchTerm] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
@@ -48,7 +57,6 @@ const FoodPage = () => {
   const handleCloseModal = () => {
     setModalOpen(false);
     setSelectedFood(null);
-    dispatch(getAllFoods());
   };
 
   const showFoodCus = (
@@ -65,12 +73,10 @@ const FoodPage = () => {
               <h3 className="text-white text-lg font-saira mb-1 overflow-hidden line-clamp-2 min-h-[48px] leading-[1.2]">
                 {item.name}
               </h3>
-
               <p className="text-blue-400 text-sm mb-4 font-saira">
                 {item.price.toLocaleString("vi-VN")}đ
               </p>
             </div>
-
             <div className="flex items-center">
               <Popconfirm
                 title={
@@ -109,7 +115,6 @@ const FoodPage = () => {
               </Popconfirm>
             </div>
           </div>
-
           <Button
             className="w-[126px] h-[38px] rounded-lg font-saira hover:scale-105 active:scale-95 transition-transform duration-200 ease-in-out"
             style={{
@@ -139,6 +144,60 @@ const FoodPage = () => {
     );
   };
 
+  const renderSkeleton = () =>
+    [...Array(8)].map((_, idx) => (
+      <div
+        key={idx}
+        className="bg-[#273142] rounded-xl overflow-hidden shadow-lg w-full"
+      >
+        {/* Skeleton for the image */}
+        <div className="w-full h-[200px] bg-gray-500">
+          <Skeleton.Image
+            active
+            style={{
+              width: "100%",
+              height: "100%",
+              backgroundColor: "#3A4657",
+            }}
+          />
+        </div>
+        <div className="p-4">
+          {/* Skeleton for name (2 lines) */}
+          <Skeleton
+            active
+            title={{ width: "80%" }}
+            paragraph={{ rows: 2, width: ["80%", "60%"] }}
+            style={{ marginBottom: 8 }}
+          />
+          {/* Skeleton for price */}
+          <Skeleton
+            active
+            title={{ width: "50%" }}
+            paragraph={false}
+            style={{ marginBottom: 16 }}
+          />
+          {/* Skeleton for buttons */}
+          <div className="flex justify-between">
+            <Skeleton.Button
+              active
+              size="small"
+              style={{
+                width: 126,
+                height: 38,
+                borderRadius: 8,
+                marginRight: 8,
+              }}
+            />
+            <Skeleton.Button
+              active
+              size="small"
+              style={{ width: 40, height: 40, borderRadius: "50%" }}
+            />
+          </div>
+        </div>
+      </div>
+    ));
+
   return (
     <ConfigProvider
       theme={{
@@ -153,6 +212,14 @@ const FoodPage = () => {
           },
           Popconfirm: {
             fontFamily: "Saira, sans-serif",
+          },
+          Skeleton: {
+            color: "#3A4657",
+            colorGradientEnd: "#2A3444",
+          },
+          Empty: {
+            colorText: "#FFFFFF",
+            colorTextDescription: "#FFFFFF",
           },
         },
       }}
@@ -209,8 +276,10 @@ const FoodPage = () => {
         />
 
         {/* Body */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-h-[705px] overflow-y-scroll scrollbar-hidden">
-          {filteredData.length > 0 ? (
+        <div className="grid grid-cols-4 gap-6 max-h-[705px] overflow-y-auto scrollbar-hidden">
+          {listLoading ? (
+            renderSkeleton()
+          ) : filteredData.length > 0 ? (
             filteredData.map((item) => (
               <div key={item.id}>
                 {showFoodCus(
@@ -221,7 +290,13 @@ const FoodPage = () => {
               </div>
             ))
           ) : (
-            <div className="text-white text-center py-4">No foods found</div>
+            <div className="flex justify-center items-center col-span-full min-h-[400px]">
+              <Empty
+                description={
+                  <span className="text-white font-saira">No foods found</span>
+                }
+              />
+            </div>
           )}
         </div>
       </div>

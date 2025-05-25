@@ -10,7 +10,14 @@ import {
   getAllMovies,
 } from "../../../redux/slices/MovieSlice.tsx";
 import { useAppDispatch, useAppSelector } from "../../../redux/store/store.tsx";
-import { Button, ConfigProvider, Popconfirm, Spin, Tooltip } from "antd";
+import {
+  Button,
+  ConfigProvider,
+  Empty,
+  Popconfirm,
+  Skeleton,
+  Tooltip,
+} from "antd";
 import { toast } from "react-toastify";
 
 const MoviePage: React.FC = () => {
@@ -27,7 +34,6 @@ const MoviePage: React.FC = () => {
   useEffect(() => {
     console.log("Render Movie Page");
     dispatch(getAllMovies());
-    console.log("List movie: ", listMovie);
   }, [dispatch]);
 
   const filteredData = listMovie.filter((item) =>
@@ -70,7 +76,7 @@ const MoviePage: React.FC = () => {
   ) => {
     return (
       <div
-        className={`grid grid-cols-9 bg-[#273142] text-white ${
+        className={`grid grid-cols-9 bg-[#273142] text-white min-h-[136px] ${
           isLastRow ? "rounded-b-xl" : "border-b border-[#979797]"
         }`}
       >
@@ -146,6 +152,132 @@ const MoviePage: React.FC = () => {
     );
   };
 
+  // Xử lý hiển thị thông tin phân trang
+  const renderPaginationInfo = () => {
+    if (isLoading) {
+      return (
+        <Skeleton
+          active
+          title={{ width: "120px" }}
+          paragraph={false}
+          style={{ marginTop: 8 }}
+        />
+      );
+    }
+    if (totalItems === 0) {
+      return <span className="text-white font-saira">Showing 0-0 of 0</span>;
+    }
+    return (
+      <span className="text-white font-saira">
+        Showing {Math.min(startIndex + 1, totalItems)}-
+        {Math.min(endIndex, totalItems)} of {totalItems}
+      </span>
+    );
+  };
+
+  // Custom Skeleton cho bảng
+  const renderSkeleton = () => (
+    <div>
+      {[...Array(moviesPerPage)].map((_, idx) => (
+        <div
+          key={idx}
+          className={`grid grid-cols-9 bg-[#273142] text-white min-h-[136px] ${
+            idx === moviesPerPage - 1
+              ? "rounded-b-xl"
+              : "border-b border-[#979797]"
+          }`}
+        >
+          <div className="flex justify-center items-center">
+            <Skeleton.Image
+              active
+              style={{ width: 80, height: 128, borderRadius: 8 }}
+            />
+          </div>
+          {[...Array(7)].map((_, colIdx) => (
+            <div
+              key={colIdx}
+              className="flex justify-center items-center font-saira"
+            >
+              <Skeleton
+                active
+                title={{
+                  width:
+                    colIdx === 2
+                      ? "90%"
+                      : colIdx === 4 || colIdx === 5 || colIdx === 6
+                      ? "60%"
+                      : "80%",
+                }}
+                paragraph={false}
+                style={{ width: "100%" }}
+              />
+            </div>
+          ))}
+          <div
+            className={`flex justify-center items-center ${
+              idx === moviesPerPage - 1 ? "rounded-br-xl" : ""
+            }`}
+          >
+            <Skeleton.Button
+              active
+              size="small"
+              style={{ width: 64, height: 32, borderRadius: 8 }}
+            />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+
+  // Skeleton cho nút phân trang
+  const renderPaginationButtons = () => {
+    if (isLoading) {
+      return (
+        <div className="flex">
+          <Skeleton.Button
+            active
+            size="small"
+            style={{
+              width: 32,
+              height: 32,
+              borderRadius: "8px 0 0 8px",
+              marginRight: 1,
+            }}
+          />
+          <Skeleton.Button
+            active
+            size="small"
+            style={{ width: 32, height: 32, borderRadius: "0 8px 8px 0" }}
+          />
+        </div>
+      );
+    }
+    return (
+      <div className="flex">
+        <button
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          className={`bg-[#323D4E] h-[32px] px-4 py-2 rounded-l-lg border-r border-[#979797] ${
+            currentPage === 1 || totalItems === 0 ? "opacity-50" : ""
+          }`}
+          disabled={currentPage === 1 || totalItems === 0}
+        >
+          <FaAngleLeft color="white" />
+        </button>
+        <button
+          onClick={() =>
+            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+          }
+          className={`bg-[#323D4E] h-[32px] px-4 py-2 rounded-r-lg ${
+            currentPage === totalPages || totalItems === 0 ? "opacity-50" : ""
+          }`}
+          disabled={currentPage === totalPages || totalItems === 0}
+        >
+          <FaAngleRight color="white" />
+        </button>
+      </div>
+    );
+  };
+
   if (error) return <div className="text-red-500">Error: {error}</div>;
 
   return (
@@ -153,15 +285,19 @@ const MoviePage: React.FC = () => {
       theme={{
         components: {
           Tooltip: {
-            colorBgSpotlight: "#1F2937", // Màu nền tối
-            colorTextLightSolid: "#FFFFFF", // Màu chữ
+            colorBgSpotlight: "#1F2937",
+            colorTextLightSolid: "#FFFFFF",
             borderRadius: 6,
             fontSize: 13,
             padding: 8,
-            fontFamily: "Saira, sans-serif", // Add font-family for Tooltip
+            fontFamily: "Saira, sans-serif",
           },
           Popconfirm: {
-            fontFamily: "Saira, sans-serif", // Add font-family for Popconfirm
+            fontFamily: "Saira, sans-serif",
+          },
+          Empty: {
+            colorTextDescription: "#FFFFFF",
+            fontFamily: "Saira, sans-serif",
           },
         },
       }}
@@ -234,8 +370,10 @@ const MoviePage: React.FC = () => {
           </div>
 
           {/* Content Table */}
-          <div className="min-h-[448px]">
-            {currentMovies.length > 0 ? (
+          <div className="bg-[#273142] rounded-b-xl">
+            {isLoading ? (
+              renderSkeleton()
+            ) : currentMovies.length > 0 ? (
               currentMovies.map((item, index) => (
                 <div key={item.id}>
                   {showMovieCus(
@@ -248,40 +386,25 @@ const MoviePage: React.FC = () => {
                 </div>
               ))
             ) : (
-              <div className="text-white text-center py-4">No movies found</div>
+              <div className="flex justify-center items-center min-h-[136px]">
+                <Empty
+                  description={
+                    <span className="text-white font-saira">
+                      No movies found
+                    </span>
+                  }
+                  imageStyle={{ filter: "brightness(0) invert(1)" }}
+                />
+              </div>
             )}
           </div>
         </div>
 
         {/* Pagination */}
         <div className="absolute bottom-0 left-0 right-0 flex justify-between items-center pt-8 space-x-4">
-          <span className="text-white font-saira">
-            Showing {Math.min(startIndex + 1, totalItems)}-
-            {Math.min(endIndex, totalItems)} of {totalItems}
-          </span>
+          {renderPaginationInfo()}
           <div className="flex items-center space-x-4">
-            <div className="flex">
-              <button
-                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                className={`bg-[#323D4E] h-[32px] px-4 py-2 rounded-l-lg border-r border-[#979797] ${
-                  currentPage === 1 ? "opacity-50" : ""
-                }`}
-                disabled={currentPage === 1}
-              >
-                <FaAngleLeft color="white" />
-              </button>
-              <button
-                onClick={() =>
-                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-                }
-                className={`bg-[#323D4E] h-[32px] px-4 py-2 rounded-r-lg ${
-                  currentPage === totalPages ? "opacity-50" : ""
-                }`}
-                disabled={currentPage === totalPages}
-              >
-                <FaAngleRight color="white" />
-              </button>
-            </div>
+            {renderPaginationButtons()}
           </div>
         </div>
       </div>

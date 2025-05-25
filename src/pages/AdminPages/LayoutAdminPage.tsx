@@ -155,14 +155,6 @@ const LayoutAdminPage = () => {
             {isSidebarOpen ? <MdClose /> : <MdMenu />}
           </button>
 
-          <div className="flex-1 mx-4">
-            <input
-              type="text"
-              placeholder="Search"
-              className="w-full max-w-md px-4 py-2 rounded-lg bg-[#1B2431] text-white placeholder-gray-400 focus:outline-none font-saira"
-            />
-          </div>
-
           {/* Avatar + Logout Menu */}
           <Dropdown
             menu={{ items, onClick: handleMenuClick }}

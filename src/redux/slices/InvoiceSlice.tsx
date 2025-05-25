@@ -24,7 +24,6 @@ export const getAllInvoices = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await instance.get("/book/ticket", {});
-
       return response.data.result;
     } catch (error: any) {
       return rejectWithValue(
@@ -63,6 +62,7 @@ const InvoiceSlice = createSlice({
       .addCase(getAllInvoices.fulfilled, (state, action) => {
         state.isLoading = false;
         state.listInvoices = action.payload;
+        console.log("Redux updated listInvoices:", action.payload);
       })
       .addCase(getAllInvoices.rejected, (state, action) => {
         state.isLoading = false;
