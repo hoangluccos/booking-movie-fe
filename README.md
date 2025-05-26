@@ -26,9 +26,15 @@ Hệ thống ứng dụng đặt vé xem phim là một nền tảng trực tuy�
 
 ## **CHỨC NĂNG ADMIN**
 
-- Chức năng đang trong quá trình phát triển (Processing...).
+- Dashboard tổng quan hệ thống
+- Quản lý danh sách phim (crud, filter)
+- Quản lý danh sách Invoices (crud, filter)
+- Quản lý showtime (crud, filter)
+- Quản lý feedback
+- Quản lý Actor, Director
+- Quản lý theater
 
 ## **HƯỚNG DẪN SỬ DỤNG**
 
-1. Clone repository về máy: git clone: link_project
+1. Clone repository về máy: https://github.com/hoangluccos/booking-movie-fe.git
 2. Download các Dependencies về máy: npm i
