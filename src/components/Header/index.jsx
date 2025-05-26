@@ -98,7 +98,7 @@ function Header() {
   };
   return (
     <div className="select-nones">
-      <ToastContainer />
+      {/* <ToastContainer />  */}
       <div className="w-full bg-[#0f172a] fixed top-0 left-0 z-50 p-2.5 nav_ab">
         <header className="max-w-[1200px] mx-auto flex flex-col p-2.5 items-center">
           <div className="flex items-center justify-between mb-2 w-full">
