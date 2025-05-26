@@ -298,5 +298,5 @@ const MovieSlice = createSlice({
       });
   },
 });
-
+//update name MovieSlice
 export default MovieSlice.reducer;
