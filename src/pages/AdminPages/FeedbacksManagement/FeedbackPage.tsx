@@ -5,6 +5,7 @@ import {
   Popover,
   Skeleton,
   Empty,
+  Tooltip,
 } from "antd";
 import { useEffect, useState } from "react";
 import {
@@ -187,27 +188,29 @@ const FeedbackPage = () => {
         {item.date} {item.time.slice(0, 5)}
       </div>
       <div className="flex justify-center items-center">
-        <Popconfirm
-          title={
-            <span className="font-saira text-sm text-white">
-              Are you sure to delete this comment?
-            </span>
-          }
-          description={
-            <div className="flex flex-col">
-              <span className="font-saira text-sm text-white">{`Content: "${item.content}"`}</span>
-              <span className="font-saira text-sm text-white">{`By: "${item.byName}"`}</span>
-            </div>
-          }
-          onConfirm={() => onDelete(item)}
-          okText={<span className="font-saira">Yes</span>}
-          cancelText={<span className="font-saira">No</span>}
-          okType="danger"
-        >
-          <button className="bg-[#323D4E] h-[32px] px-4 py-2 rounded-lg">
-            <FaRegTrashCan color="red" />
-          </button>
-        </Popconfirm>
+        <Tooltip title="Delete">
+          <Popconfirm
+            title={
+              <span className="font-saira text-sm text-white">
+                Are you sure to delete this comment?
+              </span>
+            }
+            description={
+              <div className="flex flex-col">
+                <span className="font-saira text-sm text-white">{`Content: "${item.content}"`}</span>
+                <span className="font-saira text-sm text-white">{`By: "${item.byName}"`}</span>
+              </div>
+            }
+            onConfirm={() => onDelete(item)}
+            okText={<span className="font-saira">Yes</span>}
+            cancelText={<span className="font-saira">No</span>}
+            okType="danger"
+          >
+            <button className="bg-[#323D4E] h-[32px] px-4 py-2 rounded-lg">
+              <FaRegTrashCan color="red" />
+            </button>
+          </Popconfirm>
+        </Tooltip>
       </div>
     </div>
   );
@@ -377,6 +380,13 @@ const FeedbackPage = () => {
           fontFamily: '"Saira Semi Condensed", sans-serif',
         },
         components: {
+          Tooltip: {
+            colorBgSpotlight: "#1F2937",
+            colorTextLightSolid: "#FFFFFF",
+            borderRadius: 6,
+            fontSize: 13,
+            paddingXS: 8,
+          },
           Popover: {
             colorBgElevated: "#323D4E",
             colorText: "#FFFFFF",

@@ -6,6 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { useAppDispatch, useAppSelector } from "../../../redux/store/store.tsx";
 import { createRoom } from "../../../redux/slices/RoomSlice.tsx";
 import { TheaterType } from "../Data/Data.tsx";
+import { LeftOutlined } from "@ant-design/icons";
 
 const { Option } = Select;
 
@@ -67,6 +68,10 @@ const CreateRoomPage = () => {
     }
   }, [error]);
 
+  const handleClickGoBack = () => {
+    navigate(-1);
+  };
+
   return (
     <ConfigProvider
       theme={{
@@ -109,7 +114,15 @@ const CreateRoomPage = () => {
     >
       <div className="text-white">
         <ToastContainer />
-        <span className="text-3xl mb-8 flex font-saira">Create Room</span>
+        <div className="flex items-center mb-8">
+          <Button
+            type="text"
+            icon={<LeftOutlined />}
+            onClick={handleClickGoBack}
+            className="text-white mr-4 font-saira transition-all duration-300 ease-in-out hover:!text-blue-400 hover:scale-110"
+          />
+          <span className="text-3xl flex font-saira">Create Room</span>
+        </div>
         <div className="w-full bg-[#273142] p-10 rounded-2xl shadow-lg">
           <Form
             form={form}

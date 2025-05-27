@@ -149,7 +149,7 @@ export type InvoiceType = {
   user: UserType;
   showtime: ShowtimeType;
   room: RoomType;
-  food: FoodDetailType;
+  foods: FoodDetailType[];
   coupon: CouponType;
 };
 

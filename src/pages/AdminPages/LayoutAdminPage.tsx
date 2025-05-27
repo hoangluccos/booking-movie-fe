@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import SlidebarItem from "./SlidebarItem.tsx";
 import {
@@ -8,49 +8,52 @@ import {
   MdCategory,
   MdQuestionAnswer,
 } from "react-icons/md";
-import { Avatar, Dropdown, Menu } from "antd";
-import { RiSlideshow3Fill } from "react-icons/ri";
-import { FaUsers } from "react-icons/fa";
+import { Avatar, Dropdown } from "antd";
+import { RiSlideshow3Fill, RiCoupon2Fill } from "react-icons/ri";
+import { FaUsers, FaFileInvoice } from "react-icons/fa";
 import { TbMovie } from "react-icons/tb";
-import { IoPersonSharp } from "react-icons/io5";
+import { IoPersonSharp, IoFastFood } from "react-icons/io5";
 import { GiTheater } from "react-icons/gi";
-import { IoFastFood } from "react-icons/io5";
-import { RiCoupon2Fill } from "react-icons/ri";
-import { FaFileInvoice } from "react-icons/fa6";
 import instance from "../../api/instance.js";
 import { toast } from "react-toastify";
 
 const LayoutAdminPage = () => {
   const nav = useNavigate();
-  const handleLogout = () => {
-    (async () => {
-      try {
-        const token = JSON.parse(localStorage.getItem("token"));
-        await instance.post("/auth/logout", token);
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        toast.error("Bạn đã logout");
-        setTimeout(() => {
-          nav("/login");
-          window.location.reload();
-        }, 2000);
-      } catch (error) {
-        console.log(error);
-      }
-    })();
-  };
-
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
+    setIsSidebarOpen((prev) => {
+      console.log("Toggling sidebar, new state:", !prev);
+      return !prev;
+    });
+  };
+
+  const handleLogout = async () => {
+    try {
+      const tokenString = localStorage.getItem("token");
+      if (!tokenString) {
+        toast.error("Token không tồn tại");
+        return;
+      }
+      const token = JSON.parse(tokenString);
+
+      await instance.post("/auth/logout", token);
+
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      toast.error("Bạn đã logout");
+      setTimeout(() => {
+        nav("/login");
+        window.location.reload();
+      }, 2000);
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
   };
 
   const handleMenuClick = ({ key }) => {
     if (key === "logout") {
-      // Logic đăng xuất ở đây
       handleLogout();
-      console.log("User logged out");
     }
   };
 
@@ -62,20 +65,17 @@ const LayoutAdminPage = () => {
   ];
 
   return (
-    <div className="bg-[#1B2431] min-h-screen flex">
+    <div className="flex min-h-screen bg-[#1B2431]">
       {/* Sidebar */}
       <aside
-        className={`${
+        className={`bg-[#273142] transition-all duration-300 overflow-hidden ${
           isSidebarOpen ? "w-[240px]" : "w-[60px]"
-        } transition-all duration-300 overflow-hidden`}
+        }`}
       >
-        <nav className="h-full flex flex-col bg-[#273142] p-4">
-          {/* Logo */}
-          <div className={`${isSidebarOpen ? "w-[100px]" : "w-[40px]"} mb-8`}>
-            {/* <img src={logo} alt="Logo" /> */}
+        <nav className="h-full flex flex-col p-4">
+          <div className={`mb-12 ${isSidebarOpen ? "w-full" : "w-[40px]"}`}>
+            {/* <img src={logo} alt="Logo" className="max-w-full" /> */}
           </div>
-
-          {/* Menu items */}
           <ul>
             <SlidebarItem
               icon={<MdDashboard />}
@@ -147,15 +147,19 @@ const LayoutAdminPage = () => {
         </nav>
       </aside>
 
-      {/* Navbar */}
+      {/* Main Content */}
       <div className="flex-1 flex flex-col">
-        {/* Top Navbar */}
         <header className="bg-[#273142] h-[70px] flex items-center justify-between px-4">
           <button onClick={toggleSidebar} className="text-white text-2xl">
             {isSidebarOpen ? <MdClose /> : <MdMenu />}
           </button>
-
-          {/* Avatar + Logout Menu */}
+          <div className="flex-1 mx-4">
+            <input
+              type="text"
+              placeholder="Search"
+              className="w-full max-w-md px-4 py-2 rounded-lg bg-[#1B2431] text-white placeholder-gray-400 focus:outline-none font-saira"
+            />
+          </div>
           <Dropdown
             menu={{ items, onClick: handleMenuClick }}
             placement="bottomRight"
@@ -169,8 +173,6 @@ const LayoutAdminPage = () => {
             </div>
           </Dropdown>
         </header>
-
-        {/* Content */}
         <div className="flex-1 p-8">
           <Outlet />
         </div>

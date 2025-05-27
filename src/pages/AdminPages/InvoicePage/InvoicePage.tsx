@@ -396,7 +396,7 @@ const InvoicePage = () => {
             colorTextLightSolid: "#FFFFFF",
             borderRadius: 6,
             fontSize: 13,
-            paddingXS: 8,
+            padding: 8,
           },
           DatePicker: {
             controlHeight: 48,
