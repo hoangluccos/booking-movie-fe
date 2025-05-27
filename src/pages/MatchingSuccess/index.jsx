@@ -15,6 +15,30 @@ function MatchingSuccess() {
   const dataPartner = location.state.dataPartner;
   const showTime = location.state.showTime;
 
+  const handleDeleteRQ = () => {
+    const checkAndDeleteRQ = async () => {
+      try {
+        const res = await instance.get("/matching/check");
+        if (res.data.result.isSendMatchingRequest) {
+          const deleteRQ = async () => {
+            try {
+              const response = await instance.delete("/matching/");
+              if (response.data.code === 200) {
+                console.log("Delete Request matching successfully");
+              }
+            } catch (error) {
+              console.log("error when delete", error);
+            }
+          };
+          deleteRQ();
+        }
+      } catch (error) {
+        console.log("error when checking: ", error);
+      }
+    };
+    checkAndDeleteRQ();
+  };
+
   const handlePayment = () => {
     const payment = async () => {
       try {
@@ -26,6 +50,8 @@ function MatchingSuccess() {
           },
         });
         console.log(response.data.result);
+        //delete request matching after paid successfully
+        handleDeleteRQ();
         handleRedirect(response.data.result, nav);
       } catch (error) {
         console.error("Error payment", error);
