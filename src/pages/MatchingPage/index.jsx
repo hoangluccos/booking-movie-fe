@@ -89,13 +89,11 @@ const MatchingPage = () => {
       setIsChecking(true);
       try {
         const hasRequest = await checkIsHavingRqMatching();
-        // setHasMatchingRequest(hasRequest);
+        setHasMatchingRequest(hasRequest);
 
         if (hasRequest) {
           console.log("Có yêu cầu ghép đôi, kết nối socket...");
-          connect(userId, handleNotificationSocket);
-          //change
-          setHasMatchingRequest(hasRequest);
+          await connect(userId, handleNotificationSocket);
         } else {
           console.log("Không có yêu cầu ghép đôi, lấy dữ liệu phim/rạp...");
           try {
@@ -119,7 +117,13 @@ const MatchingPage = () => {
     };
 
     initialize();
-  }, [userId, navigate, connect, handleNotificationSocket]);
+
+    // Cleanup: Ngắt kết nối WebSocket khi component unmount
+    return () => {
+      console.log("Component unmount, ngắt kết nối WebSocket...");
+      disconnect();
+    };
+  }, [userId, connect, handleNotificationSocket]);
 
   //fetch all showtime when select movie
   useEffect(() => {

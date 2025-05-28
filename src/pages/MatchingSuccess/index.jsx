@@ -22,7 +22,7 @@ function MatchingSuccess() {
     const fetchShowtime = async () => {
       try {
         const res = await instance.get(
-          `/showtimes//info/${location.state.dataTicket.showtimeId}`
+          `/showtimes/info/${location.state.dataTicket.showtimeId}`
         );
         console.log("data response: ", res.data.result);
         setDataMovie(res.data.result.movie);
