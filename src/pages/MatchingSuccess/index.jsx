@@ -3,17 +3,36 @@ import { Tooltip } from "antd";
 import { QuestionCircleOutlined } from "@ant-design/icons";
 import instance from "../../api/instance";
 import { handleRedirect } from "../../utils/common";
+import { useEffect, useState } from "react";
 
 function MatchingSuccess() {
   const location = useLocation();
   console.log("data receive", location.state);
   const nav = useNavigate();
 
-  const dataMovie = location.state.dataRequestMatching;
+  // const dataMovie = location.state.dataRequestMatching;
+  // const showTime = location.state.showTime;
   const dataTicket = location.state.dataTicket;
   const ticketId = location.state.dataTicket.id;
   const dataPartner = location.state.dataPartner;
-  const showTime = location.state.showTime;
+  const [dataMovie, setDataMovie] = useState({});
+  const [showTime, setShowTime] = useState({});
+
+  useEffect(() => {
+    const fetchShowtime = async () => {
+      try {
+        const res = await instance.get(
+          `/showtimes//info/${location.state.dataTicket.showtimeId}`
+        );
+        console.log("data response: ", res.data.result);
+        setDataMovie(res.data.result.movie);
+        setShowTime(res.data.result);
+      } catch (error) {
+        console.log("fail when fetch showtime api : ", error);
+      }
+    };
+    fetchShowtime();
+  }, []);
 
   const handleDeleteRQ = () => {
     const checkAndDeleteRQ = async () => {
