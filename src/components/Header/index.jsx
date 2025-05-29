@@ -1,69 +1,41 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { FaUserCircle, FaTimes, FaFilm } from "react-icons/fa";
 import instance from "../../api/instance";
-import { Link, useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import SearchItem from "../SearchItem";
 import { IoIosNotifications } from "react-icons/io";
 import IMG_TICKET from "../../assets/random_partner.png";
 import ButtonNavHeader from "../ButtonNavHeader";
+import { useWebSocket } from "../../hooks/useWebSocket";
+import { Badge, Dropdown, Menu } from "antd"; // Import Ant Design components
+import "antd/dist/reset.css"; // Import Ant Design CSS
 
 function Header() {
   const [listMovies, setListMovies] = useState([]);
   const [suggestedMovies, setSuggestedMovies] = useState([]);
-  console.log(listMovies);
-
-  const nav = useNavigate();
   const user = JSON.parse(localStorage.getItem("user"));
   console.log("User: ", user);
-  const token = JSON.parse(localStorage.getItem("token"));
-  console.log("Token: ", token);
-  const [Search, setSearch] = useState("");
-  console.log(Search);
-  //logout function
-  const handleLogout = () => {
-    (async () => {
-      try {
-        const token = JSON.parse(localStorage.getItem("token"));
-        await instance.post("/auth/logout", token);
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        toast.error("Bạn đã logout");
-        setTimeout(() => {
-          nav("/login");
-          window.location.reload();
-        }, 2000);
-      } catch (error) {
-        console.log(error);
-      }
-    })();
-  };
+  const [token, setToken] = useState(
+    JSON.parse(localStorage.getItem("token")) || null
+  );
+  const [userId, setUserId] = useState("");
+  const [search, setSearch] = useState("");
+  const { connect, isConnected, disconnect, isLoading } = useWebSocket();
+  const [notifications, setNotifications] = useState([]);
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const handleKeyDown = (e) => {
-    if (e.key === "Enter") {
-      console.log("Enter ");
-      const fetchSearch = async () => {
-        try {
-          const res = await instance.get("/movies/search", {
-            params: { value: Search },
-          });
-          console.log(res);
-          if (res.data.result.length >= 1) {
-            nav("/search", { state: { listMovies: res.data.result } });
-          }
-        } catch (error) {
-          console.log(error);
-        }
-      };
-      fetchSearch();
-    }
-  };
+  const handleNotificationSocket = useCallback((data) => {
+    setNotifications((prev) => [...prev, data]);
+  }, []);
+
+  // Lấy danh sách phim và userId khi có token
   useEffect(() => {
-    const fetchSearch = async () => {
+    const fetchListMovies = async () => {
       try {
         const res = await instance.get("/movies/");
-        console.log(res.data.result);
         const data = res.data.result;
         setListMovies(
           data.map((movie) => ({
@@ -73,32 +45,159 @@ function Header() {
           }))
         );
       } catch (error) {
-        console.log(error);
+        console.error("Lỗi khi lấy danh sách phim:", error);
       }
     };
-    fetchSearch();
-  }, []);
-  const handleChangeSearch = (e) => {
-    console.log(e.target.value);
-    // console.log(
-    //   listMovies.filter((item) => item.toLowerCase().includes(e.target.value))
-    // );
-    setTimeout(() => {
-      if (e.target.value) {
-        const suggest = listMovies.filter((item) =>
-          item.name.toLowerCase().includes(e.target.value)
-        );
-        console.log(suggest);
-        setSuggestedMovies(suggest);
-      } else {
-        setSuggestedMovies([]);
+    fetchListMovies();
+
+    if (token) {
+      const fetchUserId = async () => {
+        try {
+          const resMybio = await instance.get("/users/bio");
+          console.log("Đã set userId:", resMybio.data.result.id);
+          setUserId(resMybio.data.result.id || "");
+        } catch (error) {
+          console.error("Lỗi khi lấy userId:", error);
+          toast.error("Không thể lấy thông tin người dùng. Vui lòng thử lại!");
+        }
+      };
+      fetchUserId();
+    } else {
+      console.log("Không có token, reset userId");
+      setUserId("");
+    }
+  }, [token]);
+
+  // Kết nối WebSocket khi có userId
+  useEffect(() => {
+    console.log(
+      "WebSocket useEffect - userId:",
+      userId,
+      "isConnected:",
+      isConnected,
+      "path:",
+      location.pathname
+    );
+    if (userId && !isConnected) {
+      console.log("Tiến hành kết nối socket với userId:", userId);
+      try {
+        console.log("Before calling connectSocket");
+        connect(userId, handleNotificationSocket)
+          .then(() => {
+            console.log("WebSocket connect attempt successful");
+          })
+          .catch((error) => {
+            console.error("WebSocket connect failed:", error);
+            toast.error("Không thể kết nối WebSocket. Vui lòng thử lại!");
+          });
+        console.log("After calling connectSocket");
+      } catch (error) {
+        console.error("Error in useEffect:", error);
       }
-    }, 500);
-    setSearch(e.target.value);
+    } else if (!userId && isConnected) {
+      console.log("Ngắt kết nối WebSocket do không có userId");
+      disconnect();
+    }
+
+    return () => {
+      console.log(
+        "Cleanup: Disconnecting WebSocket due to unmount or page change"
+      );
+      if (isConnected) {
+        disconnect();
+      }
+    };
+  }, [
+    userId,
+    isConnected,
+    connect,
+    handleNotificationSocket,
+    location.pathname,
+  ]);
+
+  // Xử lý đăng xuất
+  const handleLogout = () => {
+    (async () => {
+      try {
+        await instance.post("/auth/logout", token);
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        setToken(null);
+        setUserId("");
+        disconnect();
+        toast.success("Bạn đã đăng xuất thành công!");
+        setTimeout(() => navigate("/login"), 2000);
+      } catch (error) {
+        console.error("Lỗi khi đăng xuất:", error);
+        toast.error("Đã xảy ra lỗi khi đăng xuất. Vui lòng thử lại!");
+      }
+    })();
   };
+
+  // Xử lý tìm kiếm
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      const fetchSearch = async () => {
+        try {
+          const res = await instance.get("/movies/search", {
+            params: { value: search },
+          });
+          if (res.data.result.length >= 1) {
+            navigate("/search", { state: { listMovies: res.data.result } });
+          }
+        } catch (error) {
+          console.error("Lỗi khi tìm kiếm:", error);
+        }
+      };
+      fetchSearch();
+    }
+  };
+
+  const handleChangeSearch = useCallback(
+    (e) => {
+      const value = e.target.value;
+      setSearch(value);
+      const timeout = setTimeout(() => {
+        if (value) {
+          const suggest = listMovies.filter((item) =>
+            item.name.toLowerCase().includes(value.toLowerCase())
+          );
+          setSuggestedMovies(suggest);
+        } else {
+          setSuggestedMovies([]);
+        }
+      }, 500);
+      return () => clearTimeout(timeout);
+    },
+    [listMovies]
+  );
+
+  // Menu thông báo cho Dropdown
+  const notificationMenu = (
+    <Menu style={{ maxHeight: "300px", overflowY: "auto" }}>
+      {notifications.length > 0 ? (
+        notifications.map((notification, id) => (
+          <Menu.Item
+            key={id}
+            style={{
+              height: "50px",
+            }}
+          >
+            <div className="flex justify-center items-center mt-3">
+              <p>{notification.message}</p>
+            </div>
+          </Menu.Item>
+        ))
+      ) : (
+        <Menu.Item>
+          <div>Không có thông báo</div>
+        </Menu.Item>
+      )}
+    </Menu>
+  );
+
   return (
-    <div className="select-nones">
-      {/* <ToastContainer />  */}
+    <div className="select-none">
       <div className="w-full bg-[#0f172a] fixed top-0 left-0 z-50 p-2.5 nav_ab">
         <header className="max-w-[1200px] mx-auto flex flex-col p-2.5 items-center">
           <div className="flex items-center justify-between mb-2 w-full">
@@ -106,14 +205,13 @@ function Header() {
               <Link to={"/"}>
                 <FaFilm className="text-white text-4xl mr-2" />
               </Link>
-              {/* search input */}
               <div className="search-input relative w-full max-w-[900px] min-w-[500px] flex-grow">
                 <div className="flex items-center bg-[#f5f5f5] rounded-full p-1.5 mr-2 flex-grow min-w-[200px]">
                   <input
                     type="text"
                     placeholder="Search"
                     className="outline-none border-none bg-transparent px-2 py-1 text-[#333] text-sm w-full"
-                    value={Search}
+                    value={search}
                     onChange={handleChangeSearch}
                     onKeyDown={handleKeyDown}
                   />
@@ -165,7 +263,7 @@ function Header() {
                       Lịch sử thanh toán
                     </Link>
                     <button
-                      onClick={() => handleLogout()}
+                      onClick={handleLogout}
                       className="block px-5 py-2 text-white text-left w-full cursor-pointer text-sm hover:bg-[#555]"
                     >
                       <i className="fa-solid fa-right-from-bracket"></i> Đăng
@@ -189,7 +287,20 @@ function Header() {
                   </div>
                 )}
               </div>
-              <IoIosNotifications className="text-white text-4xl cursor-pointer mr-2" />
+              <div className="relative inline-block">
+                <Badge count={notifications.length} offset={[-10, 10]}>
+                  <Dropdown
+                    overlay={notificationMenu}
+                    trigger={["click"]}
+                    placement="bottomRight"
+                  >
+                    <IoIosNotifications
+                      className="text-white text-4xl cursor-pointer mr-2"
+                      onClick={(e) => e.preventDefault()}
+                    />
+                  </Dropdown>
+                </Badge>
+              </div>
             </div>
           </div>
 

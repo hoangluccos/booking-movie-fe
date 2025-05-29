@@ -3,7 +3,7 @@ import { Select, Spin } from "antd";
 import instance from "../../api/instance";
 import { useNavigate } from "react-router-dom";
 import { transferStringToDateCheckToDay } from "../../utils/common";
-import { useWebSocket } from "../../hooks/useWebSocket";
+// import { useWebSocket } from "../../hooks/useWebSocket";
 import { LoadingOutlined } from "@ant-design/icons";
 import couple_bg from "../../assets/couple_gemini.jpg";
 import { toast } from "react-toastify";
@@ -20,9 +20,9 @@ const onSearchSelect = (value) => {
 const MatchingPage = () => {
   const navigate = useNavigate();
   const token = JSON.parse(localStorage.getItem("token"));
-  const { connect, isConnected, disconnect, isLoading } = useWebSocket();
+  // const { connect, isConnected, disconnect, isLoading } = useWebSocket();
   const [userId, setUserId] = useState("");
-  const [notifications, setNotifications] = useState([]);
+  // const [notifications, setNotifications] = useState([]);
   const [hasMatchingRequest, setHasMatchingRequest] = useState(false);
   const [isChecking, setIsChecking] = useState(true);
   const [listMovies, setListMovies] = useState([]);
@@ -46,9 +46,9 @@ const MatchingPage = () => {
     return { label: `${age} tuổi`, value: age };
   });
 
-  const handleNotificationSocket = useCallback((data) => {
-    setNotifications((prev) => [...prev, data]);
-  }, []);
+  // const handleNotificationSocket = useCallback((data) => {
+  //   setNotifications((prev) => [...prev, data]);
+  // }, []);
 
   const checkIsHavingRqMatching = async () => {
     try {
@@ -92,8 +92,9 @@ const MatchingPage = () => {
         setHasMatchingRequest(hasRequest);
 
         if (hasRequest) {
-          console.log("Có yêu cầu ghép đôi, kết nối socket...");
-          await connect(userId, handleNotificationSocket);
+          //change logic handle with socket connect
+          // console.log("Có yêu cầu ghép đôi, kết nối socket...");
+          // await connect(userId, handleNotificationSocket);
         } else {
           console.log("Không có yêu cầu ghép đôi, lấy dữ liệu phim/rạp...");
           try {
@@ -119,11 +120,12 @@ const MatchingPage = () => {
     initialize();
 
     // Cleanup: Ngắt kết nối WebSocket khi component unmount
-    return () => {
-      console.log("Component unmount, ngắt kết nối WebSocket...");
-      disconnect();
-    };
-  }, [userId, connect, handleNotificationSocket]);
+    // return () => {
+    //   console.log("Component unmount, ngắt kết nối WebSocket...");
+    //   disconnect();
+    // };
+    // }, [userId, connect, handleNotificationSocket]);
+  }, [userId]);
 
   //fetch all showtime when select movie
   useEffect(() => {
@@ -157,35 +159,35 @@ const MatchingPage = () => {
   }, [allShowtimesAccessible, selectTheaterName]);
 
   //handle get notifications from socket
-  useEffect(() => {
-    const isCreateTicket = notifications.find(
-      (noti) => noti.message === "Tạo vé thành công"
-    );
-    if (isCreateTicket) {
-      const props = {
-        dataPartner: null,
-        dataTicket: null,
-        dataMovie: null,
-        showTime: null,
-      };
-      const isMatched = notifications.find(
-        (noti) => noti.message === "Ghép đôi thành công"
-      );
-      if (isMatched) {
-        props.dataPartner = isMatched.result;
-        props.dataTicket = isCreateTicket.result;
-        props.dataRequestMatching = listMovies.find(
-          (movieObj) => movieObj.id === selectMovieId
-        );
-        props.showTime = showtimesCanPick.find((s) => s.id === selectShowtime);
-      }
-      toast.success("Hệ thống đã tìm được partner cho bạn!");
-      setTimeout(() => {
-        disconnect();
-        navigate("/matching_success", { state: props });
-      }, 1000);
-    }
-  }, [notifications]);
+  // useEffect(() => {
+  //   const isCreateTicket = notifications.find(
+  //     (noti) => noti.message === "Tạo vé thành công"
+  //   );
+  //   if (isCreateTicket) {
+  //     const props = {
+  //       dataPartner: null,
+  //       dataTicket: null,
+  //       dataMovie: null,
+  //       showTime: null,
+  //     };
+  //     const isMatched = notifications.find(
+  //       (noti) => noti.message === "Ghép đôi thành công"
+  //     );
+  //     if (isMatched) {
+  //       props.dataPartner = isMatched.result;
+  //       props.dataTicket = isCreateTicket.result;
+  //       props.dataRequestMatching = listMovies.find(
+  //         (movieObj) => movieObj.id === selectMovieId
+  //       );
+  //       props.showTime = showtimesCanPick.find((s) => s.id === selectShowtime);
+  //     }
+  //     toast.success("Hệ thống đã tìm được partner cho bạn!");
+  //     setTimeout(() => {
+  //       // disconnect();
+  //       navigate("/matching_success", { state: props });
+  //     }, 1000);
+  //   }
+  // }, [notifications]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -211,7 +213,7 @@ const MatchingPage = () => {
       toast.success("Yêu cầu ghép đôi đã được gửi!");
 
       if (userId) {
-        connect(userId, handleNotificationSocket);
+        // connect(userId, handleNotificationSocket);
         setHasMatchingRequest(true);
       } else {
         console.error("Không có userId để kết nối socket");
@@ -227,9 +229,9 @@ const MatchingPage = () => {
     try {
       await instance.delete("/matching/");
       toast.success("Đã hủy yêu cầu ghép đôi!");
-      disconnect();
+      // disconnect();
       setHasMatchingRequest(false);
-      setNotifications([]);
+      // setNotifications([]);
     } catch (error) {
       console.error("Lỗi khi hủy yêu cầu ghép đôi: ", error);
       toast.error("Không thể hủy yêu cầu ghép đôi. Vui lòng thử lại!");
@@ -262,7 +264,8 @@ const MatchingPage = () => {
   }
 
   //
-  if (hasMatchingRequest || isLoading) {
+  // if (hasMatchingRequest || isLoading) {
+  if (hasMatchingRequest) {
     return (
       <div
         className="flex flex-col justify-center pt-5 min-h-screen"
@@ -280,7 +283,7 @@ const MatchingPage = () => {
           }
         />
         <p className="flex justify-center mt-10 font-bold text-2xl text-white p-2 rounded-md bg-pink-400">
-          Hệ thống đang tìm người phù hợp với bạn
+          Hệ thống đã nhận yêu cầu ghép đôi từ bạn! Hãy check thông báo nhé!
         </p>
         <div className="flex justify-center">
           <button
@@ -290,7 +293,7 @@ const MatchingPage = () => {
             Hủy tìm
           </button>
         </div>
-        <div className="mt-3 justify-center">
+        {/* <div className="mt-3 justify-center">
           {notifications.length > 0 && (
             <div className="bg-pink-400 flex flex-col justify-center">
               {notifications.map((noti, i) => (
@@ -303,7 +306,7 @@ const MatchingPage = () => {
               ))}
             </div>
           )}
-        </div>
+        </div> */}
       </div>
     );
   }
