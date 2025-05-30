@@ -176,7 +176,7 @@ const MatchingPage = () => {
   //     if (isMatched) {
   //       props.dataPartner = isMatched.result;
   //       props.dataTicket = isCreateTicket.result;
-  //       props.dataRequestMatching = listMovies.find(
+  //       props.dataMovie = listMovies.find(
   //         (movieObj) => movieObj.id === selectMovieId
   //       );
   //       props.showTime = showtimesCanPick.find((s) => s.id === selectShowtime);

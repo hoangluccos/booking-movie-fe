@@ -9,8 +9,8 @@ import { IoIosNotifications } from "react-icons/io";
 import IMG_TICKET from "../../assets/random_partner.png";
 import ButtonNavHeader from "../ButtonNavHeader";
 import { useWebSocket } from "../../hooks/useWebSocket";
-import { Badge, Dropdown, Menu } from "antd"; // Import Ant Design components
-import "antd/dist/reset.css"; // Import Ant Design CSS
+import { Badge, Dropdown, Menu } from "antd";
+import { CheckOutlined, NotificationOutlined } from "@ant-design/icons";
 
 function Header() {
   const [listMovies, setListMovies] = useState([]);
@@ -23,7 +23,7 @@ function Header() {
   const [userId, setUserId] = useState("");
   const [search, setSearch] = useState("");
   const { connect, isConnected, disconnect, isLoading } = useWebSocket();
-  const [notifications, setNotifications] = useState([]);
+  const [notifications, setNotifications] = useState([]); //400: not yet hand have rq , 200: matching_success , 201: create ticket successfully
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -172,9 +172,45 @@ function Header() {
     [listMovies]
   );
 
+  //handle toggle notification
+  const handleToggleNotify = async (idNotify) => {
+    console.log("id notify", idNotify);
+    try {
+      const res = await instance.put(`/notifies/${idNotify}`);
+      console.log(res.data.result);
+    } catch (error) {
+      console.log("Fail to toggle message", error);
+    }
+  };
+
+  //handle redirect into matching_success page
+  const handleMatchingSuccess = () => {
+    const isCreateTicket = notifications.find(
+      (noti) => noti.code === 201 //"Tạo vé thành công"
+    );
+    if (isCreateTicket) {
+      const props = {
+        dataPartner: null,
+        dataTicket: null,
+      };
+      const isMatched = notifications.find(
+        (noti) => noti.code === 200 //"Ghép đôi thành công"
+      );
+      if (isMatched) {
+        props.dataPartner = isMatched.result;
+        props.dataTicket = isCreateTicket.result;
+      }
+      toast.success("Hệ thống đã tìm được partner cho bạn!");
+      setTimeout(() => {
+        // disconnect();
+        navigate("/matching_success", { state: props });
+      }, 1000);
+    }
+  };
+
   // Menu thông báo cho Dropdown
   const notificationMenu = (
-    <Menu style={{ maxHeight: "300px", overflowY: "auto" }}>
+    <Menu style={{ marginTop: "10px", maxHeight: "300px", overflowY: "auto" }}>
       {notifications.length > 0 ? (
         notifications.map((notification, id) => (
           <Menu.Item
@@ -183,8 +219,39 @@ function Header() {
               height: "50px",
             }}
           >
-            <div className="flex justify-center items-center mt-3">
-              <p>{notification.message}</p>
+            <div className="flex items-center justify-between w-full gap-1">
+              <div className="flex items-center">
+                <NotificationOutlined
+                  style={{
+                    fontSize: "16px",
+                    marginRight: "8px",
+                    color: "#1890ff",
+                  }}
+                />
+                <button
+                  onClick={handleMatchingSuccess}
+                  className="font-bold text-[#888] m-0"
+                >
+                  {notification.message}
+                </button>
+              </div>
+              <CheckOutlined
+                style={{
+                  fontSize: "16px",
+                  cursor: "pointer",
+                  color: "#1890ff",
+                  transition: "color 0.3s, transform 0.3s",
+                }}
+                onClick={() => handleToggleNotify(notification.id)}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = "#2268A7";
+                  e.currentTarget.style.transform = "scale(1.5)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = "#1890ff";
+                  e.currentTarget.style.transform = "scale(1)";
+                }}
+              />
             </div>
           </Menu.Item>
         ))
