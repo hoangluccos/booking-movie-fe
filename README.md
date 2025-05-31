@@ -15,6 +15,7 @@ Hệ thống ứng dụng đặt vé xem phim là một nền tảng trực tuy�
 - Tìm kiếm phim theo tiêu chí.
 - Đặt vé xem phim.
 - Thanh toán qua VNPay.
+- Đánh giá phim
 - Đăng nhập bằng Google.
 - Đăng ký tài khoản (Sign-up).
 - Đăng xuất (Logout).

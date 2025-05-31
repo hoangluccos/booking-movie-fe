@@ -28,7 +28,12 @@ function Header() {
   const location = useLocation();
 
   const handleNotificationSocket = useCallback((data) => {
-    setNotifications((prev) => [...prev, data]);
+    setNotifications((prev) => {
+      if (prev.some((notif) => notif.id === data.id)) {
+        return prev;
+      }
+      return [...prev, { ...data }];
+    });
   }, []);
 
   // Lấy danh sách phim và userId khi có token
@@ -65,6 +70,7 @@ function Header() {
     } else {
       console.log("Không có token, reset userId");
       setUserId("");
+      setNotifications([]);
     }
   }, [token]);
 
@@ -80,6 +86,7 @@ function Header() {
     );
     if (userId && !isConnected) {
       console.log("Tiến hành kết nối socket với userId:", userId);
+      setNotifications([]);
       try {
         console.log("Before calling connectSocket");
         connect(userId, handleNotificationSocket)
@@ -115,7 +122,6 @@ function Header() {
     location.pathname,
   ]);
 
-  // Xử lý đăng xuất
   const handleLogout = () => {
     (async () => {
       try {
@@ -134,7 +140,6 @@ function Header() {
     })();
   };
 
-  // Xử lý tìm kiếm
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
       const fetchSearch = async () => {
@@ -177,7 +182,13 @@ function Header() {
     console.log("id notify", idNotify);
     try {
       const res = await instance.put(`/notifies/${idNotify}`);
-      console.log(res.data.result);
+      if (res.data) {
+        setNotifications(
+          notifications.filter((notify) => notify.id !== idNotify)
+        );
+        toast.success("Đã đọc thông báo");
+      }
+      // console.log("Da toggle notify", res.data);
     } catch (error) {
       console.log("Fail to toggle message", error);
     }
@@ -197,8 +208,8 @@ function Header() {
         (noti) => noti.code === 200 //"Ghép đôi thành công"
       );
       if (isMatched) {
-        props.dataPartner = isMatched.result;
-        props.dataTicket = isCreateTicket.result;
+        props.dataPartner = isMatched.data;
+        props.dataTicket = isCreateTicket.data;
       }
       toast.success("Hệ thống đã tìm được partner cho bạn!");
       setTimeout(() => {
@@ -208,7 +219,6 @@ function Header() {
     }
   };
 
-  // Menu thông báo cho Dropdown
   const notificationMenu = (
     <Menu style={{ marginTop: "10px", maxHeight: "300px", overflowY: "auto" }}>
       {notifications.length > 0 ? (
