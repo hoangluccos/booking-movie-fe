@@ -283,6 +283,9 @@ const MoviePage: React.FC = () => {
   return (
     <ConfigProvider
       theme={{
+        token: {
+          fontFamily: '"Saira Semi Condensed", sans-serif',
+        },
         components: {
           Tooltip: {
             colorBgSpotlight: "#1F2937",
@@ -290,7 +293,6 @@ const MoviePage: React.FC = () => {
             borderRadius: 6,
             fontSize: 13,
             padding: 8,
-            fontFamily: "Saira, sans-serif",
           },
           Popconfirm: {
             fontFamily: "Saira, sans-serif",

@@ -230,9 +230,25 @@ const DashboardPage = () => {
       tooltip: {
         callbacks: {
           label: (context) =>
-            `Revenue: $${context.parsed.y?.toLocaleString("en-US") || 0}`,
-          title: (context) =>
-            context?.[0]?.label ? `Day/Month: ${context[0].label}` : "",
+            `Revenue: ${context.parsed.y?.toLocaleString("vi-VN") || 0}đ`,
+          title: (context) => {
+            if (!context?.[0]?.label) return "";
+            const label = context[0].label;
+            if (month && year) {
+              // Day selected: Format as dd/mm/yyyy
+              return `Day: ${label.padStart(2, "0")}/${month}/${year}`;
+            } else if (year && !month) {
+              // Month selected: Format as mm/yyyy
+              const monthIndex = monthNames.indexOf(label);
+              if (monthIndex >= 0) {
+                return `Month: ${(monthIndex + 1)
+                  .toString()
+                  .padStart(2, "0")}/${year}`;
+              }
+            }
+            // Year selected: Show only year
+            return `Year: ${label}`;
+          },
         },
         backgroundColor: "#1F2A44",
         titleColor: "#ffffff",

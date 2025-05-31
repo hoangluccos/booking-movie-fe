@@ -1,4 +1,4 @@
-import { Button, Modal, Popconfirm } from "antd";
+import { Button, ConfigProvider, Modal, Popconfirm, Tooltip } from "antd";
 import { useEffect, useState } from "react";
 import { IoIosSearch } from "react-icons/io";
 import { RoomType, SeatType, TheaterType } from "../Data/Data";
@@ -7,7 +7,8 @@ import { FaRegTrashCan } from "react-icons/fa6";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
 import { useAppDispatch, useAppSelector } from "../../../redux/store/store.tsx";
 import { deleteRoom, getAllRooms } from "../../../redux/slices/RoomSlice.tsx";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
+import { LeftOutlined } from "@ant-design/icons";
 
 const RoomPage = () => {
   const location = useLocation();
@@ -121,24 +122,26 @@ const RoomPage = () => {
           {item.seats.length} seats
         </div>
         <div className="flex justify-center items-center">
-          <Popconfirm
-            title={
-              <span className="font-saira text-sm">
-                Are you sure to delete this room?
-              </span>
-            }
-            description={
-              <span className="font-saira text-sm">{`Name: "${item.name}"`}</span>
-            }
-            onConfirm={() => onDelete(item)}
-            okText={<span className="font-saira">Yes</span>}
-            cancelText={<span className="font-saira">No</span>}
-            okType="danger"
-          >
-            <button className="bg-[#323D4E] h-[32px] px-4 py-2 rounded-lg">
-              <FaRegTrashCan color="red" />
-            </button>
-          </Popconfirm>
+          <Tooltip title="Delete">
+            <Popconfirm
+              title={
+                <span className="font-saira text-sm">
+                  Are you sure to delete this room?
+                </span>
+              }
+              description={
+                <span className="font-saira text-sm">{`Name: "${item.name}"`}</span>
+              }
+              onConfirm={() => onDelete(item)}
+              okText={<span className="font-saira">Yes</span>}
+              cancelText={<span className="font-saira">No</span>}
+              okType="danger"
+            >
+              <button className="bg-[#323D4E] h-[32px] px-4 py-2 rounded-lg">
+                <FaRegTrashCan color="red" />
+              </button>
+            </Popconfirm>
+          </Tooltip>
         </div>
       </div>
     );
@@ -159,106 +162,140 @@ const RoomPage = () => {
     navigate("create", { state: theaterItem });
   };
 
-  return (
-    <div className="relative min-h-[600px]">
-      <div className="flex justify-between items-center">
-        <span className="text-white text-3xl font-saira">
-          {theaterItem.name}
-        </span>
-        <div className="flex items-center space-x-4">
-          <div className="flex items-center bg-[#323D4E] px-4 rounded-full space-x-2">
-            <IoIosSearch size={20} color="gray" />
-            <input
-              className="bg-[#323D4E] w-[253px] h-[38px] focus:outline-none text-white placeholder-gray-400 font-saira"
-              type="text"
-              placeholder="Search room name"
-              value={searchTerm}
-              onChange={handleSearchChange}
-            />
-          </div>
-          <Button
-            type="primary"
-            className="w-[147px] h-[48px] rounded-lg font-saira"
-            style={{ backgroundColor: "#3b82f6", borderColor: "#3b82f6" }}
-            onClick={handleClickAddNewRoom}
-          >
-            Add New Room
-          </Button>
-        </div>
-      </div>
+  const handleClickGoBack = () => {
+    navigate(-1);
+  };
 
-      {/* Table */}
-      <div className="pt-8">
-        <div className="grid grid-cols-5">
-          {["Name", "Column", "Row", "Seat", "Action"].map((title, idx) => (
-            <div
-              key={idx}
-              className={`bg-[#313D4F] font-saira text-white h-[48px] flex justify-center items-center p-4 w-full
+  return (
+    <ConfigProvider
+      theme={{
+        token: {
+          fontFamily: '"Saira Semi Condensed", sans-serif',
+        },
+        components: {
+          Tooltip: {
+            colorBgSpotlight: "#1F2937",
+            colorTextLightSolid: "#FFFFFF",
+            borderRadius: 6,
+            fontSize: 13,
+            paddingXS: 8,
+          },
+        },
+      }}
+    >
+      <div className="relative min-h-[600px]">
+        <div className="w-full">
+          <ToastContainer />
+
+          <div className="flex items-center justify-between w-full">
+            <div className="flex items-center">
+              <Button
+                type="text"
+                icon={<LeftOutlined />}
+                onClick={handleClickGoBack}
+                className="text-white mr-4 font-saira transition-all duration-300 ease-in-out hover:!text-blue-400 hover:scale-110"
+              />
+              <span className="text-white text-3xl font-saira">
+                {theaterItem.name}
+              </span>
+            </div>
+
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center bg-[#323D4E] px-4 rounded-full space-x-2">
+                <IoIosSearch size={20} color="gray" />
+                <input
+                  className="bg-[#323D4E] w-[253px] h-[38px] focus:outline-none text-white placeholder-gray-400 font-saira"
+                  type="text"
+                  placeholder="Search room name"
+                  value={searchTerm}
+                  onChange={handleSearchChange}
+                />
+              </div>
+              <Button
+                type="primary"
+                className="w-[147px] h-[48px] rounded-lg font-saira"
+                style={{ backgroundColor: "#3b82f6", borderColor: "#3b82f6" }}
+                onClick={handleClickAddNewRoom}
+              >
+                Add New Room
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* Table */}
+        <div className="pt-8">
+          <div className="grid grid-cols-5">
+            {["Name", "Column", "Row", "Seat", "Action"].map((title, idx) => (
+              <div
+                key={idx}
+                className={`bg-[#313D4F] font-saira text-white h-[48px] flex justify-center items-center p-4 w-full
               ${idx === 0 ? "rounded-tl-xl" : ""}
               ${idx === 4 ? "rounded-tr-xl" : ""}`}
-            >
-              {title}
-            </div>
-          ))}
-        </div>
+              >
+                {title}
+              </div>
+            ))}
+          </div>
 
-        {/* Content */}
-        <div className="min-h-[640px]">
-          {currentRooms.length > 0 ? (
-            currentRooms.map((item, index) =>
-              showRoomCus(item, index, handleClickDelete)
-            )
-          ) : (
-            <div className="text-white text-center py-4">No rooms found</div>
-          )}
-        </div>
-      </div>
-
-      {/* Pagination */}
-      <div className="absolute bottom-0 left-0 right-0 flex justify-between items-center pt-8">
-        <span className="text-white font-saira px-4">
-          Showing {Math.min(startIndex + 1, totalItems)}-
-          {Math.min(endIndex, totalItems)} of {totalItems}
-        </span>
-        <div className="flex items-center">
-          <button
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-            className={`bg-[#323D4E] h-[32px] px-4 py-2 rounded-l-lg border-r border-[#979797] ${
-              currentPage === 1 ? "opacity-50" : ""
-            }`}
-            disabled={currentPage === 1}
-          >
-            <FaAngleLeft color="white" />
-          </button>
-          <button
-            onClick={() =>
-              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-            }
-            className={`bg-[#323D4E] h-[32px] px-4 py-2 rounded-r-lg ${
-              currentPage === totalPages ? "opacity-50" : ""
-            }`}
-            disabled={currentPage === totalPages}
-          >
-            <FaAngleRight color="white" />
-          </button>
-        </div>
-      </div>
-
-      {/* Modal to show seat grid */}
-      <Modal
-        open={isModalOpen}
-        title={<span className="font-saira">Seat Arrangement</span>}
-        onCancel={() => setIsModalOpen(false)}
-        footer={null}
-      >
-        <div className="p-4">
-          {renderSeatsGrid()}
-          <div className="mt-4 text-sm text-gray-500">
-            * Green: Couple Seat | Gray: Normal Seat
+          {/* Content */}
+          <div className="min-h-[640px]">
+            {currentRooms.length > 0 ? (
+              currentRooms.map((item, index) =>
+                showRoomCus(item, index, handleClickDelete)
+              )
+            ) : (
+              <div className="text-white text-center py-4">No rooms found</div>
+            )}
           </div>
         </div>
-      </Modal>
-    </div>
+
+        {/* Pagination */}
+        <div className="absolute bottom-0 left-0 right-0 flex justify-between items-center pt-8">
+          <span className="text-white font-saira px-4">
+            Showing {Math.min(startIndex + 1, totalItems)}-
+            {Math.min(endIndex, totalItems)} of {totalItems}
+          </span>
+          <div className="flex items-center">
+            <button
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              className={`bg-[#323D4E] h-[32px] px-4 py-2 rounded-l-lg border-r border-[#979797] ${
+                currentPage === 1 ? "opacity-50" : ""
+              }`}
+              disabled={currentPage === 1}
+            >
+              <FaAngleLeft color="white" />
+            </button>
+            <button
+              onClick={() =>
+                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+              }
+              className={`bg-[#323D4E] h-[32px] px-4 py-2 rounded-r-lg ${
+                currentPage === totalPages ? "opacity-50" : ""
+              }`}
+              disabled={currentPage === totalPages}
+            >
+              <FaAngleRight color="white" />
+            </button>
+          </div>
+        </div>
+
+        {/* Modal to show seat grid */}
+        <Modal
+          open={isModalOpen}
+          title={<span className="font-saira">Seat Arrangement</span>}
+          onCancel={() => setIsModalOpen(false)}
+          footer={null}
+        >
+          <div className="p-4">
+            {renderSeatsGrid()}
+            <div className="mt-4 text-sm text-gray-500">
+              * Green: Couple Seat | Gray: Normal Seat
+            </div>
+          </div>
+        </Modal>
+      </div>
+    </ConfigProvider>
   );
 };
 

@@ -9,6 +9,7 @@ import {
   Skeleton,
   Empty,
   ConfigProvider,
+  Tooltip,
 } from "antd";
 import { useAppDispatch, useAppSelector } from "../../../redux/store/store.tsx";
 import { GenreType } from "../Data/Data";
@@ -188,6 +189,13 @@ const GenrePage: React.FC = () => {
             colorText: "#FFFFFF",
             colorTextDescription: "#FFFFFF",
           },
+          Tooltip: {
+            colorBgSpotlight: "#1F2937",
+            colorTextLightSolid: "#FFFFFF",
+            borderRadius: 6,
+            fontSize: 13,
+            padding: 8,
+          },
         },
       }}
     >
@@ -267,33 +275,37 @@ const GenrePage: React.FC = () => {
                     {item.name}
                   </div>
                   <div className="flex justify-center items-center">
-                    <button
-                      onClick={() => handleEdit(item)}
-                      className="bg-[#323D4E] h-[32px] px-4 py-2 rounded-l-lg border-r border-[#979797]"
-                    >
-                      <FaRegEdit />
-                    </button>
-                    <Popconfirm
-                      title={
-                        <span className="font-saira text-sm">
-                          Are you sure to delete this genre?
-                        </span>
-                      }
-                      description={
-                        <span className="font-saira text-sm">
-                          {`Name: "${item.name}"`}
-                        </span>
-                      }
-                      onConfirm={() => handleDelete(item)}
-                      onCancel={() => {}}
-                      okText={<span className="font-saira">Yes</span>}
-                      cancelText={<span className="font-saira">No</span>}
-                      okType="danger"
-                    >
-                      <button className="bg-[#323D4E] h-[32px] px-4 py-2 rounded-r-lg">
-                        <FaRegTrashCan color="red" />
+                    <Tooltip title="Edit">
+                      <button
+                        onClick={() => handleEdit(item)}
+                        className="bg-[#323D4E] h-[32px] px-4 py-2 rounded-l-lg border-r border-[#979797]"
+                      >
+                        <FaRegEdit />
                       </button>
-                    </Popconfirm>
+                    </Tooltip>
+                    <Tooltip title="Delete">
+                      <Popconfirm
+                        title={
+                          <span className="font-saira text-sm">
+                            Are you sure to delete this genre?
+                          </span>
+                        }
+                        description={
+                          <span className="font-saira text-sm">
+                            {`Name: "${item.name}"`}
+                          </span>
+                        }
+                        onConfirm={() => handleDelete(item)}
+                        onCancel={() => {}}
+                        okText={<span className="font-saira">Yes</span>}
+                        cancelText={<span className="font-saira">No</span>}
+                        okType="danger"
+                      >
+                        <button className="bg-[#323D4E] h-[32px] px-4 py-2 rounded-r-lg">
+                          <FaRegTrashCan color="red" />
+                        </button>
+                      </Popconfirm>
+                    </Tooltip>
                   </div>
                 </div>
               ))

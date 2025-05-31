@@ -1,9 +1,10 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../redux/store/store.tsx";
-import { ConfigProvider } from "antd";
+import { Button, ConfigProvider } from "antd";
 import { InvoiceDetailType, InvoiceType } from "../Data/Data.tsx";
 import { useEffect } from "react";
 import { getAllInvoiceDetails } from "../../../redux/slices/InvoiceSlice.tsx";
+import { LeftOutlined } from "@ant-design/icons";
 
 const InvoiceDetailPage = () => {
   const navigate = useNavigate();
@@ -29,8 +30,11 @@ const InvoiceDetailPage = () => {
     return acc + item.seat.price;
   }, 0);
 
-  const foodPrice = invoiceInfo.food
-    ? invoiceInfo.food.price * invoiceInfo.food.quantity
+  const foodPrice = invoiceInfo.foods
+    ? invoiceInfo.foods.reduce(
+        (total, food) => total + food.price * food.quantity,
+        0
+      )
     : 0;
 
   let discountAmount = 0;
@@ -67,6 +71,10 @@ const InvoiceDetailPage = () => {
       </div>
     </div>
   );
+
+  const handleClickGoBack = () => {
+    navigate(-1);
+  };
 
   return (
     <ConfigProvider
@@ -116,9 +124,17 @@ const InvoiceDetailPage = () => {
     >
       <div className="min-h-[750px]">
         <div className="flex flex-wrap justify-between items-center mb-3">
-          <span className="text-white text-3xl font-saira pb-4">
-            Invoices Detail
-          </span>
+          <div className="flex items-center mb-8 justify-center">
+            <Button
+              type="text"
+              icon={<LeftOutlined />}
+              onClick={handleClickGoBack}
+              className="text-white mr-4 font-saira transition-all duration-300 ease-in-out hover:!text-blue-400 hover:scale-110"
+            />
+            <span className="text-white text-3xl font-saira">
+              Invoices Detail
+            </span>
+          </div>
           <div className="flex flex-wrap gap-2 items-center"></div>
         </div>
 
@@ -153,12 +169,16 @@ const InvoiceDetailPage = () => {
             <div className="flex flex-col space-y-2 line-clamp-2">
               <span className="break-words max-w-[180px] inline-block">
                 Food:{" "}
-                {invoiceInfo.food
-                  ? `${(
-                      invoiceInfo.food.price * invoiceInfo.food.quantity
-                    ).toLocaleString("vi-VN")}đ - (${invoiceInfo.food.name} x${
-                      invoiceInfo.food.quantity
-                    })`
+                {Array.isArray(invoiceInfo.foods) &&
+                invoiceInfo.foods.length > 0
+                  ? invoiceInfo.foods.map((food, index) => (
+                      <span key={index}>
+                        {`${(food.price * food.quantity).toLocaleString(
+                          "vi-VN"
+                        )}đ - (${food.name} x${food.quantity})`}
+                        {index < invoiceInfo.foods.length - 1 && ", "}
+                      </span>
+                    ))
                   : "No food ordered"}
               </span>
 

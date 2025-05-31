@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { TheaterType } from "../Data/Data";
-import { Button, Popconfirm, Skeleton, Empty, ConfigProvider } from "antd";
+import {
+  Button,
+  Popconfirm,
+  Skeleton,
+  Empty,
+  ConfigProvider,
+  Tooltip,
+} from "antd";
 import { IoIosSearch } from "react-icons/io";
 import { FaRegEdit, FaAngleLeft, FaAngleRight } from "react-icons/fa";
 import { MdOutlineChair } from "react-icons/md";
@@ -9,10 +16,11 @@ import {
   deleteTheater,
   getAllTheaters,
 } from "../../../redux/slices/TheaterSlice.tsx";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import ModalCreateUpdateTheater from "./ModalCreateUpdateTheater.tsx";
 import { FaRegTrashCan } from "react-icons/fa6";
+import { LeftOutlined } from "@ant-design/icons";
 
 const TheaterPage = () => {
   const dispatch = useAppDispatch();
@@ -63,39 +71,45 @@ const TheaterPage = () => {
           {item.location}
         </div>
         <div className="flex justify-center items-center">
-          <button
-            onClick={() => onEdit(item)}
-            className="bg-[#323D4E] h-[32px] px-4 py-2 rounded-l-lg border-r border-[#979797]"
-          >
-            <FaRegEdit />
-          </button>
-          <button
-            onClick={() => onAddRoom(item)}
-            className="bg-[#323D4E] h-[32px] px-4 py-2 border-r border-[#979797]"
-          >
-            <MdOutlineChair />
-          </button>
-          <Popconfirm
-            title={
-              <span className="font-saira text-sm">
-                Are you sure to delete this theater?
-              </span>
-            }
-            description={
-              <span className="font-saira text-sm">
-                {`Name: "${item.name}"`}
-              </span>
-            }
-            onConfirm={() => onDelete(item)}
-            onCancel={() => {}}
-            okText={<span className="font-saira">Yes</span>}
-            cancelText={<span className="font-saira">No</span>}
-            okType="danger"
-          >
-            <button className="bg-[#323D4E] h-[32px] px-4 py-2 rounded-r-lg">
-              <FaRegTrashCan color="red" />
+          <Tooltip title="Edit">
+            <button
+              onClick={() => onEdit(item)}
+              className="bg-[#323D4E] h-[32px] px-4 py-2 rounded-l-lg border-r border-[#979797]"
+            >
+              <FaRegEdit />
             </button>
-          </Popconfirm>
+          </Tooltip>
+          <Tooltip title="Seat Management">
+            <button
+              onClick={() => onAddRoom(item)}
+              className="bg-[#323D4E] h-[32px] px-4 py-2 border-r border-[#979797]"
+            >
+              <MdOutlineChair />
+            </button>
+          </Tooltip>
+          <Tooltip title="Delete">
+            <Popconfirm
+              title={
+                <span className="font-saira text-sm">
+                  Are you sure to delete this theater?
+                </span>
+              }
+              description={
+                <span className="font-saira text-sm">
+                  {`Name: "${item.name}"`}
+                </span>
+              }
+              onConfirm={() => onDelete(item)}
+              onCancel={() => {}}
+              okText={<span className="font-saira">Yes</span>}
+              cancelText={<span className="font-saira">No</span>}
+              okType="danger"
+            >
+              <button className="bg-[#323D4E] h-[32px] px-4 py-2 rounded-r-lg">
+                <FaRegTrashCan color="red" />
+              </button>
+            </Popconfirm>
+          </Tooltip>
         </div>
       </div>
     );
@@ -227,6 +241,10 @@ const TheaterPage = () => {
     );
   };
 
+  const handleClickGoBack = () => {
+    navigate(-1);
+  };
+
   return (
     <ConfigProvider
       theme={{
@@ -234,6 +252,13 @@ const TheaterPage = () => {
           fontFamily: '"Saira Semi Condensed", sans-serif',
         },
         components: {
+          Tooltip: {
+            colorBgSpotlight: "#1F2937",
+            colorTextLightSolid: "#FFFFFF",
+            borderRadius: 6,
+            fontSize: 13,
+            paddingXS: 8,
+          },
           Button: {
             colorText: "#FFFFFF",
             colorBgContainer: "#3b82f6",
@@ -258,45 +283,58 @@ const TheaterPage = () => {
       }}
     >
       <div className="relative min-h-[750px] p-4">
-        <div className="flex justify-between items-center">
-          <span className="text-white text-3xl font-saira">Theater</span>
-          <div className="flex items-center space-x-4">
-            <div className="flex items-center bg-[#323D4E] px-4 rounded-full space-x-2">
-              <IoIosSearch size={20} color="gray" />
-              <input
-                className="bg-[#323D4E] w-[253px] h-[38px] focus:outline-none text-white placeholder-gray-400 font-saira"
+        <div className="w-full">
+          <ToastContainer />
+
+          <div className="flex justify-between items-center w-full">
+            <div className="flex items-center">
+              <Button
                 type="text"
-                placeholder="Search theater name"
-                value={searchTerm}
-                onChange={handleSearchChange}
+                icon={<LeftOutlined />}
+                onClick={handleClickGoBack}
+                className="text-white mr-4 font-saira transition-all duration-300 ease-in-out hover:!text-blue-400 hover:scale-110"
               />
+              <span className="text-white text-3xl font-saira">Theater</span>
             </div>
-            <Button
-              type="primary"
-              className="w-[147px] h-[48px] rounded-lg font-saira"
-              style={{
-                backgroundColor: "#3b82f6",
-                borderColor: "#3b82f6",
-                padding: "8px 48px",
-                borderRadius: "8px",
-                transition:
-                  "background-color 0.3s ease, border-color 0.3s ease",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = "#2563eb";
-                e.currentTarget.style.borderColor = "#2563eb";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = "#3b82f6";
-                e.currentTarget.style.borderColor = "#3b82f6";
-              }}
-              onClick={() => {
-                setSelectedItem(null);
-                setIsModalOpen(true);
-              }}
-            >
-              Add New Theater
-            </Button>
+
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center bg-[#323D4E] px-4 rounded-full space-x-2">
+                <IoIosSearch size={20} color="gray" />
+                <input
+                  className="bg-[#323D4E] w-[253px] h-[38px] focus:outline-none text-white placeholder-gray-400 font-saira"
+                  type="text"
+                  placeholder="Search theater name"
+                  value={searchTerm}
+                  onChange={handleSearchChange}
+                />
+              </div>
+              <Button
+                type="primary"
+                className="w-[147px] h-[48px] rounded-lg font-saira"
+                style={{
+                  backgroundColor: "#3b82f6",
+                  borderColor: "#3b82f6",
+                  padding: "8px 48px",
+                  borderRadius: "8px",
+                  transition:
+                    "background-color 0.3s ease, border-color 0.3s ease",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = "#2563eb";
+                  e.currentTarget.style.borderColor = "#2563eb";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = "#3b82f6";
+                  e.currentTarget.style.borderColor = "#3b82f6";
+                }}
+                onClick={() => {
+                  setSelectedItem(null);
+                  setIsModalOpen(true);
+                }}
+              >
+                Add New Theater
+              </Button>
+            </div>
           </div>
         </div>
 
