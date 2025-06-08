@@ -6,7 +6,7 @@ Hệ thống ứng dụng đặt vé xem phim là một nền tảng trực tuy�
 
 ## **VAI TRÒ**
 
-- **Admin**: Quản lý hệ thống (chức năng đang phát triển...).
+- **Admin**: Quản lý hệ thống thuận tiện và chi tiết.
 - **User**: Người dùng cuối với các tính năng phong phú.
 
 ## **CHỨC NĂNG USER**
@@ -15,6 +15,7 @@ Hệ thống ứng dụng đặt vé xem phim là một nền tảng trực tuy�
 - Tìm kiếm phim theo tiêu chí.
 - Đặt vé xem phim.
 - Thanh toán qua VNPay.
+- Đánh giá phim
 - Đăng nhập bằng Google.
 - Đăng ký tài khoản (Sign-up).
 - Đăng xuất (Logout).
@@ -23,6 +24,8 @@ Hệ thống ứng dụng đặt vé xem phim là một nền tảng trực tuy�
 - Xem lịch sử mua vé.
 - Áp dụng coupon để giảm giá.
 - Mua food đi kèm.
+- Gửi yêu cầu tìm bạn xem phim random (matching)
+- Nhận thông báo khi tìm được bạn xem phim random (matching)
 
 ## **CHỨC NĂNG ADMIN**
 
