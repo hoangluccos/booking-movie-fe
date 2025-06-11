@@ -72,6 +72,7 @@ function MatchingSuccess() {
         //delete request matching after paid successfully
         handleDeleteRQ();
         handleRedirect(response.data.result, nav);
+        // handle delete all notification
       } catch (error) {
         console.error("Error payment", error);
       }
