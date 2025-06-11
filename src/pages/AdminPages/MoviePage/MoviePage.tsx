@@ -304,7 +304,7 @@ const MoviePage: React.FC = () => {
         },
       }}
     >
-      <div className="relative min-h-[750px]">
+      <div className="relative min-h-[85vh] w-full">
         {/* Title Page */}
         <div className="flex-row flex justify-between items-center">
           <span className="text-white text-3xl font-saira">Movies</span>
