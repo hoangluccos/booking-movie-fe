@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react";
 import instance from "../../api/instance";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import img from "../../assets/cinema.jpg";
 import TheaterItemBasic from "../../components/TheaterItemBasic";
 function TheatersPage() {
   const [theaters, setTheaters] = useState([]);
-  const navigate = useNavigate();
-  const token = JSON.parse(localStorage.getItem("token"));
-  useEffect(() => {
-    if (token === null) {
-      navigate("/login");
-    }
-  }, []);
+  // const navigate = useNavigate();
+  // const token = JSON.parse(localStorage.getItem("token"));
+  // useEffect(() => {
+  //   if (token === null) {
+  //     navigate("/login");
+  //   }
+  // }, []);
   useEffect(() => {
     const fetchTheaters = async () => {
       try {
