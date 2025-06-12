@@ -8,6 +8,9 @@ import {
   Empty,
   Skeleton,
 } from "antd";
+import { DownOutlined } from "@ant-design/icons";
+import type { MenuProps } from "antd";
+import { Dropdown, Space } from "antd";
 import { useEffect, useState } from "react";
 import {
   FaAngleLeft,
@@ -24,6 +27,7 @@ import { ShowtimeType } from "../Data/Data.tsx";
 import {
   deleteShowtime,
   getAllShowtimes,
+  sortShowtimesByTime,
 } from "../../../redux/slices/ShowtimeSlice.tsx";
 import { toast } from "react-toastify";
 
@@ -33,6 +37,7 @@ const ShowtimePage = () => {
   const { listShowtimes, isLoading } = useAppSelector(
     (state) => state.showtime
   );
+  console.log("showtime from redux:", listShowtimes);
   const [currentPage, setCurrentPage] = useState(1);
 
   interface Filters {
@@ -52,6 +57,28 @@ const ShowtimePage = () => {
     date: "",
   });
 
+  const [stateFilterTime, setStateFilterTime] = useState<number>(1);
+
+  const handleSortTime = (id: number) => {
+    console.log("test");
+    dispatch(sortShowtimesByTime(id as 0 | 1));
+    console.log("Đã dispatch sortShowtimesByTime với:", id);
+    setStateFilterTime(id);
+  };
+  const items: MenuProps["items"] = [
+    {
+      label: (
+        <button onClick={() => handleSortTime(1)}>Thời gian gần nhất</button>
+      ),
+      key: "0",
+    },
+    {
+      label: (
+        <button onClick={() => handleSortTime(0)}>Thời gian xa nhất</button>
+      ),
+      key: "1",
+    },
+  ];
   const [moviePopoverOpen, setMoviePopoverOpen] = useState(false);
   const [theaterPopoverOpen, setTheaterPopoverOpen] = useState(false);
 
@@ -491,6 +518,19 @@ const ShowtimePage = () => {
           >
             <span className="text-xl">↺</span> Reset Filter
           </Button>
+        </div>
+        <div className="flex justify-end items-center text-white">
+          <p className="text-xl my-0">Filter</p>
+          <Dropdown
+            menu={{ items }}
+            trigger={["click"]}
+            className="p-4 border-spacing-1 border-white"
+          >
+            <Space>
+              {stateFilterTime === 1 ? "Gần nhất" : "Xa nhất"}
+              <DownOutlined />
+            </Space>
+          </Dropdown>
         </div>
         {/* Table Header */}
         <div className="grid grid-cols-7">

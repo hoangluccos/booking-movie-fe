@@ -1,6 +1,7 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ShowtimeType } from "../../pages/AdminPages/Data/Data";
 import instance from "../../api/instance";
+import { sortBy } from "lodash";
 
 interface ShowtimeState {
   listShowtimes: ShowtimeType[];
@@ -43,7 +44,6 @@ export const getAllShowtimes = createAsyncThunk(
     }
   }
 );
-
 export const getOneShowtime = createAsyncThunk(
   "showtime/getOneShowtime",
   async ({ showtimeId }: { showtimeId: string }, { rejectWithValue }) => {
@@ -122,7 +122,26 @@ export const deleteShowtime = createAsyncThunk(
 const ShowtimeSlice = createSlice({
   name: "showtime",
   initialState,
-  reducers: {},
+  reducers: {
+    sortShowtimesByTime: (state, action: PayloadAction<0 | 1>) => {
+      state.listShowtimes = [...state.listShowtimes].sort((a, b) => {
+        // Chuyển đổi date từ "DD-MM-YYYY" sang "YYYY-MM-DD"
+        const toISOString = (d: string) => {
+          const [day, month, year] = d.split("-");
+          return `${year}-${month}-${day}`;
+        };
+
+        const timeA = new Date(
+          `${toISOString(a.date)}T${a.startTime}`
+        ).getTime();
+        const timeB = new Date(
+          `${toISOString(b.date)}T${b.startTime}`
+        ).getTime();
+
+        return action.payload === 0 ? timeA - timeB : timeB - timeA;
+      });
+    },
+  },
   extraReducers: (builder) => {
     builder
       // get all showtime
@@ -206,3 +225,4 @@ const ShowtimeSlice = createSlice({
 });
 
 export default ShowtimeSlice.reducer;
+export const { sortShowtimesByTime } = ShowtimeSlice.actions;
