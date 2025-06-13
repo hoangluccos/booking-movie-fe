@@ -80,8 +80,8 @@ const FoodPage = () => {
             <div className="flex items-center">
               <Popconfirm
                 title={
-                  <span className="font-saira text-sm">
-                    Are you sure to delete this person?
+                  <span className="font-saira text-sm text-white">
+                    Are you sure to delete this food?
                   </span>
                 }
                 description={
@@ -210,8 +210,25 @@ const FoodPage = () => {
             padding: 8,
             fontFamily: "Saira, sans-serif",
           },
+          Popover: {
+            colorBgElevated: "#323D4E",
+            colorText: "#FFFFFF",
+            borderRadius: 8,
+          },
           Popconfirm: {
-            fontFamily: "Saira, sans-serif",
+            colorBgElevated: "#323D4E",
+            colorText: "#FFFFFF",
+            borderRadius: 8,
+            colorPrimary: "#ff4d4f",
+            colorError: "#ff4d4f",
+          },
+          Button: {
+            colorText: "#FFFFFF",
+            colorBgContainer: "#323D4E",
+            colorBorder: "transparent",
+            borderRadius: 8,
+            defaultColor: "#FFFFFF",
+            defaultBorderColor: "#3b82f6",
           },
           Skeleton: {
             color: "#3A4657",

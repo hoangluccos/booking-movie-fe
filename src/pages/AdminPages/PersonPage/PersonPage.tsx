@@ -79,7 +79,7 @@ const PersonPage = () => {
           <Tooltip title="Delete">
             <Popconfirm
               title={
-                <span className="font-saira text-sm">
+                <span className="font-saira text-sm text-white">
                   Are you sure to delete this person?
                 </span>
               }
@@ -221,6 +221,26 @@ const PersonPage = () => {
           Empty: {
             colorText: "#FFFFFF",
             colorTextDescription: "#FFFFFF",
+          },
+          Popover: {
+            colorBgElevated: "#323D4E",
+            colorText: "#FFFFFF",
+            borderRadius: 8,
+          },
+          Popconfirm: {
+            colorBgElevated: "#323D4E",
+            colorText: "#FFFFFF",
+            borderRadius: 8,
+            colorPrimary: "#ff4d4f",
+            colorError: "#ff4d4f",
+          },
+          Button: {
+            colorText: "#FFFFFF",
+            colorBgContainer: "#323D4E",
+            colorBorder: "transparent",
+            borderRadius: 8,
+            defaultColor: "#FFFFFF",
+            defaultBorderColor: "#3b82f6",
           },
         },
       }}

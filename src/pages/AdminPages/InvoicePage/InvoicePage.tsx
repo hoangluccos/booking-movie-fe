@@ -185,13 +185,13 @@ const InvoicePage = () => {
         {item.amount.toLocaleString("vi-VN")}đ
       </div>
       <div className="flex justify-center items-center p-2 font-saira">
-        {item.showtime?.movie.name}
+        {item.showtime?.movie?.name ?? "Dữ liệu không tồn tại"}
       </div>
       <div className="flex justify-center items-center p-2 font-saira">
-        {item.showtime?.theater.name}
+        {item.showtime?.theater?.name ?? "Dữ liệu không tồn tại"}
       </div>
       <div className="flex justify-center items-center p-2 font-saira">
-        {item.showtime?.room.name}
+        {item.showtime?.room?.name ?? "Dữ liệu không tồn tại"}
       </div>
       <div className="flex justify-center items-center p-2 font-saira">
         {item.user.firstName} {item.user.lastName}

@@ -169,17 +169,25 @@ const GenrePage: React.FC = () => {
           fontFamily: '"Saira Semi Condensed", sans-serif',
         },
         components: {
-          Button: {
+          Popover: {
+            colorBgElevated: "#323D4E",
             colorText: "#FFFFFF",
-            colorBgContainer: "#3b82f6",
-            colorBorder: "transparent",
             borderRadius: 8,
           },
           Popconfirm: {
-            colorBgElevated: "#ffffff",
-            colorText: "#000000",
-            colorPrimary: "#ff4d4f",
+            colorBgElevated: "#323D4E",
+            colorText: "#FFFFFF",
             borderRadius: 8,
+            colorPrimary: "#ff4d4f",
+            colorError: "#ff4d4f",
+          },
+          Button: {
+            colorText: "#FFFFFF",
+            colorBgContainer: "#323D4E",
+            colorBorder: "transparent",
+            borderRadius: 8,
+            defaultColor: "#FFFFFF",
+            defaultBorderColor: "#3b82f6",
           },
           Skeleton: {
             color: "#3A4657",
@@ -286,7 +294,7 @@ const GenrePage: React.FC = () => {
                     <Tooltip title="Delete">
                       <Popconfirm
                         title={
-                          <span className="font-saira text-sm">
+                          <span className="font-saira text-sm text-white">
                             Are you sure to delete this genre?
                           </span>
                         }
