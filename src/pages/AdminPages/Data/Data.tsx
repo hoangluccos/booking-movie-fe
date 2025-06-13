@@ -80,7 +80,25 @@ export type ShowtimeType = {
   movie: MovieDetailType;
   room: RoomType;
 };
-
+export type ShowTimeCheckType = {
+  id: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  totalSeat: number;
+  emptySeat: number;
+  bookedSeat: number;
+  status: string | null;
+  seats: SeatTypeCheckInfo[];
+};
+export type SeatTypeCheckInfo = {
+  id: string;
+  locateRow: string;
+  locateColumn: number;
+  price: number;
+  isBooked: boolean;
+  isCouple: boolean | null;
+};
 export type SeatType = {
   id: string;
   locateRow: string;

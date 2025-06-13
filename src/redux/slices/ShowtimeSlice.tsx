@@ -1,11 +1,14 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { ShowtimeType } from "../../pages/AdminPages/Data/Data";
+import {
+  ShowTimeCheckType,
+  ShowtimeType,
+} from "../../pages/AdminPages/Data/Data";
 import instance from "../../api/instance";
-import { sortBy } from "lodash";
 
 interface ShowtimeState {
   listShowtimes: ShowtimeType[];
   showtimeInfo: ShowtimeType | null;
+  checkShowtimeInfo: ShowTimeCheckType | null;
   isLoading: boolean;
   error: string | null;
 }
@@ -13,6 +16,7 @@ interface ShowtimeState {
 const initialState: ShowtimeState = {
   listShowtimes: [],
   showtimeInfo: null,
+  checkShowtimeInfo: null,
   isLoading: false,
   error: null,
 };
@@ -58,7 +62,20 @@ export const getOneShowtime = createAsyncThunk(
     }
   }
 );
+export const checkShowtime = createAsyncThunk(
+  "showtime/checkShowtime",
+  async ({ showtimeId }: { showtimeId: string }, { rejectWithValue }) => {
+    try {
+      const response = await instance.get(`showtimes/check/${showtimeId}`);
 
+      return response.data.result;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to fetch all theaters"
+      );
+    }
+  }
+);
 export const createShowtime = createAsyncThunk(
   "showtime/createShowtime",
   async (
@@ -171,7 +188,19 @@ const ShowtimeSlice = createSlice({
         state.isLoading = false;
         state.error = action.payload as string;
       })
-
+      // check showtime
+      .addCase(checkShowtime.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(checkShowtime.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.checkShowtimeInfo = action.payload;
+      })
+      .addCase(checkShowtime.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+      })
       // create showtime
       .addCase(createShowtime.pending, (state) => {
         state.isLoading = true;

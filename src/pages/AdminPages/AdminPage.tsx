@@ -19,6 +19,7 @@ import FoodPage from "./FoodPage/FoodPage.tsx";
 import CreateUpdateCouponPage from "./CouponPage/CreateUpdateCouponPage.tsx";
 import InvoicePage from "./InvoicePage/InvoicePage.tsx";
 import InvoiceDetailPage from "./InvoicePage/InvoiceDetailPage.tsx";
+import CheckShowtimePage from "./ShowTimePage/CheckShowtimePage.tsx";
 
 const AdminPage = () => {
   return (
@@ -26,11 +27,9 @@ const AdminPage = () => {
       {/* layout cho trang admin */}
       <Route element={<LayoutAdminPage />}>
         <Route path="/dashboard" element={<DashboardPage />} />
-
         <Route path="/movies" element={<MoviePage />} />
         <Route path="/movies/create" element={<CreateUpdateMoviePage />} />
         <Route path="/movies/edit/:id" element={<CreateUpdateMoviePage />} />
-
         <Route path="/showtimes" element={<ShowtimePage />} />
         <Route
           path="/showtimes/create"
@@ -39,31 +38,23 @@ const AdminPage = () => {
         <Route
           path="/showtimes/edit/:id"
           element={<CreateUpdateShowtimePage />}
-        />
-
+        />{" "}
+        <Route path="/showtimes/check/:id" element={<CheckShowtimePage />} />
         <Route path="/invoices" element={<InvoicePage />} />
         <Route path="/invoices/:id" element={<InvoiceDetailPage />} />
-
         <Route path="/users" element={<UserPage />} />
-
         <Route path="/genres" element={<GenrePage />} />
-
         <Route path="/persons" element={<PersonPage />} />
         <Route path="/persons/create" element={<CreateUpdatePersonPage />} />
         <Route path="/persons/edit/:id" element={<CreateUpdatePersonPage />} />
-
         <Route path="/theaters" element={<TheaterPage />} />
         <Route path="/theaters/:id" element={<RoomPage />} />
         <Route path="/theaters/:id/create" element={<CreateRoomPage />} />
-
         <Route path="/rooms" element={<RoomPage />} />
-
         <Route path="/coupons" element={<CouponPage />} />
         <Route path="/coupons/create" element={<CreateUpdateCouponPage />} />
         <Route path="/coupons/edit/:id" element={<CreateUpdateCouponPage />} />
-
         <Route path="/foods" element={<FoodPage />} />
-
         <Route path="/feedbacks" element={<FeedbackPage />} />
       </Route>
     </Routes>

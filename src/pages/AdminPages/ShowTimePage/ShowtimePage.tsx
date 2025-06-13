@@ -8,7 +8,7 @@ import {
   Empty,
   Skeleton,
 } from "antd";
-import { DownOutlined } from "@ant-design/icons";
+import { DownOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Dropdown, Space } from "antd";
 import { useEffect, useState } from "react";
@@ -117,6 +117,9 @@ const ShowtimePage = () => {
   const endIndex = startIndex + moviesPerPage;
   const currentShowtimes = filteredShowtimes.slice(startIndex, endIndex);
 
+  const handleClickCheck = (item: ShowtimeType) => {
+    navigate(`/admin/showtimes/check/${item.id}`);
+  };
   const handleClickEditShowtime = (item: ShowtimeType) => {
     navigate(`/admin/showtimes/edit/${item.id}`);
   };
@@ -149,6 +152,7 @@ const ShowtimePage = () => {
   const showShowtimeCus = (
     item: ShowtimeType,
     isLastRow: boolean,
+    onCheck: (item: ShowtimeType) => void,
     onEdit: (item: ShowtimeType) => void,
     onDelete: (item: ShowtimeType) => void
   ) => (
@@ -180,6 +184,14 @@ const ShowtimePage = () => {
         {item.room.name}
       </div>
       <div className="flex justify-center items-center">
+        <Tooltip title="Check">
+          <button
+            onClick={() => onCheck(item)}
+            className="bg-[#323D4E] h-[32px] px-4 py-2 rounded-l-lg border-r border-[#979797]"
+          >
+            <MenuUnfoldOutlined />
+          </button>
+        </Tooltip>
         <Tooltip title="Edit">
           <button
             onClick={() => onEdit(item)}
@@ -564,6 +576,7 @@ const ShowtimePage = () => {
                   {showShowtimeCus(
                     item,
                     index === currentShowtimes.length - 1,
+                    handleClickCheck,
                     handleClickEditShowtime,
                     handleClickDeleteShowtime
                   )}

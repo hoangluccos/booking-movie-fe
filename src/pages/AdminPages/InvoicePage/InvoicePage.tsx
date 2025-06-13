@@ -1,7 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../redux/store/store.tsx";
 import { useEffect, useMemo, useState } from "react";
-import { getAllInvoices } from "../../../redux/slices/InvoiceSlice.tsx";
+import {
+  getAllInvoices,
+  sortInvoiceByTime,
+} from "../../../redux/slices/InvoiceSlice.tsx";
 import { InvoiceType } from "../Data/Data";
 import dayjs from "dayjs";
 import {
@@ -12,7 +15,11 @@ import {
   Skeleton,
   Tooltip,
   Empty,
+  MenuProps,
+  Dropdown,
+  Space,
 } from "antd";
+import { DownOutlined } from "@ant-design/icons";
 import {
   FaAngleDown,
   FaAngleLeft,
@@ -248,7 +255,27 @@ const InvoicePage = () => {
       ))}
     </div>
   );
-
+  const [stateFilterTime, setStateFilterTime] = useState<number>(1);
+  const handleSortTime = (id: number) => {
+    console.log("test");
+    dispatch(sortInvoiceByTime(id as 0 | 1));
+    console.log("Đã dispatch sortShowtimesByTime với:", id);
+    setStateFilterTime(id);
+  };
+  const items: MenuProps["items"] = [
+    {
+      label: (
+        <button onClick={() => handleSortTime(1)}>Thời gian gần nhất</button>
+      ),
+      key: "0",
+    },
+    {
+      label: (
+        <button onClick={() => handleSortTime(0)}>Thời gian xa nhất</button>
+      ),
+      key: "1",
+    },
+  ];
   const renderPaginationInfo = () => {
     if (isLoading) {
       return (
@@ -438,14 +465,14 @@ const InvoicePage = () => {
         },
       }}
     >
-      <div className="relative min-h-[750px]">
+      <div className="relative min-h-[750px] ">
         <div className="flex flex-wrap justify-between items-center mb-3">
           <span className="text-white text-3xl font-saira">Invoices</span>
           <div className="flex flex-wrap gap-2 items-center"></div>
         </div>
 
-        <div className="flex justify-between text-white">
-          <div className="flex items-center gap-4 mb-6 font-saira text-sm">
+        <div className="flex items-center justify-between text-white ">
+          <div className="flex items-center gap-4 mb-6 font-saira text-sm max-w-[70%]">
             <FaFilter size={25} />
             <span className="font-saira">Filter By</span>
 
@@ -538,7 +565,19 @@ const InvoicePage = () => {
             Total : {totalAmount.toLocaleString("vi-VN")}đ
           </span>
         </div>
-
+        <div className="flex justify-end items-center text-white">
+          <p className="text-xl my-0">Filter</p>
+          <Dropdown
+            menu={{ items }}
+            trigger={["click"]}
+            className="p-4 border-spacing-1 border-white"
+          >
+            <Space>
+              {stateFilterTime === 1 ? "Gần nhất" : "Xa nhất"}
+              <DownOutlined />
+            </Space>
+          </Dropdown>
+        </div>
         <div className="grid grid-cols-8">
           {[
             "Date",

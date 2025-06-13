@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   InvoiceDetailType,
   InvoiceType,
@@ -51,7 +51,22 @@ export const getAllInvoiceDetails = createAsyncThunk(
 const InvoiceSlice = createSlice({
   name: "invoice",
   initialState,
-  reducers: {},
+  reducers: {
+    sortInvoiceByTime: (state, action: PayloadAction<0 | 1>) => {
+      state.listInvoices = [...state.listInvoices].sort((a, b) => {
+        // Chuyển đổi date từ "DD-MM-YYYY" sang "YYYY-MM-DD"
+        const toISOString = (d: string) => {
+          const [day, month, year] = d.split("-");
+          return `${year}-${month}-${day}`;
+        };
+
+        const timeA = new Date(`${toISOString(a.date)}T${a.time}`).getTime();
+        const timeB = new Date(`${toISOString(b.date)}T${b.time}`).getTime();
+
+        return action.payload === 0 ? timeA - timeB : timeB - timeA;
+      });
+    },
+  },
   extraReducers: (builder) => {
     builder
       // get all invoice
@@ -86,3 +101,4 @@ const InvoiceSlice = createSlice({
 });
 
 export default InvoiceSlice.reducer;
+export const { sortInvoiceByTime } = InvoiceSlice.actions;
