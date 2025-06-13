@@ -246,7 +246,7 @@ const MovieForm = () => {
   console.log(formData);
   return (
     <div className="max-w-6xl mx-auto p-4 rounded shadow-lg bg-gradient-to-r from-slate-400 via-indigo-500 to-indigo-700 h-full">
-      <ToastContainer />
+      {/* <ToastContainer /> */}
       <h2 className="text-md font-bold text-white mb-3 text-center">
         {id ? "Edit Movie" : "Add Movie"}
       </h2>

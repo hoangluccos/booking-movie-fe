@@ -40,7 +40,7 @@ export default function Authenticate() {
 
   return (
     <>
-      <ToastContainer />
+      {/* <ToastContainer /> */}
       <p className="flex flex-col gap-[30px] justify-center items-center h-[100vh]">
         <p>Authenticating...</p>
       </p>

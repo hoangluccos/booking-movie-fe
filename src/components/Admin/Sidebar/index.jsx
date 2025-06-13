@@ -41,7 +41,7 @@ function Sidebar() {
   };
   return (
     <div className="fixed top-0 left-0 w-64 bg-gray-100 h-screen flex flex-col justify-between p-5 shadow-md">
-      <ToastContainer />
+      {/* <ToastContainer /> */}
       <div className="sidebar-header text-2xl font-bold text-gray-800 ">
         <h2>HL Movies</h2>
       </div>

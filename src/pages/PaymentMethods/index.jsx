@@ -11,9 +11,14 @@ const PaymentMethods = () => {
   const [selectedCouponId, setSelectedCouponId] = useState(null);
   const [listFood, setListFood] = useState([1, 2]);
   const [selectFood, setSelectFood] = useState("");
+  const [selectFood_Price, setSelectFood_Price] = useState(0);
   const location = useLocation();
   console.log("state: ", location.state);
-  console.log("seatPriceTotal: ", location.state.seatId.length * 100000, "VND");
+  console.log(
+    "seatPriceTotal: ",
+    location.state.seatId.length * 100000 + selectFood_Price,
+    "VND"
+  );
   console.log(selectedMethod);
   const nav = useNavigate();
 
@@ -32,8 +37,9 @@ const PaymentMethods = () => {
     fetchFoods();
   }, []);
 
-  const handleSelectFood = (id) => {
+  const handleSelectFood = (id, price) => {
     console.log("select food ", id);
+    setSelectFood_Price(price);
     setSelectFood(id);
   };
 
@@ -101,7 +107,7 @@ const PaymentMethods = () => {
                 image={food.image}
                 name={food.name}
                 price={food.price}
-                selectHandle={() => handleSelectFood(food.id)}
+                selectHandle={() => handleSelectFood(food.id, food.price)}
                 isSelect={selectFood === food.id}
               />
             ))}
@@ -155,7 +161,7 @@ const PaymentMethods = () => {
         </div>
       </div>
       <CouponComponent
-        totalPrice={location.state.seatId.length * 100000}
+        totalPrice={location.state.seatId.length * 100000 + selectFood_Price}
         onApplyCoupon={(couponId) => setSelectedCouponId(couponId)}
       />
     </div>

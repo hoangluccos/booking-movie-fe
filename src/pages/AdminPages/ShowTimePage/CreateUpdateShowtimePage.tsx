@@ -191,7 +191,8 @@ const CreateUpdateShowtimePage = () => {
       }
       setTimeout(() => navigate("/admin/showtimes"), 1000);
     } catch (error: any) {
-      toast.error(error.message || "Failed to create/update showtime.");
+      // console.log("loi", error);
+      toast.error(error || "Failed to create/update showtime.");
     }
   };
 
@@ -248,7 +249,7 @@ const CreateUpdateShowtimePage = () => {
       }}
     >
       <div className="text-white">
-        <ToastContainer />
+        {/* <ToastContainer /> */}
         <div className="flex items-center mb-8">
           <Button
             type="text"
@@ -334,7 +335,7 @@ const CreateUpdateShowtimePage = () => {
             </div>
           </form>
         </div>
-        <ToastContainer />
+        {/* <ToastContainer /> */}
       </div>
     </ConfigProvider>
   );

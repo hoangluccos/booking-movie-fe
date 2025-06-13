@@ -284,7 +284,7 @@ const TheaterPage = () => {
     >
       <div className="relative min-h-[750px] p-4">
         <div className="w-full">
-          <ToastContainer />
+          {/* <ToastContainer /> */}
 
           <div className="flex justify-between items-center w-full">
             <div className="flex items-center">

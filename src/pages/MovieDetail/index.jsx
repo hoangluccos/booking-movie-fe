@@ -44,7 +44,8 @@ function MovieDetail() {
     try {
       const res = instance.post("/feedbacks/", newFeedback);
       console.log(res.data);
-      toast.success("Đã gửi feedback, đợi phản hồi từ admin");
+      toast.success("Đã gửi feedback");
+      setFeedback([...feedback, newFeedback]);
       setComment("");
       setRate(0);
     } catch (error) {
@@ -152,7 +153,7 @@ function MovieDetail() {
   return (
     <div className="">
       <div className="pt-5">
-        <ToastContainer />
+        {/* <ToastContainer /> */}
         <div className="content">
           <div className="movie-detail mt-6 pb-3 flex flex-row gap-[40px]">
             <div className="w-[40%] h-[40%] movie-banner shadow-lg shadow-black">
