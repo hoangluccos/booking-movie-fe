@@ -21,6 +21,7 @@ import {
   ChartOptions,
 } from "chart.js";
 import { ConfigProvider, Cascader } from "antd";
+import Top3Movie from "../../../components/Admin/Top3Movie/Top3Movie.tsx";
 
 // Utility function to get the number of days in a month
 const getDaysInMonth = (month: number, year: number): number => {
@@ -302,7 +303,7 @@ const DashboardPage = () => {
           colorText: "#ffffff",
           colorTextPlaceholder: "#a0a0a0",
           colorBgElevated: "#273142",
-          colorBorder: "#2D3F5E", // màu trùng background => như không thấy border
+          colorBorder: "#2D3F5E",
           colorPrimaryBorder: "#2D3F5E",
           colorPrimaryBorderHover: "#2D3F5E",
           fontFamily: "Saira",
@@ -362,7 +363,8 @@ const DashboardPage = () => {
             isUp={true}
           />
         </div>
-
+        {/* top 3 income movies */}
+        <Top3Movie />
         <div className="bg-[#273142] p-6 rounded-lg shadow-lg">
           <div className="flex justify-between items-center mb-6">
             <span className="text-white text-xl font-saira font-semibold">
