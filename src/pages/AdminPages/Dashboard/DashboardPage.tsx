@@ -365,6 +365,7 @@ const DashboardPage = () => {
         </div>
         {/* top 3 income movies */}
         <Top3Movie />
+        {/* top 3 income movies */}
         <div className="bg-[#273142] p-6 rounded-lg shadow-lg">
           <div className="flex justify-between items-center mb-6">
             <span className="text-white text-xl font-saira font-semibold">
