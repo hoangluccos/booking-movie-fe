@@ -323,7 +323,7 @@ const MatchingPage = () => {
     >
       <div className="bg-white/80 border rounded shadow-md w-[550px] p-6">
         <div className="bg-black/40 text-white text-center py-2 font-semibold rounded mb-4">
-          Đăng ký ghép đôi "Tìm bạn xem phim chung" dành cho các thành viên F.A
+          Đăng ký ghép đôi
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
           <FormRow
