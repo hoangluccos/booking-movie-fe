@@ -9,7 +9,7 @@ const QrReader = () => {
   const qrBoxEl = useRef(null);
   const [qrOn, setQrOn] = useState(true);
   const [isShowCamera, setIsShowCamera] = useState(true);
-
+  const [ticketInfo, setTicketInfo] = useState(null);
   // Result
   const [scannedResult, setScannedResult] = useState("");
 
@@ -70,39 +70,76 @@ const QrReader = () => {
   }, [qrOn]);
   useEffect(() => {
     const fetch = async () => {
+      if (!scannedResult) return;
+
       try {
-        const res = await instance.get(
-          `/book/ticket/${scannedResult.ticketId}`
-        );
+        // ✅ Parse JSON string
+        const parsed = JSON.parse(scannedResult);
+        // ✅ Dừng camera
+        await scanner.current?.stop();
+        setIsShowCamera(false);
+
+        // ✅ Fetch dữ liệu
+        const res = await instance.get(`/book/ticket/${parsed.ticketId}`);
         if (res) {
-          setIsShowCamera(false);
-          console.log("du lieu ticketId", res.data);
+          console.log("✅ Dữ liệu ticketId:", res.data);
+          setTicketInfo(res.data.result);
         }
       } catch (error) {
-        console.log("error", error);
+        console.log("❌ Lỗi khi gọi API:", error);
       }
     };
+
     fetch();
   }, [scannedResult]);
+  const handleRescan = () => {
+    window.location.reload();
+  };
   return (
     <div className="qr-reader">
-      {/* QR */}
-      {/* {isShowCamera ?  : ""} */}
-      <video ref={videoEl}></video>
+      {/* Chỉ hiển thị camera nếu được bật */}
+      {isShowCamera && <video ref={videoEl} />}
 
-      {/* Show Data Result if scan is success */}
-      {scannedResult && (
-        <p
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            zIndex: 99999,
-            color: "white",
-          }}
-        >
-          Scanned Result: {scannedResult}
-        </p>
+      {/* Hiển thị kết quả */}
+      {ticketInfo && (
+        <div className="mt-6 w-full max-w-md bg-gray-800 p-4 rounded-lg shadow-lg text-white">
+          <h3 className="text-xl font-bold mb-3">📄 Thông tin vé</h3>
+          <ul className="space-y-2">
+            {ticketInfo.map((item, index) => (
+              <li key={item.id} className="bg-gray-700 p-3 rounded">
+                <p>
+                  <strong>Trạng thái : </strong>{" "}
+                  <strong className="font-bold px-3 py-1 bg-green-500 rounded-md my-1">
+                    Hợp lệ
+                  </strong>
+                </p>
+                <p>
+                  <strong>STT:</strong> {index + 1}
+                </p>
+                <p>
+                  <strong>Ticket ID:</strong> {item.ticketId}
+                </p>
+                <p>
+                  <strong>Ghế:</strong> {item.seat.locateRow}
+                  {item.seat.locateColumn}
+                </p>
+                <p>
+                  <strong>Giá:</strong> {item.price.toLocaleString()} VND
+                </p>
+                <p>
+                  <strong>Loại ghế:</strong>{" "}
+                  {item.seat.isCouple ? "Ghế đôi" : "Ghế đơn"}
+                </p>
+              </li>
+            ))}
+          </ul>
+          <button
+            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            onClick={handleRescan}
+          >
+            🔄 Quét lại
+          </button>
+        </div>
       )}
     </div>
   );

@@ -573,7 +573,7 @@ const InvoicePage = () => {
             <Link className="matching-feature mt-1" to={"/admin/uploadQR"}>
               <p className="text-black font-bold text-xl flex justify-center gap-2 items-center py-2 px-3 transition-colors ease-in-out duration-100 bg-gray-300 rounded-sm border border-black hover:bg-gray-500 hover:text-white">
                 <IoScanOutline />
-                Upload Ticket
+                Scan Ticket
               </p>
             </Link>
             {/*               <Link

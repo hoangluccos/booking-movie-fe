@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import instance from "../../api/instance";
+import { toast } from "react-toastify";
 
 const SeatSelection = () => {
   const param = useParams();
@@ -74,7 +75,11 @@ const SeatSelection = () => {
           state: { showtimeId: showtimeId, seatId: selectedSeatsID },
         });
       }
-    } catch (error) {}
+    } catch (error) {
+      toast.error(
+        error.data?.message || "Ghế đã được người khác đặt trước bạn"
+      );
+    }
   };
   return (
     <div className="content p-4">
