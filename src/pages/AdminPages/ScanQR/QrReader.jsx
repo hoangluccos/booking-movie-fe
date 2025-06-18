@@ -10,6 +10,7 @@ const QrReader = () => {
   const [qrOn, setQrOn] = useState(true);
   const [isShowCamera, setIsShowCamera] = useState(true);
   const [ticketInfo, setTicketInfo] = useState(null);
+  const [userInfo, setUserInfo] = useState(null);
   // Result
   const [scannedResult, setScannedResult] = useState("");
 
@@ -83,7 +84,8 @@ const QrReader = () => {
         const res = await instance.get(`/book/ticket/${parsed.ticketId}`);
         if (res) {
           console.log("✅ Dữ liệu ticketId:", res.data);
-          setTicketInfo(res.data.result);
+          setTicketInfo(res.data.result.ticketDetails);
+          setUserInfo(res.data.result.user);
         }
       } catch (error) {
         console.log("❌ Lỗi khi gọi API:", error);
@@ -104,12 +106,12 @@ const QrReader = () => {
       {ticketInfo && (
         <div className="mt-6 w-full max-w-md bg-gray-800 p-4 rounded-lg shadow-lg text-white">
           <h3 className="text-xl font-bold mb-3">📄 Thông tin vé</h3>
-          <ul className="space-y-2">
+          <ul className="flex gap-x-2 justify-center items-center">
             {ticketInfo.map((item, index) => (
               <li key={item.id} className="bg-gray-700 p-3 rounded">
                 <p>
                   <strong>Trạng thái : </strong>{" "}
-                  <strong className="font-bold px-3 py-1 bg-green-500 rounded-md my-1">
+                  <strong className="font-bold px-3 py-1 bg-green-500 rounded-md">
                     Hợp lệ
                   </strong>
                 </p>
@@ -118,6 +120,16 @@ const QrReader = () => {
                 </p>
                 <p>
                   <strong>Ticket ID:</strong> {item.ticketId}
+                </p>
+                <p>
+                  <strong>Email:</strong> {userInfo.email}
+                </p>
+                <p>
+                  <strong>FullName:</strong> {userInfo.firstName}{" "}
+                  {userInfo.lastName}
+                </p>
+                <p>
+                  <strong>Date of birth:</strong> {userInfo.dateOfBirth}
                 </p>
                 <p>
                   <strong>Ghế:</strong> {item.seat.locateRow}

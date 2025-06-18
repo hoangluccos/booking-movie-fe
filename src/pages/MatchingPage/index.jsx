@@ -350,7 +350,7 @@ const MatchingPage = () => {
             listData={genderOptions}
             storeAt={setSelectGender}
           />
-          <div className="flex justify-between items-center">
+          <div className="flex items-center justify-between mr-3">
             <label className="text-black font-semibold">
               Khoảng tuổi mong muốn
             </label>

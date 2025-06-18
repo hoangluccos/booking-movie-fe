@@ -408,6 +408,9 @@ const InvoicePage = () => {
   const onClickShowDetailInvoice = (item: InvoiceType) => {
     navigate(`${item.id}`, { state: item });
   };
+  //   const onClickShowDetailInvoice = (item: InvoiceType) => {
+  //   navigate(`${item.id}`, { state: item });
+  // };
 
   if (error) {
     console.log(error);
@@ -576,7 +579,7 @@ const InvoicePage = () => {
                 Scan Ticket
               </p>
             </Link>
-            {/*               <Link
+            {/* <Link
                 className="matching-feature mt-1 w-[150px] h-[60px]"
                 style={{
                   background: `url(${IMG_TICKET})`,

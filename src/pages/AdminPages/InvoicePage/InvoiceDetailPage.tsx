@@ -11,6 +11,7 @@ const InvoiceDetailPage = () => {
   const dispatch = useAppDispatch();
   const location = useLocation();
   const invoiceInfo = location.state as InvoiceType;
+  console.log("invoiceInfo", invoiceInfo);
   const { error, isLoading, listInvoiceDetails } = useAppSelector(
     (state) => state.invoice
   );

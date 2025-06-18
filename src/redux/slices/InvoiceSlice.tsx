@@ -39,7 +39,7 @@ export const getAllInvoiceDetails = createAsyncThunk(
     try {
       const response = await instance.get(`/book/ticket/${ticketId}`, {});
 
-      return response.data.result;
+      return response.data.result.ticketDetails;
     } catch (error: any) {
       return rejectWithValue(
         error.response?.data?.message || "Failed to fetch all users"
