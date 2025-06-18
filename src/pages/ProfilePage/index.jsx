@@ -195,6 +195,7 @@ const ProfilePage = () => {
               <div className="info-item">
                 <label className="block mb-2">Email</label>
                 <input
+                  disabled
                   type="text"
                   {...register("email", {
                     required: "Email is required",
@@ -203,7 +204,7 @@ const ProfilePage = () => {
                       message: "Email không hợp lệ",
                     },
                   })}
-                  className="w-full p-2 border border-gray-300 rounded-lg"
+                  className="w-full p-2 border border-gray-300 rounded-lg opacity-65 hover:cursor-not-allowed"
                 />
                 {errors.email && (
                   <span className="text-red-500">{errors.email.message}</span>

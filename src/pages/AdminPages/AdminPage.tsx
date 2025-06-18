@@ -20,6 +20,7 @@ import CreateUpdateCouponPage from "./CouponPage/CreateUpdateCouponPage.tsx";
 import InvoicePage from "./InvoicePage/InvoicePage.tsx";
 import InvoiceDetailPage from "./InvoicePage/InvoiceDetailPage.tsx";
 import CheckShowtimePage from "./ShowTimePage/CheckShowtimePage.tsx";
+import QrReader from "./ScanQR/QrReader.jsx";
 
 const AdminPage = () => {
   return (
@@ -56,6 +57,7 @@ const AdminPage = () => {
         <Route path="/coupons/edit/:id" element={<CreateUpdateCouponPage />} />
         <Route path="/foods" element={<FoodPage />} />
         <Route path="/feedbacks" element={<FeedbackPage />} />
+        <Route path="/uploadQR" element={<QrReader />} />
       </Route>
     </Routes>
   );

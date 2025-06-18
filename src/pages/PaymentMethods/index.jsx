@@ -122,13 +122,14 @@ const PaymentMethods = () => {
   return (
     <div className="flex flex-col items-center gap-y-1 my-1">
       {/* component countdown */}
-      <div className="flex justify-center">
+      <div className="flex justify-center gap-2">
         <CountDownComponent setIsTimeout={setIsTimeout} />
         <button
           onClick={cancelSelectSeat}
-          className="flex justify-center items-center"
+          className="flex justify-center items-center bg-gray-500 text-white font-bold  border border-black rounded-md gap-1 px-2 transition-colors ease-in-out duration-300 hover:bg-gray-300 hover:text-black"
         >
-          <GiCancel size={40} color="red" />
+          <GiCancel size={30} color="red" />
+          Hủy chọn ghế
         </button>
       </div>
       <div className="content flex gap-x-1 justify-center">

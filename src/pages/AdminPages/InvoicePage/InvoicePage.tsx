@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../redux/store/store.tsx";
 import { useEffect, useMemo, useState } from "react";
 import {
@@ -27,6 +27,8 @@ import {
   FaFilter,
 } from "react-icons/fa";
 import { BiDetail } from "react-icons/bi";
+import ScanQR from "../ScanQR/ScanQR.jsx";
+import { IoScanOutline } from "react-icons/io5";
 
 const InvoicePage = () => {
   const navigate = useNavigate();
@@ -565,18 +567,39 @@ const InvoicePage = () => {
             Total : {totalAmount.toLocaleString("vi-VN")}đ
           </span>
         </div>
-        <div className="flex justify-end items-center text-white">
-          <p className="text-xl my-0">Filter</p>
-          <Dropdown
-            menu={{ items }}
-            trigger={["click"]}
-            className="p-4 border-spacing-1 border-white"
-          >
-            <Space>
-              {stateFilterTime === 1 ? "Gần nhất" : "Xa nhất"}
-              <DownOutlined />
-            </Space>
-          </Dropdown>
+        {/* bar qrscan and filter */}
+        <div className="flex justify-between items-center">
+          <div className="">
+            <Link className="matching-feature mt-1" to={"/admin/uploadQR"}>
+              <p className="text-black font-bold text-xl flex justify-center gap-2 items-center py-2 px-3 transition-colors ease-in-out duration-100 bg-gray-300 rounded-sm border border-black hover:bg-gray-500 hover:text-white">
+                <IoScanOutline />
+                Upload Ticket
+              </p>
+            </Link>
+            {/*               <Link
+                className="matching-feature mt-1 w-[150px] h-[60px]"
+                style={{
+                  background: `url(${IMG_TICKET})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                  color: "white",
+                }}
+                to={"/matching"}
+              ></Link> */}
+          </div>
+          <div className="flex justify-end items-center text-white">
+            <p className="text-xl my-0">Filter</p>
+            <Dropdown
+              menu={{ items }}
+              trigger={["click"]}
+              className="p-4 border-spacing-1 border-white"
+            >
+              <Space>
+                {stateFilterTime === 1 ? "Gần nhất" : "Xa nhất"}
+                <DownOutlined />
+              </Space>
+            </Dropdown>
+          </div>
         </div>
         <div className="grid grid-cols-8">
           {[

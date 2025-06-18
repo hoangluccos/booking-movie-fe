@@ -333,16 +333,12 @@ const DashboardPage = () => {
             title="Total Users"
             icon={<FaUserFriends className="text-white text-2xl" />}
             iconBgColor="#7474E1"
-            percentageChange={8.5}
-            isUp={true}
           />
           <StatisticComponent
             total={listMovie?.length || 0}
             title="Total Movies"
             icon={<MdMovieFilter className="text-white text-2xl" />}
             iconBgColor="#DEAF3E"
-            percentageChange={1.3}
-            isUp={true}
           />
           <StatisticComponent
             total={totalRevenue}
@@ -350,8 +346,6 @@ const DashboardPage = () => {
             icon={<FaDongSign className="text-white text-2xl" />}
             iconBgColor="#44BE84"
             isCurrency={true}
-            percentageChange={4.3}
-            isUp={false}
           />
           <StatisticComponent
             total={listShowtimes?.length || 0}
@@ -359,8 +353,6 @@ const DashboardPage = () => {
             icon={<BiSolidSlideshow className="text-white text-2xl" />}
             iconBgColor="#DE8160"
             isCurrency={false}
-            percentageChange={1.1}
-            isUp={true}
           />
         </div>
         {/* top 3 income movies */}
