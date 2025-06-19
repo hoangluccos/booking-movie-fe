@@ -326,6 +326,7 @@ const CreateUpdateMoviePage = () => {
                   value={movie.duration}
                   onChange={(e) => handleChange("duration", e.target.value)}
                   min="60"
+                  max="300"
                   required
                 />
               </div>
@@ -339,6 +340,7 @@ const CreateUpdateMoviePage = () => {
                   onChange={(e) => handleChange("rate", e.target.value)}
                   step="0.1"
                   min="1"
+                  max="5"
                   required
                 />
               </div>

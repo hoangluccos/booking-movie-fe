@@ -133,7 +133,9 @@ const MatchingPage = () => {
 
     const fetchShowtime = async () => {
       try {
-        const res = await instance.get(`/showtimes/${selectMovieId}/all`);
+        const res = await instance.get(
+          `/showtimes/matching/${selectMovieId}/all`
+        );
         const temp = res.data.result.filter((data) =>
           transferStringToDateCheckToDay(data.date)
         );
